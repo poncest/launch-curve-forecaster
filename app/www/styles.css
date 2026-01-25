@@ -1,5 +1,6 @@
 /* styles.css */
 /* Launch Curve Forecaster - Custom Styles */
+/* Deep Navy Theme - Differentiates from other portfolio apps */
 
 /* ============================================================================
    CSS VARIABLES (set dynamically from R via inline styles in ui.R)
@@ -12,8 +13,8 @@
    ============================================================================ */
 
 body {
-  background-color: var(--color-background, #FAFAFA);
-  color: var(--color-text-primary, #323130);
+  background-color: var(--color-background, #F8F9FA);
+  color: var(--color-text-primary, #1B1B1B);
 }
 
 /* ============================================================================
@@ -21,24 +22,25 @@ body {
    ============================================================================ */
 
 .ui.vertical.tabular.menu .item {
-  padding: 1em 1.5em !important;
+  padding: 1em 1.2em !important;
   font-weight: 500;
   transition: all 0.2s ease;
+  font-size: 0.95em;
 }
 
 .ui.vertical.tabular.menu .item:hover {
-  background: rgba(0, 119, 182, 0.05);
+  background: rgba(29, 53, 87, 0.05);
 }
 
 .ui.vertical.tabular.menu .active.item {
-  background: rgba(0, 119, 182, 0.1) !important;
-  border-left: 3px solid var(--color-primary, #0077B6) !important;
-  color: var(--color-primary-dark, #023E8A) !important;
+  background: rgba(29, 53, 87, 0.1) !important;
+  border-left: 3px solid var(--color-primary, #1D3557) !important;
+  color: var(--color-primary-dark, #0D1B2A) !important;
   font-weight: 600;
 }
 
 .ui.vertical.tabular.menu .item i.icon {
-  margin-right: 0.75em;
+  margin-right: 0.6em;
 }
 
 /* ============================================================================
@@ -47,7 +49,7 @@ body {
 
 .ui.segment {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--color-border, #EDEBE9);
+  border: 1px solid var(--color-border, #DEE2E6);
   border-radius: 6px;
 }
 
@@ -57,13 +59,25 @@ body {
 }
 
 /* KPI Cards */
-.ui.segment[style*="border-top: 3px solid"] {
+.ui.segment[style*="border-top: 3px solid"],
+.ui.segment[style*="border-top: 4px solid"] {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.ui.segment[style*="border-top: 3px solid"]:hover {
+.ui.segment[style*="border-top: 3px solid"]:hover,
+.ui.segment[style*="border-top: 4px solid"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Decision cards with left border */
+.ui.segment[style*="border-left: 4px solid"] {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ui.segment[style*="border-left: 4px solid"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
 /* ============================================================================
@@ -71,17 +85,26 @@ body {
    ============================================================================ */
 
 .ui.primary.button {
-  background: var(--color-primary, #0077B6) !important;
+  background: var(--color-primary, #1D3557) !important;
   transition: all 0.2s ease;
 }
 
 .ui.primary.button:hover {
-  background: var(--color-primary-dark, #023E8A) !important;
+  background: var(--color-primary-dark, #0D1B2A) !important;
   transform: translateY(-1px);
 }
 
 .ui.basic.button {
-  box-shadow: 0 0 0 1px var(--color-border, #EDEBE9) inset !important;
+  box-shadow: 0 0 0 1px var(--color-border, #DEE2E6) inset !important;
+}
+
+.ui.inverted.basic.button {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.5) inset !important;
+}
+
+.ui.inverted.basic.button:hover {
+  background: rgba(255,255,255,0.1) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.8) inset !important;
 }
 
 /* ============================================================================
@@ -89,7 +112,7 @@ body {
    ============================================================================ */
 
 .ui.form .field > label {
-  color: var(--color-text-primary, #323130);
+  color: var(--color-text-primary, #1B1B1B);
   font-weight: 600;
   margin-bottom: 0.5em;
 }
@@ -97,39 +120,39 @@ body {
 .ui.selection.dropdown,
 .ui.input > input,
 .ui.form input[type="text"] {
-  border-color: var(--color-border, #EDEBE9) !important;
+  border-color: var(--color-border, #DEE2E6) !important;
 }
 
 .ui.selection.dropdown:focus,
 .ui.input > input:focus {
-  border-color: var(--color-primary, #0077B6) !important;
+  border-color: var(--color-primary, #1D3557) !important;
 }
 
 /* Slider styling */
 .irs--shiny .irs-bar {
-  background: var(--color-primary, #0077B6) !important;
-  border-color: var(--color-primary, #0077B6) !important;
+  background: var(--color-primary, #1D3557) !important;
+  border-color: var(--color-primary, #1D3557) !important;
 }
 
 .irs--shiny .irs-handle {
-  border-color: var(--color-primary, #0077B6) !important;
+  border-color: var(--color-primary, #1D3557) !important;
 }
 
 .irs--shiny .irs-from,
 .irs--shiny .irs-to,
 .irs--shiny .irs-single {
-  background: var(--color-primary, #0077B6) !important;
+  background: var(--color-primary, #1D3557) !important;
 }
 
 /* Checkboxes */
 .ui.checkbox input:checked ~ label:before {
-  background: var(--color-primary, #0077B6) !important;
-  border-color: var(--color-primary, #0077B6) !important;
+  background: var(--color-primary, #1D3557) !important;
+  border-color: var(--color-primary, #1D3557) !important;
 }
 
 /* Radio buttons */
 .ui.radio.checkbox input:checked ~ label:after {
-  background-color: var(--color-primary, #0077B6) !important;
+  background-color: var(--color-primary, #1D3557) !important;
 }
 
 /* ============================================================================
@@ -137,33 +160,33 @@ body {
    ============================================================================ */
 
 .rt-table {
-  border: 1px solid var(--color-border, #EDEBE9);
+  border: 1px solid var(--color-border, #DEE2E6);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .rt-thead {
-  background: var(--color-background, #FAFAFA) !important;
+  background: var(--color-background, #F8F9FA) !important;
 }
 
 .rt-th {
-  padding: 12px 16px !important;
+  padding: 12px 14px !important;
   font-weight: 600 !important;
-  color: var(--color-text-primary, #323130) !important;
-  border-bottom: 2px solid var(--color-border, #EDEBE9) !important;
+  color: var(--color-text-primary, #1B1B1B) !important;
+  border-bottom: 2px solid var(--color-border, #DEE2E6) !important;
 }
 
 .rt-td {
-  padding: 10px 16px !important;
-  border-bottom: 1px solid var(--color-border, #EDEBE9) !important;
+  padding: 10px 14px !important;
+  border-bottom: 1px solid var(--color-border, #DEE2E6) !important;
 }
 
 .rt-tr-striped {
-  background: var(--color-background, #FAFAFA) !important;
+  background: var(--color-background, #F8F9FA) !important;
 }
 
 .rt-tr:hover {
-  background: rgba(0, 119, 182, 0.05) !important;
+  background: rgba(29, 53, 87, 0.05) !important;
 }
 
 /* ============================================================================
@@ -182,7 +205,7 @@ body {
 /* Tooltip styling */
 .ggiraph-tooltip {
   background: white !important;
-  border: 1px solid var(--color-border, #EDEBE9) !important;
+  border: 1px solid var(--color-border, #DEE2E6) !important;
   border-radius: 4px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   padding: 8px 12px !important;
@@ -194,7 +217,7 @@ body {
    ============================================================================ */
 
 .ui.modal > .header {
-  background: var(--color-primary-dark, #023E8A) !important;
+  background: var(--color-primary-dark, #0D1B2A) !important;
   color: white !important;
 }
 
@@ -203,7 +226,7 @@ body {
 }
 
 .ui.modal > .actions {
-  background: var(--color-background, #FAFAFA) !important;
+  background: var(--color-background, #F8F9FA) !important;
 }
 
 /* ============================================================================
@@ -211,11 +234,11 @@ body {
    ============================================================================ */
 
 .ui.statistics .statistic > .value {
-  color: var(--color-primary, #0077B6) !important;
+  color: var(--color-primary, #1D3557) !important;
 }
 
 .ui.statistics .statistic > .label {
-  color: var(--color-text-secondary, #605E5C) !important;
+  color: var(--color-text-secondary, #4A4A4A) !important;
   text-transform: none !important;
 }
 
@@ -223,10 +246,21 @@ body {
    RESPONSIVE ADJUSTMENTS
    ============================================================================ */
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 992px) {
   .ui.container {
     padding-left: 1em !important;
     padding-right: 1em !important;
+  }
+  
+  /* Stack sidebar on smaller screens */
+  .ui.grid > .three.wide.column {
+    width: 100% !important;
+    margin-bottom: 1.5em;
+  }
+  
+  .ui.grid > .thirteen.wide.column {
+    width: 100% !important;
+    padding-left: 0 !important;
   }
   
   .ui.vertical.tabular.menu {
@@ -234,16 +268,20 @@ body {
   }
   
   .ui.vertical.tabular.menu .item {
-    text-align: center;
+    display: inline-block;
+    width: auto;
   }
-  
-  .ui.grid > .four.wide.column {
-    width: 100% !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .ui.four.column.stackable.grid > .column {
+    width: 50% !important;
     margin-bottom: 1em;
   }
   
-  .ui.grid > .twelve.wide.column {
+  .ui.two.column.stackable.grid > .column {
     width: 100% !important;
+    margin-bottom: 1em;
   }
 }
 
@@ -252,33 +290,58 @@ body {
    ============================================================================ */
 
 .text-muted {
-  color: var(--color-text-muted, #A19F9D) !important;
+  color: var(--color-text-muted, #8D99AE) !important;
 }
 
 .text-secondary {
-  color: var(--color-text-secondary, #605E5C) !important;
+  color: var(--color-text-secondary, #4A4A4A) !important;
 }
 
 .text-primary {
-  color: var(--color-primary, #0077B6) !important;
+  color: var(--color-primary, #1D3557) !important;
 }
 
 .bg-light {
-  background: var(--color-background, #FAFAFA) !important;
+  background: var(--color-background, #F8F9FA) !important;
 }
 
 .border-left-primary {
-  border-left: 3px solid var(--color-primary, #0077B6) !important;
+  border-left: 3px solid var(--color-primary, #1D3557) !important;
 }
 
 .border-left-success {
-  border-left: 3px solid var(--color-success, #107C10) !important;
+  border-left: 3px solid var(--color-success, #2D6A4F) !important;
 }
 
 .border-left-warning {
-  border-left: 3px solid var(--color-warning, #CA5010) !important;
+  border-left: 3px solid var(--color-warning, #E76F51) !important;
 }
 
 .border-left-danger {
-  border-left: 3px solid var(--color-danger, #D13438) !important;
+  border-left: 3px solid var(--color-danger, #9B2226) !important;
+}
+
+/* ============================================================================
+   CUSTOM COMPONENT STYLES
+   ============================================================================ */
+
+/* Decision context card in sidebar */
+.ui.segment[style*="border-left: 3px solid"] h4 {
+  font-size: 1em;
+}
+
+/* Header gradient enhancement */
+.ui.inverted.segment {
+  border-radius: 0 !important;
+}
+
+/* Footer links */
+footer a:hover {
+  color: white !important;
+  text-decoration: underline;
+}
+
+/* Smooth transitions for interactive elements */
+a, button, .ui.segment, .rt-tr {
+  transition: all 0.15s ease;
 }

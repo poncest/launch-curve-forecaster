@@ -9,9 +9,20 @@
 ui <- semanticPage(
   title = app_info$title,
   
-  # Custom CSS
+  # Custom CSS and JavaScript
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+    
+    # JavaScript to trigger Shiny input after page loads
+    tags$script(HTML("
+      $(document).ready(function() {
+        // Fire startup trigger after short delay to ensure Shiny is ready
+        setTimeout(function() {
+          Shiny.setInputValue('startup_trigger', Date.now());
+        }, 50);
+      });
+    ")),
+    
     tags$style(HTML(sprintf("
       :root {
         --color-primary: %s;
@@ -27,17 +38,17 @@ ui <- semanticPage(
         --color-border: %s;
       }
     ",
-      colors$primary,
-      colors$primary_dark,
-      colors$primary_light,
-      colors$success,
-      colors$warning,
-      colors$danger,
-      colors$text_primary,
-      colors$text_secondary,
-      colors$background,
-      colors$card_bg,
-      colors$border
+                            colors$primary,
+                            colors$primary_dark,
+                            colors$primary_light,
+                            colors$success,
+                            colors$warning,
+                            colors$danger,
+                            colors$text_primary,
+                            colors$text_secondary,
+                            colors$background,
+                            colors$card_bg,
+                            colors$border
     )))
   ),
   
@@ -91,18 +102,19 @@ ui <- semanticPage(
   # ============================================================================
   
   div(
-    class = "ui container",
-    style = "margin-top: 2em; margin-bottom: 3em;",
+    class = "ui container fluid",
+    style = "margin-top: 2em; margin-bottom: 3em; padding: 0 3em;",
     
     div(
       class = "ui grid",
       
       # --------------------------------------------------------------------
-      # SIDEBAR (4 columns wide)
+      # SIDEBAR (3 columns wide - narrower for more content space)
       # --------------------------------------------------------------------
       
       div(
-        class = "four wide column",
+        class = "three wide column",
+        style = "padding-right: 0.5em;",
         
         # Navigation menu
         div(
@@ -165,11 +177,12 @@ ui <- semanticPage(
       ),
       
       # --------------------------------------------------------------------
-      # MAIN CONTENT AREA (12 columns wide)
+      # MAIN CONTENT AREA (13 columns wide - more breathing room)
       # --------------------------------------------------------------------
       
       div(
-        class = "twelve wide stretched column",
+        class = "thirteen wide stretched column",
+        style = "padding-left: 1.5em;",
         
         # Executive Brief Tab
         div(
@@ -230,7 +243,7 @@ ui <- semanticPage(
           h4(style = "color: white;", "Oncology Launch Curve Forecaster"),
           p(
             style = "color: rgba(255,255,255,0.7); font-size: 0.9em;",
-            "A decision-support framework for VP-level launch planning. ",
+            "A decision-support framework for launch planning. ",
             "This tool does not predict outcomes—it quantifies how assumptions ",
             "translate into revenue risk."
           )
@@ -300,7 +313,7 @@ ui <- semanticPage(
       tags$ul(
         style = sprintf("color: %s;", colors$text_secondary),
         tags$li("FDA drug approval database (approval dates)"),
-        tags$li("SEC 10-K/10-Q filings (product-level revenue)"),
+        tags$li("SEC 10-K/20-F filings (product-level revenue)"),
         tags$li("Published literature (launch curve patterns)")
       ),
       

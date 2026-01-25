@@ -7,10 +7,20 @@ server <- function(input, output, session) {
   # SHARED REACTIVE VALUES
   # ==========================================================================
   
+  # Initialize selected_analogs with all products (never starts as NULL)
+  initial_analogs <- if (!app_data$is_placeholder) {
+    app_data$analogs$product_name
+  } else {
+    character(0)
+  }
+  
   # Store user selections that need to be shared across modules
   shared <- reactiveValues(
-    # Selected analogs (from scenario builder)
-    selected_analogs = NULL,
+    # Selected analogs (from scenario builder) - initialized with all products
+    selected_analogs = initial_analogs,
+    
+    # Delay in quarters (default to 2 = 6 months)
+    delay_quarters = 2,
     
     # Current scenario configuration
     scenario_config = list(
@@ -20,8 +30,16 @@ server <- function(input, output, session) {
     ),
     
     # Calculated outputs (from scenario builder)
-    scenario_outputs = NULL
+    scenario_outputs = NULL,
+    
+    # Startup trigger (set by JavaScript after page load)
+    startup_complete = FALSE
   )
+  
+  # React to JavaScript startup trigger
+  observeEvent(input$startup_trigger, {
+    shared$startup_complete <- TRUE
+  }, ignoreNULL = TRUE, once = TRUE)
   
   # ==========================================================================
   # MODULE SERVERS

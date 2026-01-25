@@ -23,7 +23,7 @@ mod_executive_brief_ui <- function(id) {
       ),
       p(
         style = sprintf("color: %s;", colors$text_secondary),
-        "VP-level summary: key metrics, scenario comparison, and decision trade-offs"
+        "Key metrics, scenario comparison, and decision trade-offs"
       )
     ),
     
@@ -41,15 +41,21 @@ mod_executive_brief_ui <- function(id) {
         div(
           class = "ui segment",
           style = sprintf(
-            "text-align: center; padding: 1.5em; border-top: 3px solid %s;",
+            "text-align: center; padding: 1.5em 1em; border-top: 3px solid %s; min-height: 140px; position: relative;",
             colors$primary
+          ),
+          # Info icon with tooltip
+          tags$span(
+            style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
+            title = "Number of oncology products included in the analog set for forecasting",
+            icon("info circle")
           ),
           div(
             style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$primary),
             uiOutput(ns("kpi_analogs"), inline = TRUE)
           ),
           div(
-            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em;", colors$text_secondary),
+            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
             "Analogs Selected"
           ),
           div(
@@ -65,15 +71,21 @@ mod_executive_brief_ui <- function(id) {
         div(
           class = "ui segment",
           style = sprintf(
-            "text-align: center; padding: 1.5em; border-top: 3px solid %s;",
-            colors$success
+            "text-align: center; padding: 1.5em 1em; border-top: 3px solid %s; min-height: 140px; position: relative;",
+            colors$primary
+          ),
+          # Info icon with tooltip
+          tags$span(
+            style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
+            title = "Median (P50) peak annual revenue across selected analogs. Range shows P25-P75 bounds.",
+            icon("info circle")
           ),
           div(
-            style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$success),
+            style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$primary),
             uiOutput(ns("kpi_peak_revenue"), inline = TRUE)
           ),
           div(
-            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em;", colors$text_secondary),
+            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
             "Base Case Peak (P50)"
           ),
           div(
@@ -89,20 +101,26 @@ mod_executive_brief_ui <- function(id) {
         div(
           class = "ui segment",
           style = sprintf(
-            "text-align: center; padding: 1.5em; border-top: 3px solid %s;",
-            colors$warning
+            "text-align: center; padding: 1.5em 1em; border-top: 3px solid %s; min-height: 140px; position: relative;",
+            colors$primary
+          ),
+          # Info icon with tooltip
+          tags$span(
+            style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
+            title = "Estimated cumulative revenue at risk during first 3 years if launch is delayed by 6 months",
+            icon("info circle")
           ),
           div(
-            style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$warning),
+            style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$primary),
             uiOutput(ns("kpi_revenue_at_risk"), inline = TRUE)
           ),
           div(
-            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em;", colors$text_secondary),
+            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
             "Revenue at Risk"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
-            "6-month delay scenario"
+            uiOutput(ns("kpi_risk_context"), inline = TRUE)
           )
         )
       ),
@@ -113,15 +131,21 @@ mod_executive_brief_ui <- function(id) {
         div(
           class = "ui segment",
           style = sprintf(
-            "text-align: center; padding: 1.5em; border-top: 3px solid %s;",
-            colors$secondary
+            "text-align: center; padding: 1.5em 1em; border-top: 3px solid %s; min-height: 140px; position: relative;",
+            colors$primary
+          ),
+          # Info icon with tooltip
+          tags$span(
+            style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
+            title = "Median number of quarters from launch to peak annual revenue across selected analogs",
+            icon("info circle")
           ),
           div(
-            style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$secondary),
+            style = sprintf("font-size: 2.5em; font-weight: bold; color: %s;", colors$primary),
             uiOutput(ns("kpi_time_to_peak"), inline = TRUE)
           ),
           div(
-            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em;", colors$text_secondary),
+            style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
             "Quarters to Peak"
           ),
           div(
@@ -133,92 +157,94 @@ mod_executive_brief_ui <- function(id) {
     ),
     
     # ========================================================================
-    # MAIN CONTENT: CHART + DECISIONS
+    # LAUNCH CURVE CHART (FULL WIDTH)
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = "padding: 1.5em; margin-bottom: 1.5em;",
+      
+      h3(
+        style = sprintf("color: %s; margin-bottom: 0.5em;", colors$primary_dark),
+        "Launch Trajectory Scenarios"
+      ),
+      p(
+        style = sprintf("color: %s; margin-bottom: 1em;", colors$text_muted),
+        "P25/P50/P75 bands based on selected analog performance"
+      ),
+      
+      # Interactive chart - full width
+      girafeOutput(ns("launch_curve_chart"), height = "420px")
+    ),
+    
+    # ========================================================================
+    # DECISION CARDS ROW (Two cards side by side below chart)
     # ========================================================================
     
     div(
       class = "ui two column stackable grid",
+      style = "margin-bottom: 1.5em;",
       
-      # Left: Launch Curve Chart
+      # Decision Box 1: Launch Timing
       div(
-        class = "ten wide column",
-        div(
-          class = "ui segment",
-          style = "padding: 1.5em;",
-          
-          h3(
-            style = sprintf("color: %s; margin-bottom: 0.5em;", colors$primary_dark),
-            "Launch Trajectory Scenarios"
-          ),
-          p(
-            style = sprintf("color: %s; margin-bottom: 1em;", colors$text_muted),
-            "P25/P50/P75 bands based on selected analog performance"
-          ),
-          
-          # Interactive chart
-          girafeOutput(ns("launch_curve_chart"), height = "400px")
-        )
-      ),
-      
-      # Right: Key Decisions Panel
-      div(
-        class = "six wide column",
-        
-        # Decision Box 1: Launch Timing
+        class = "column",
         div(
           class = "ui segment",
           style = sprintf(
-            "margin-bottom: 1em; border-left: 3px solid %s;",
+            "border-left: 4px solid %s; height: 100%%;",
             colors$warning
           ),
           
           h4(
-            style = sprintf("color: %s;", colors$primary_dark),
+            style = sprintf("color: %s; margin-bottom: 0.5em;", colors$primary_dark),
             icon("clock outline"),
             "Decision: Launch Timing"
           ),
           p(
-            style = sprintf("color: %s; font-size: 0.95em;", colors$text_secondary),
+            style = sprintf("color: %s; font-size: 0.95em; margin-bottom: 0.75em;", colors$text_secondary),
             strong("Trade-off:"), " Speed vs. readiness"
           ),
           
           div(
             style = sprintf(
-              "background: %s; padding: 1em; border-radius: 4px; margin-top: 0.75em;",
+              "background: %s; padding: 1em; border-radius: 4px;",
               colors$background
             ),
             p(
-              style = sprintf("color: %s; margin: 0; font-size: 0.9em;", colors$text_primary),
+              style = sprintf("color: %s; margin: 0; font-size: 0.9em; line-height: 1.5;", colors$text_primary),
               uiOutput(ns("decision_timing"), inline = TRUE)
             )
           )
-        ),
-        
-        # Decision Box 2: Forecast Commitment
+        )
+      ),
+      
+      # Decision Box 2: Forecast Commitment
+      div(
+        class = "column",
         div(
           class = "ui segment",
           style = sprintf(
-            "border-left: 3px solid %s;",
+            "border-left: 4px solid %s; height: 100%%;",
             colors$primary
           ),
           
           h4(
-            style = sprintf("color: %s;", colors$primary_dark),
+            style = sprintf("color: %s; margin-bottom: 0.5em;", colors$primary_dark),
             icon("chart bar outline"),
             "Decision: Forecast Commitment"
           ),
           p(
-            style = sprintf("color: %s; font-size: 0.95em;", colors$text_secondary),
+            style = sprintf("color: %s; font-size: 0.95em; margin-bottom: 0.75em;", colors$text_secondary),
             strong("Trade-off:"), " Alignment vs. credibility risk"
           ),
           
           div(
             style = sprintf(
-              "background: %s; padding: 1em; border-radius: 4px; margin-top: 0.75em;",
+              "background: %s; padding: 1em; border-radius: 4px;",
               colors$background
             ),
             p(
-              style = sprintf("color: %s; margin: 0; font-size: 0.9em;", colors$text_primary),
+              style = sprintf("color: %s; margin: 0; font-size: 0.9em; line-height: 1.5;", colors$text_primary),
               uiOutput(ns("decision_forecast"), inline = TRUE)
             )
           )
@@ -232,7 +258,7 @@ mod_executive_brief_ui <- function(id) {
     
     div(
       class = "ui segment",
-      style = "margin-top: 1.5em;",
+      style = "margin-top: 1em;",
       
       h3(
         style = sprintf("color: %s; margin-bottom: 0.5em;", colors$primary_dark),
@@ -282,12 +308,16 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     
     selected_data <- reactive({
       # If no analogs selected yet, use all available
-      if (is.null(shared$selected_analogs) || length(shared$selected_analogs) == 0) {
+      base_data <- if (is.null(shared$selected_analogs) || length(shared$selected_analogs) == 0) {
         app_data$analogs
       } else {
         app_data$analogs |>
           filter(product_name %in% shared$selected_analogs)
       }
+      
+      # Ensure unique products (in case source data has duplicates)
+      base_data |>
+        distinct(product_name, .keep_all = TRUE)
     })
     
     # ========================================================================
@@ -295,8 +325,6 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     # ========================================================================
     
     metrics <- reactive({
-      # Placeholder calculations - will be replaced with real logic
-      # when data is available
       
       if (app_data$is_placeholder) {
         return(list(
@@ -317,7 +345,28 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       # Get peak revenue by product
       peaks <- curves |>
         group_by(product_name) |>
-        summarise(peak_revenue = max(revenue_millions, na.rm = TRUE))
+        summarise(
+          peak_revenue = max(revenue_millions, na.rm = TRUE),
+          years_to_peak = years_since_launch[which.max(revenue_millions)],
+          .groups = "drop"
+        )
+      
+      # Get delay from shared (default to 2 quarters / 6 months if not set)
+      delay_q <- if (!is.null(shared$delay_quarters)) shared$delay_quarters else 2
+      
+      # Calculate revenue at risk based on delay
+      # Get Year 1 median revenue across selected analogs
+      year1_data <- curves |>
+        filter(years_since_launch == 1)
+      
+      year1_median <- if (nrow(year1_data) > 0) {
+        median(year1_data$revenue_millions, na.rm = TRUE)
+      } else {
+        median(peaks$peak_revenue, na.rm = TRUE) * 0.3  # Fallback estimate
+      }
+      
+      # Revenue at risk = delay quarters * (Year 1 revenue / 4)
+      revenue_at_risk_calc <- delay_q * (year1_median / 4)
       
       # Calculate percentiles
       list(
@@ -325,9 +374,13 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         peak_p50 = median(peaks$peak_revenue, na.rm = TRUE),
         peak_p25 = quantile(peaks$peak_revenue, 0.25, na.rm = TRUE),
         peak_p75 = quantile(peaks$peak_revenue, 0.75, na.rm = TRUE),
-        revenue_at_risk = median(peaks$peak_revenue, na.rm = TRUE) * 0.15,
-        quarters_to_peak = 12,
-        quarters_range = c(8, 16)
+        revenue_at_risk = revenue_at_risk_calc,
+        delay_quarters = delay_q,
+        quarters_to_peak = round(median(peaks$years_to_peak, na.rm = TRUE) * 4),
+        quarters_range = c(
+          round(min(peaks$years_to_peak, na.rm = TRUE) * 4),
+          round(max(peaks$years_to_peak, na.rm = TRUE) * 4)
+        )
       )
     })
     
@@ -376,7 +429,17 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       if (m$revenue_at_risk == 0) {
         "--"
       } else {
-        paste0("$", round(m$revenue_at_risk, 0), "M")
+        paste0("$", format(round(m$revenue_at_risk), big.mark = ","), "M")
+      }
+    })
+    
+    output$kpi_risk_context <- renderUI({
+      m <- metrics()
+      delay_q <- m$delay_quarters
+      if (is.null(delay_q) || delay_q == 0) {
+        "No delay selected"
+      } else {
+        paste0(delay_q, "-quarter delay scenario")
       }
     })
     
@@ -400,14 +463,15 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     
     output$decision_timing <- renderUI({
       m <- metrics()
-      if (m$revenue_at_risk == 0) {
-        "Configure analogs in Scenario Builder to see timing analysis."
+      if (m$revenue_at_risk == 0 || is.null(m$delay_quarters) || m$delay_quarters == 0) {
+        "Select a delay scenario in Scenario Builder to see timing analysis."
       } else {
+        delay_months <- m$delay_quarters * 3
         paste0(
-          "A 6-month delay scenario suggests approximately $",
-          round(m$revenue_at_risk, 0), "M in cumulative revenue at risk ",
-          "during the first 3 years post-launch. This estimate reflects ",
-          "median analog performance and does not account for competitive dynamics."
+          "A ", m$delay_quarters, "-quarter (", delay_months, "-month) delay scenario suggests approximately $",
+          format(round(m$revenue_at_risk), big.mark = ","), "M in cumulative revenue at risk ",
+          "during the first 3 years post-launch. This estimate assumes demand is deferred, not destroyed, ",
+          "and does not account for competitive dynamics."
         )
       }
     })
@@ -447,27 +511,83 @@ mod_executive_brief_server <- function(id, app_data, shared) {
             plot.background = element_rect(fill = colors$card_bg, color = NA)
           )
         
-        girafe(ggobj = p, width_svg = 8, height_svg = 4)
+        girafe(ggobj = p, width_svg = 10, height_svg = 5)
         
       } else {
         # Real chart with data
-        # This will be implemented when data is available
+        # Filter to selected analogs
+        curves <- app_data$curves |>
+          filter(product_name %in% selected_data()$product_name)
         
-        # Placeholder for now
-        p <- ggplot() +
-          annotate(
-            "text",
-            x = 0.5, y = 0.5,
-            label = "Launch curve visualization\n(Data loaded)",
-            size = 5,
-            color = colors$text_secondary
-          ) +
-          theme_void() +
-          theme(
-            plot.background = element_rect(fill = colors$card_bg, color = NA)
+        # Calculate percentile bands
+        bands <- curves |>
+          group_by(years_since_launch) |>
+          summarise(
+            p25 = quantile(revenue_millions, 0.25, na.rm = TRUE),
+            p50 = quantile(revenue_millions, 0.50, na.rm = TRUE),
+            p75 = quantile(revenue_millions, 0.75, na.rm = TRUE),
+            .groups = "drop"
           )
         
-        girafe(ggobj = p, width_svg = 8, height_svg = 4)
+        # Build the chart
+        p <- ggplot() +
+          # P25-P75 ribbon
+          geom_ribbon(
+            data = bands,
+            aes(x = years_since_launch, ymin = p25, ymax = p75),
+            fill = colors$primary_light,
+            alpha = 0.3
+          ) +
+          # P50 line
+          geom_line(
+            data = bands,
+            aes(x = years_since_launch, y = p50),
+            color = colors$primary,
+            linewidth = 1.5
+          ) +
+          # Individual analog lines (interactive)
+          geom_line_interactive(
+            data = curves,
+            aes(
+              x = years_since_launch,
+              y = revenue_millions,
+              group = product_name,
+              tooltip = paste0(
+                "<strong>", product_name, "</strong><br>",
+                "Year ", years_since_launch, ": $",
+                scales::comma(round(revenue_millions)), "M"
+              ),
+              data_id = product_name
+            ),
+            color = colors$text_muted,
+            linewidth = 0.7,
+            alpha = 0.5
+          ) +
+          # Labels
+          labs(
+            x = "Years Since Launch",
+            y = "Revenue ($M)",
+            caption = "Gray lines = individual analogs | Blue line = P50 median | Shaded area = P25-P75 range"
+          ) +
+          scale_x_continuous(breaks = 0:5, limits = c(0, 5)) +
+          scale_y_continuous(labels = scales::comma_format()) +
+          theme_launch()
+        
+        girafe(
+          ggobj = p,
+          width_svg = 10,
+          height_svg = 5,
+          options = list(
+            opts_hover(css = "stroke-width: 2; stroke-opacity: 1;"),
+            opts_hover_inv(css = "opacity: 0.2;"),
+            opts_tooltip(
+              css = sprintf(
+                "background: white; border: 1px solid %s; border-radius: 4px; padding: 8px 12px; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);",
+                colors$border
+              )
+            )
+          )
+        )
       }
     })
     
@@ -496,28 +616,53 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           )
         
       } else {
-        # Real table
-        selected_data() |>
-          select(
-            Product = product_name,
-            Company = company,
-            `Approval Year` = approval_date,
-            Indication = indication
-          ) |>
-          reactable(
-            searchable = FALSE,
-            pagination = FALSE,
-            striped = TRUE,
-            highlight = TRUE,
-            theme = reactableTheme(
-              headerStyle = list(
-                background = colors$background,
-                color = colors$text_primary,
-                fontWeight = "bold"
-              ),
-              stripedColor = colors$background
-            )
+        # Real table - aggressive deduplication
+        raw_data <- selected_data()
+        
+        # Create table data with explicit unique() as backup
+        table_data <- data.frame(
+          Product = raw_data$product_name,
+          Company = raw_data$company,
+          `Approval Year` = raw_data$approval_date,
+          Indication = raw_data$indication,
+          stringsAsFactors = FALSE,
+          check.names = FALSE
+        )
+        
+        # Remove duplicates by Product name
+        table_data <- table_data[!duplicated(table_data$Product), ]
+        
+        # Sort alphabetically
+        table_data <- table_data[order(table_data$Product), ]
+        
+        # Debug: print to console
+        message("Table rows after dedup: ", nrow(table_data))
+        
+        reactable(
+          table_data,
+          searchable = FALSE,
+          pagination = FALSE,
+          defaultPageSize = 10,
+          striped = TRUE,
+          highlight = TRUE,
+          compact = TRUE,
+          theme = reactableTheme(
+            headerStyle = list(
+              background = colors$background,
+              color = colors$text_primary,
+              fontWeight = "bold",
+              borderBottom = sprintf("2px solid %s", colors$border)
+            ),
+            stripedColor = colors$background,
+            cellPadding = "10px 14px"
+          ),
+          columns = list(
+            Product = colDef(minWidth = 100),
+            Company = colDef(minWidth = 100),
+            `Approval Year` = colDef(minWidth = 100, align = "center"),
+            Indication = colDef(minWidth = 150)
           )
+        )
       }
     })
     

@@ -24,13 +24,13 @@ library(reactablefmtr)
 
 app_info <- list(
   title = "Oncology Launch Curve Forecaster",
-  subtitle = "Decision Support for VP-Level Launch Planning",
+  subtitle = "Decision Support for Commercial Launch Planning",
   version = "0.1.0",
   author = "Steven Ponce",
   
   # Canonical positioning statement
   positioning = paste(
-    "This framework supports VP-level launch decisions by quantifying how",
+    "This framework supports commercial launch decisions by quantifying how",
     "uncertainty in uptake timing and analog selection translates into",
     "revenue risk and investment trade-offs."
   ),
@@ -49,34 +49,37 @@ app_info <- list(
 # COLOR PALETTE
 # ============================================================================
 
-colors <- list(
-  # Primary - Professional blue (pharma-appropriate)
-  primary = "#0077B6",
-  primary_dark = "#023E8A",
-  primary_light = "#90E0EF",
-  
-  # Secondary - Teal accent
+# Deep navy theme - differentiates from Microsoft (bright blue) and 
+# Clinical Trial Forecaster (standard blue) while remaining pharma-appropriate
 
-  secondary = "#006B75",
-  secondary_light = "#48A9A6",
+colors <- list(
+  # Primary - Deep navy (professional, distinct)
+  primary = "#1D3557",
+  primary_dark = "#0D1B2A",
+  primary_light = "#457B9D",
+  
+  # Secondary - Steel blue accent
+  secondary = "#2A6F97",
+  secondary_light = "#61A5C2",
   
   # Semantic colors
-  success = "#107C10",
-  warning = "#CA5010",
-  danger = "#D13438",
+  success = "#2D6A4F",
+  warning = "#E76F51",
+  danger = "#9B2226",
+  
   
   # Scenario colors (for charts)
-  scenario_base = "#0077B6",
-  scenario_optimistic = "#107C10",
-  scenario_conservative = "#CA5010",
+  scenario_base = "#1D3557",
+  scenario_optimistic = "#2D6A4F",
+  scenario_conservative = "#E76F51",
   
   # Neutrals
-  text_primary = "#323130",
-  text_secondary = "#605E5C",
-  text_muted = "#A19F9D",
-  background = "#FAFAFA",
+  text_primary = "#1B1B1B",
+  text_secondary = "#4A4A4A",
+  text_muted = "#8D99AE",
+  background = "#F8F9FA",
   card_bg = "#FFFFFF",
-  border = "#EDEBE9"
+  border = "#DEE2E6"
 )
 
 # ============================================================================
@@ -84,48 +87,48 @@ colors <- list(
 # ============================================================================
 
 theme_launch <- function(base_size = 12) {
-  theme_minimal(base_size = base_size) +
-    theme(
+  ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
       # Text
-      text = element_text(color = colors$text_primary),
-      plot.title = element_text(
+      text = ggplot2::element_text(color = colors$text_primary),
+      plot.title = ggplot2::element_text(
         face = "bold",
-        size = rel(1.2),
+        size = ggplot2::rel(1.2),
         color = colors$primary_dark,
-        margin = margin(b = 10)
+        margin = ggplot2::margin(b = 10)
       ),
-      plot.subtitle = element_text(
+      plot.subtitle = ggplot2::element_text(
         color = colors$text_secondary,
-        margin = margin(b = 15)
+        margin = ggplot2::margin(b = 15)
       ),
-      plot.caption = element_text(
+      plot.caption = ggplot2::element_text(
         color = colors$text_muted,
-        size = rel(0.8),
+        size = ggplot2::rel(0.8),
         hjust = 0
       ),
       
       # Axes
-      axis.title = element_text(
+      axis.title = ggplot2::element_text(
         color = colors$text_secondary,
-        size = rel(0.9)
+        size = ggplot2::rel(0.9)
       ),
-      axis.text = element_text(color = colors$text_secondary),
-      axis.line = element_line(color = colors$border),
+      axis.text = ggplot2::element_text(color = colors$text_secondary),
+      axis.line = ggplot2::element_line(color = colors$border),
       
       # Grid
-      panel.grid.major = element_line(color = colors$border, linewidth = 0.5),
-      panel.grid.minor = element_blank(),
+      panel.grid.major = ggplot2::element_line(color = colors$border, linewidth = 0.5),
+      panel.grid.minor = ggplot2::element_blank(),
       
       # Legend
       legend.position = "bottom",
-      legend.title = element_text(face = "bold", size = rel(0.9)),
+      legend.title = ggplot2::element_text(face = "bold", size = ggplot2::rel(0.9)),
       
       # Background
-      plot.background = element_rect(fill = colors$background, color = NA),
-      panel.background = element_rect(fill = colors$card_bg, color = NA),
+      plot.background = ggplot2::element_rect(fill = colors$card_bg, color = NA),
+      panel.background = ggplot2::element_rect(fill = colors$card_bg, color = NA),
       
       # Margins
-      plot.margin = margin(15, 15, 15, 15)
+      plot.margin = ggplot2::margin(15, 15, 15, 15)
     )
 }
 
@@ -138,29 +141,37 @@ theme_launch <- function(base_size = 12) {
 
 load_app_data <- function(app_dir = NULL) {
   
- # Determine the correct data path
- if (!is.null(app_dir)) {
+  # Determine the correct data path
+  if (!is.null(app_dir)) {
     data_path <- file.path(app_dir, "data/processed/")
- } else if (dir.exists("data/processed")) {
+  } else if (dir.exists("data/processed")) {
     data_path <- "data/processed/"
   } else if (dir.exists("app/data/processed")) {
     data_path <- "app/data/processed/"
   } else {
-    data_path <- "data/processed/"  # Fallback
+    data_path <- "data/processed/"
   }
   
-  # Check if data exists
-  required_files <- c(
-    "oncology_analogs.rds",
-    "launch_curves.rds"
-  )
+  # Check if data exists (RDS preferred, CSV as fallback)
+  analogs_file <- if (file.exists(file.path(data_path, "oncology_analogs.rds"))) {
+    file.path(data_path, "oncology_analogs.rds")
+  } else if (file.exists(file.path(data_path, "oncology_analogs.csv"))) {
+    file.path(data_path, "oncology_analogs.csv")
+  } else {
+    NULL
+  }
   
-  missing <- !file.exists(file.path(data_path, required_files))
+  curves_file <- if (file.exists(file.path(data_path, "launch_curves.rds"))) {
+    file.path(data_path, "launch_curves.rds")
+  } else if (file.exists(file.path(data_path, "launch_curves.csv"))) {
+    file.path(data_path, "launch_curves.csv")
+  } else {
+    NULL
+  }
   
-  if (any(missing)) {
+  if (is.null(analogs_file) || is.null(curves_file)) {
     warning(
-      "Missing data files: ",
-      paste(required_files[missing], collapse = ", "),
+      "Missing data files in: ", data_path,
       "\nRun scripts/02_data_preparation.R first."
     )
     
@@ -171,27 +182,41 @@ load_app_data <- function(app_dir = NULL) {
         company = character(),
         approval_date = as.Date(character()),
         indication = character(),
-        line_of_therapy = character()
+        tumor_class = character()
       ),
       curves = data.frame(
         product_name = character(),
-        quarters_since_launch = integer(),
-        revenue_millions = numeric()
+        years_since_launch = integer(),
+        revenue_millions = numeric(),
+        tumor_class = character()
       ),
       is_placeholder = TRUE
     ))
   }
   
-  # Load actual data
+  # Load actual data (handle both RDS and CSV)
+  load_file <- function(filepath) {
+    if (grepl("\\.rds$", filepath, ignore.case = TRUE)) {
+      readRDS(filepath)
+    } else {
+      read.csv(filepath, stringsAsFactors = FALSE)
+    }
+  }
+  
+  # Load and deduplicate
+  analogs_data <- load_file(analogs_file) |>
+    dplyr::distinct(product_name, .keep_all = TRUE)
+  
+  curves_data <- load_file(curves_file)
+  
   list(
-    analogs = readRDS(file.path(data_path, "oncology_analogs.rds")),
-    curves = readRDS(file.path(data_path, "launch_curves.rds")),
+    analogs = analogs_data,
+    curves = curves_data,
     is_placeholder = FALSE
   )
 }
 
 # NOTE: app_data is loaded in app.R after app_dir is determined
-# This allows the path resolution to work correctly
 # app_data <- load_app_data()  # Called from app.R instead
 
 # ============================================================================
@@ -272,11 +297,3 @@ cat("                     Oncology Launch Curve Forecaster                      
 cat("                           Version ", app_info$version, "                      \n")
 cat("═══════════════════════════════════════════════════════════════════════════════\n")
 cat("\n")
-
-if (app_data$is_placeholder) {
-  cat("⚠ Running with placeholder data. Run data preparation scripts first.\n\n")
-} else {
-  cat("✓ Data loaded successfully\n")
-  cat("  Analogs: ", nrow(app_data$analogs), "\n")
-  cat("  Curve observations: ", nrow(app_data$curves), "\n\n")
-}

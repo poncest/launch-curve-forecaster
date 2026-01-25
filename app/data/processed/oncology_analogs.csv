@@ -1,0 +1,11 @@
+product_name,company,approval_date,indication,tumor_class,peak_revenue_millions
+Keytruda,Merck,2014-09-04,Melanoma (initial),Solid,11084
+Opdivo,BMS,2014-12-22,Melanoma (initial),Solid,7204
+Ibrance,Pfizer,2015-02-03,Breast cancer (HR+/HER2-),Solid,5392
+Tagrisso,AstraZeneca,2015-11-13,NSCLC (EGFR T790M),Solid,4328
+Lynparza,AstraZeneca,2014-12-19,Ovarian cancer (BRCA),Solid,1195
+Tecentriq,Roche,2016-05-18,Bladder cancer (initial),Solid,3462
+Imbruvica,AbbVie/J&J,2013-11-13,CLL/MCL,Heme,4562
+Darzalex,J&J,2015-11-16,Multiple myeloma,Heme,4190
+Venclexta,AbbVie,2016-04-11,CLL,Heme,1831
+Calquence,AstraZeneca,2017-10-31,MCL (initial),Heme,2052
