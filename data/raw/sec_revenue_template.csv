@@ -1,0 +1,61 @@
+product_name,company,fiscal_year,revenue_usd_millions,geography,years_since_launch,source_filing,extraction_date,notes
+Keytruda,Merck,2014,,,0,10-K 2014,,Launch year - may be partial
+Keytruda,Merck,2015,,,1,10-K 2015,,
+Keytruda,Merck,2016,,,2,10-K 2016,,
+Keytruda,Merck,2017,,,3,10-K 2017,,
+Keytruda,Merck,2018,,,4,10-K 2018,,
+Keytruda,Merck,2019,,,5,10-K 2019,,
+Opdivo,BMS,2014,,,0,10-K 2014,,Launch year - may be partial
+Opdivo,BMS,2015,,,1,10-K 2015,,
+Opdivo,BMS,2016,,,2,10-K 2016,,
+Opdivo,BMS,2017,,,3,10-K 2017,,
+Opdivo,BMS,2018,,,4,10-K 2018,,
+Opdivo,BMS,2019,,,5,10-K 2019,,
+Ibrance,Pfizer,2015,,,0,10-K 2015,,Launch year - may be partial
+Ibrance,Pfizer,2016,,,1,10-K 2016,,
+Ibrance,Pfizer,2017,,,2,10-K 2017,,
+Ibrance,Pfizer,2018,,,3,10-K 2018,,
+Ibrance,Pfizer,2019,,,4,10-K 2019,,
+Ibrance,Pfizer,2020,,,5,10-K 2020,,
+Tagrisso,AstraZeneca,2015,,,0,20-F 2015,,Launch year - may be partial
+Tagrisso,AstraZeneca,2016,,,1,20-F 2016,,
+Tagrisso,AstraZeneca,2017,,,2,20-F 2017,,
+Tagrisso,AstraZeneca,2018,,,3,20-F 2018,,
+Tagrisso,AstraZeneca,2019,,,4,20-F 2019,,
+Tagrisso,AstraZeneca,2020,,,5,20-F 2020,,
+Lynparza,AstraZeneca,2014,,,0,20-F 2014,,Launch year - may be partial
+Lynparza,AstraZeneca,2015,,,1,20-F 2015,,
+Lynparza,AstraZeneca,2016,,,2,20-F 2016,,
+Lynparza,AstraZeneca,2017,,,3,20-F 2017,,
+Lynparza,AstraZeneca,2018,,,4,20-F 2018,,
+Lynparza,AstraZeneca,2019,,,5,20-F 2019,,
+Tecentriq,Roche,2016,,,0,20-F 2016,,Launch year - may be partial
+Tecentriq,Roche,2017,,,1,20-F 2017,,
+Tecentriq,Roche,2018,,,2,20-F 2018,,
+Tecentriq,Roche,2019,,,3,20-F 2019,,
+Tecentriq,Roche,2020,,,4,20-F 2020,,
+Tecentriq,Roche,2021,,,5,20-F 2021,,
+Imbruvica,AbbVie/J&J,2013,,,0,10-K 2013,,Launch year - may be partial; use AbbVie share
+Imbruvica,AbbVie/J&J,2014,,,1,10-K 2014,,
+Imbruvica,AbbVie/J&J,2015,,,2,10-K 2015,,
+Imbruvica,AbbVie/J&J,2016,,,3,10-K 2016,,
+Imbruvica,AbbVie/J&J,2017,,,4,10-K 2017,,
+Imbruvica,AbbVie/J&J,2018,,,5,10-K 2018,,
+Darzalex,J&J,2015,,,0,10-K 2015,,Launch year - may be partial
+Darzalex,J&J,2016,,,1,10-K 2016,,
+Darzalex,J&J,2017,,,2,10-K 2017,,
+Darzalex,J&J,2018,,,3,10-K 2018,,
+Darzalex,J&J,2019,,,4,10-K 2019,,
+Darzalex,J&J,2020,,,5,10-K 2020,,
+Venclexta,AbbVie,2016,,,0,10-K 2016,,Launch year - may be partial
+Venclexta,AbbVie,2017,,,1,10-K 2017,,
+Venclexta,AbbVie,2018,,,2,10-K 2018,,
+Venclexta,AbbVie,2019,,,3,10-K 2019,,
+Venclexta,AbbVie,2020,,,4,10-K 2020,,
+Venclexta,AbbVie,2021,,,5,10-K 2021,,
+Calquence,AstraZeneca,2017,,,0,20-F 2017,,Launch year - may be partial
+Calquence,AstraZeneca,2018,,,1,20-F 2018,,
+Calquence,AstraZeneca,2019,,,2,20-F 2019,,
+Calquence,AstraZeneca,2020,,,3,20-F 2020,,
+Calquence,AstraZeneca,2021,,,4,20-F 2021,,
+Calquence,AstraZeneca,2022,,,5,20-F 2022,,

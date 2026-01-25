@@ -1,0 +1,61 @@
+product_name,company,fiscal_year,revenue_usd_millions,geography,years_since_launch,source_filing,extraction_date,notes
+Keytruda,Merck,2014,83,WW,0,10-K 2014,2026-01-25,Launch year - partial (Sep-Dec)
+Keytruda,Merck,2015,566,WW,1,10-K 2015,2026-01-25,First full year
+Keytruda,Merck,2016,1402,WW,2,10-K 2016,2026-01-25,
+Keytruda,Merck,2017,3809,WW,3,10-K 2017,2026-01-25,
+Keytruda,Merck,2018,7171,WW,4,10-K 2018,2026-01-25,
+Keytruda,Merck,2019,11084,WW,5,10-K 2019,2026-01-25,
+Opdivo,BMS,2014,27,WW,0,10-K 2014,2026-01-25,Launch year - partial (Dec only)
+Opdivo,BMS,2015,942,WW,1,10-K 2015,2026-01-25,First full year
+Opdivo,BMS,2016,3774,WW,2,10-K 2016,2026-01-25,
+Opdivo,BMS,2017,4948,WW,3,10-K 2017,2026-01-25,
+Opdivo,BMS,2018,6735,WW,4,10-K 2018,2026-01-25,
+Opdivo,BMS,2019,7204,WW,5,10-K 2019,2026-01-25,
+Ibrance,Pfizer,2015,723,WW,0,10-K 2015,2026-01-25,Launch year - partial (Feb-Dec)
+Ibrance,Pfizer,2016,2135,WW,1,10-K 2016,2026-01-25,
+Ibrance,Pfizer,2017,3129,WW,2,10-K 2017,2026-01-25,
+Ibrance,Pfizer,2018,4115,WW,3,10-K 2018,2026-01-25,
+Ibrance,Pfizer,2019,4961,WW,4,10-K 2019,2026-01-25,
+Ibrance,Pfizer,2020,5392,WW,5,10-K 2020,2026-01-25,
+Tagrisso,AstraZeneca,2015,29,WW,0,20-F 2015,2026-01-25,Launch year - partial (Nov-Dec)
+Tagrisso,AstraZeneca,2016,423,WW,1,20-F 2016,2026-01-25,
+Tagrisso,AstraZeneca,2017,955,WW,2,20-F 2017,2026-01-25,
+Tagrisso,AstraZeneca,2018,1860,WW,3,20-F 2018,2026-01-25,
+Tagrisso,AstraZeneca,2019,3189,WW,4,20-F 2019,2026-01-25,
+Tagrisso,AstraZeneca,2020,4328,WW,5,20-F 2020,2026-01-25,
+Lynparza,AstraZeneca,2014,19,WW,0,20-F 2014,2026-01-25,Launch year - partial (Dec only)
+Lynparza,AstraZeneca,2015,115,WW,1,20-F 2015,2026-01-25,
+Lynparza,AstraZeneca,2016,218,WW,2,20-F 2016,2026-01-25,
+Lynparza,AstraZeneca,2017,348,WW,3,20-F 2017,2026-01-25,
+Lynparza,AstraZeneca,2018,682,WW,4,20-F 2018,2026-01-25,
+Lynparza,AstraZeneca,2019,1195,WW,5,20-F 2019,2026-01-25,
+Tecentriq,Roche,2016,78,WW,0,20-F 2016,2026-01-25,Launch year - partial (May-Dec)
+Tecentriq,Roche,2017,428,WW,1,20-F 2017,2026-01-25,
+Tecentriq,Roche,2018,772,WW,2,20-F 2018,2026-01-25,
+Tecentriq,Roche,2019,1885,WW,3,20-F 2019,2026-01-25,
+Tecentriq,Roche,2020,2832,WW,4,20-F 2020,2026-01-25,
+Tecentriq,Roche,2021,3462,WW,5,20-F 2021,2026-01-25,
+Imbruvica,AbbVie/J&J,2013,53,WW,0,10-K 2013,2026-01-25,Launch year - partial (Nov-Dec); combined revenue
+Imbruvica,AbbVie/J&J,2014,548,WW,1,10-K 2014,2026-01-25,Combined AbbVie + J&J
+Imbruvica,AbbVie/J&J,2015,1620,WW,2,10-K 2015,2026-01-25,Combined AbbVie + J&J
+Imbruvica,AbbVie/J&J,2016,2487,WW,3,10-K 2016,2026-01-25,Combined AbbVie + J&J
+Imbruvica,AbbVie/J&J,2017,3266,WW,4,10-K 2017,2026-01-25,Combined AbbVie + J&J
+Imbruvica,AbbVie/J&J,2018,4562,WW,5,10-K 2018,2026-01-25,Combined AbbVie + J&J
+Darzalex,J&J,2015,37,WW,0,10-K 2015,2026-01-25,Launch year - partial (Nov-Dec)
+Darzalex,J&J,2016,572,WW,1,10-K 2016,2026-01-25,
+Darzalex,J&J,2017,1249,WW,2,10-K 2017,2026-01-25,
+Darzalex,J&J,2018,2026,WW,3,10-K 2018,2026-01-25,
+Darzalex,J&J,2019,2998,WW,4,10-K 2019,2026-01-25,
+Darzalex,J&J,2020,4190,WW,5,10-K 2020,2026-01-25,
+Venclexta,AbbVie,2016,37,WW,0,10-K 2016,2026-01-25,Launch year - partial (Apr-Dec)
+Venclexta,AbbVie,2017,157,WW,1,10-K 2017,2026-01-25,
+Venclexta,AbbVie,2018,315,WW,2,10-K 2018,2026-01-25,
+Venclexta,AbbVie,2019,792,WW,3,10-K 2019,2026-01-25,
+Venclexta,AbbVie,2020,1376,WW,4,10-K 2020,2026-01-25,
+Venclexta,AbbVie,2021,1831,WW,5,10-K 2021,2026-01-25,
+Calquence,AstraZeneca,2017,12,WW,0,20-F 2017,2026-01-25,Launch year - partial (Oct-Dec)
+Calquence,AstraZeneca,2018,113,WW,1,20-F 2018,2026-01-25,
+Calquence,AstraZeneca,2019,372,WW,2,20-F 2019,2026-01-25,
+Calquence,AstraZeneca,2020,828,WW,3,20-F 2020,2026-01-25,
+Calquence,AstraZeneca,2021,1462,WW,4,20-F 2021,2026-01-25,
+Calquence,AstraZeneca,2022,2052,WW,5,20-F 2022,2026-01-25,

@@ -1,0 +1,41 @@
+# R artifacts
+.Rhistory
+.Rdata
+.RData
+.Ruserdata
+.Rproj.user/
+
+# renv (if used later)
+renv/library/
+renv/staging/
+renv/python/
+renv/local/
+
+# Never commit .Rprofile (deployment poison)
+.Rprofile
+
+# Deployment artifacts
+rsconnect/
+
+# Data files (track structure via .gitkeep, not content)
+# Uncomment these once you have real data:
+# data/raw/*.csv
+# data/processed/*.rds
+# app/data/processed/*.rds
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*~
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+
+# documentation
+docs/

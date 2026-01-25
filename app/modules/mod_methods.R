@@ -1,0 +1,519 @@
+# mod_methods.R
+# Methods & Data Module - Methodology Documentation
+#
+# Purpose: Transparent documentation of methodology, data sources, and limitations
+# This module is critical for AD-level positioning (shows professional judgment)
+
+# ============================================================================
+# MODULE UI
+# ============================================================================
+
+mod_methods_ui <- function(id) {
+  ns <- NS(id)
+  
+  tagList(
+    # Header
+    div(
+      style = "margin-bottom: 1.5em;",
+      h2(
+        style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
+        icon("book"),
+        "Methods & Data"
+      ),
+      p(
+        style = sprintf("color: %s;", colors$text_secondary),
+        "Methodology, data sources, assumptions, and limitations"
+      )
+    ),
+    
+    # ========================================================================
+    # FRAMEWORK OVERVIEW
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      
+      h3(
+        style = sprintf("color: %s;", colors$primary_dark),
+        icon("sitemap"),
+        "Framework Overview"
+      ),
+      
+      p(
+        style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
+        app_info$positioning
+      ),
+      
+      # Framework diagram
+      div(
+        style = sprintf(
+          "margin: 1.5em 0; padding: 2em; background: %s; border-radius: 4px; text-align: center;",
+          colors$background
+        ),
+        
+        div(
+          style = "display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1em;",
+          
+          # Step 1
+          div(
+            style = sprintf(
+              "padding: 1em 1.5em; background: %s; color: white; border-radius: 4px;",
+              colors$primary
+            ),
+            icon("filter"),
+            br(),
+            "Analog Selection"
+          ),
+          
+          div(style = sprintf("color: %s; font-size: 1.5em;", colors$text_muted), "→"),
+          
+          # Step 2
+          div(
+            style = sprintf(
+              "padding: 1em 1.5em; background: %s; color: white; border-radius: 4px;",
+              colors$primary
+            ),
+            icon("chart line"),
+            br(),
+            "Curve Extraction"
+          ),
+          
+          div(style = sprintf("color: %s; font-size: 1.5em;", colors$text_muted), "→"),
+          
+          # Step 3
+          div(
+            style = sprintf(
+              "padding: 1em 1.5em; background: %s; color: white; border-radius: 4px;",
+              colors$primary
+            ),
+            icon("calculator"),
+            br(),
+            "Percentile Bands"
+          ),
+          
+          div(style = sprintf("color: %s; font-size: 1.5em;", colors$text_muted), "→"),
+          
+          # Step 4
+          div(
+            style = sprintf(
+              "padding: 1em 1.5em; background: %s; color: white; border-radius: 4px;",
+              colors$success
+            ),
+            icon("clipboard check"),
+            br(),
+            "Decision Support"
+          )
+        )
+      )
+    ),
+    
+    # ========================================================================
+    # DATA SOURCES
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = "margin-top: 1.5em;",
+      
+      h3(
+        style = sprintf("color: %s;", colors$primary_dark),
+        icon("database"),
+        "Data Sources"
+      ),
+      
+      div(
+        class = "ui three column stackable grid",
+        style = "margin-top: 1em;",
+        
+        # Source 1: FDA
+        div(
+          class = "column",
+          div(
+            class = "ui segment",
+            style = sprintf("border-top: 3px solid %s;", colors$primary),
+            h4(
+              style = sprintf("color: %s;", colors$primary_dark),
+              "FDA Approvals"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
+              "Drug approval dates and indication information from FDA's ",
+              tags$a(href = "https://www.fda.gov/drugs", target = "_blank", "drug database"),
+              "."
+            ),
+            tags$ul(
+              style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
+              tags$li("Approval dates (T=0 for launch)"),
+              tags$li("Indication scope"),
+              tags$li("Accelerated approval status")
+            )
+          )
+        ),
+        
+        # Source 2: SEC Filings
+        div(
+          class = "column",
+          div(
+            class = "ui segment",
+            style = sprintf("border-top: 3px solid %s;", colors$secondary),
+            h4(
+              style = sprintf("color: %s;", colors$primary_dark),
+              "SEC EDGAR Filings"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
+              "Product-level revenue from 10-K and 10-Q filings via ",
+              tags$a(href = "https://www.sec.gov/edgar", target = "_blank", "SEC EDGAR"),
+              "."
+            ),
+            tags$ul(
+              style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
+              tags$li("Quarterly/annual revenue"),
+              tags$li("Geographic breakdown (when available)"),
+              tags$li("Product-specific disclosures")
+            )
+          )
+        ),
+        
+        # Source 3: Literature
+        div(
+          class = "column",
+          div(
+            class = "ui segment",
+            style = sprintf("border-top: 3px solid %s;", colors$warning),
+            h4(
+              style = sprintf("color: %s;", colors$primary_dark),
+              "Published Literature"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
+              "Launch curve patterns and uptake dynamics from peer-reviewed sources."
+            ),
+            tags$ul(
+              style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
+              tags$li("Oncology launch benchmarks"),
+              tags$li("Market access timelines"),
+              tags$li("Competitive dynamics")
+            )
+          )
+        )
+      )
+    ),
+    
+    # ========================================================================
+    # ANALOG SELECTION METHODOLOGY
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = "margin-top: 1.5em;",
+      
+      h3(
+        style = sprintf("color: %s;", colors$primary_dark),
+        icon("filter"),
+        "Analog Selection Methodology"
+      ),
+      
+      p(
+        style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
+        "Analog selection follows a governance-first approach: inclusion criteria are ",
+        "specified ", strong("before"), " examining outcome data. This separation ensures ",
+        "defensible analysis and prevents post-hoc rationalization."
+      ),
+      
+      h4(
+        style = sprintf("color: %s; margin-top: 1.5em;", colors$text_primary),
+        "Inclusion Criteria"
+      ),
+      
+      reactableOutput(ns("inclusion_criteria_table")),
+      
+      h4(
+        style = sprintf("color: %s; margin-top: 1.5em;", colors$text_primary),
+        "Exclusion Criteria"
+      ),
+      
+      tags$ul(
+        style = sprintf("color: %s;", colors$text_secondary),
+        tags$li("Products with loss of exclusivity during observation period"),
+        tags$li("Products with major safety withdrawals"),
+        tags$li("Products with incomplete revenue disclosure"),
+        tags$li("Biosimilars and generics")
+      )
+    ),
+    
+    # ========================================================================
+    # KEY ASSUMPTIONS
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = "margin-top: 1.5em;",
+      
+      h3(
+        style = sprintf("color: %s;", colors$primary_dark),
+        icon("exclamation triangle"),
+        "Key Assumptions"
+      ),
+      
+      p(
+        style = sprintf("color: %s; line-height: 1.7; margin-bottom: 1em;", colors$text_secondary),
+        "This framework relies on several simplifying assumptions. Users should ",
+        "understand these limitations when interpreting results."
+      ),
+      
+      div(
+        class = "ui three column stackable grid",
+        
+        # Assumption 1
+        div(
+          class = "column",
+          div(
+            style = sprintf(
+              "padding: 1em; background: %s; border-radius: 4px; height: 100%%;",
+              colors$background
+            ),
+            h4(
+              style = sprintf("color: %s; margin-bottom: 0.5em;", colors$warning),
+              "Analog Relevance"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
+              "Past analog performance is informative for future launches. ",
+              "Market dynamics, pricing environment, and competitive landscape ",
+              "may differ materially."
+            )
+          )
+        ),
+        
+        # Assumption 2
+        div(
+          class = "column",
+          div(
+            style = sprintf(
+              "padding: 1em; background: %s; border-radius: 4px; height: 100%%;",
+              colors$background
+            ),
+            h4(
+              style = sprintf("color: %s; margin-bottom: 0.5em;", colors$warning),
+              "Revenue Attribution"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
+              "Product-level revenue reflects launch performance. ",
+              "Some products have revenue combined with other assets or ",
+              "include ex-US sales not separately disclosed."
+            )
+          )
+        ),
+        
+        # Assumption 3
+        div(
+          class = "column",
+          div(
+            style = sprintf(
+              "padding: 1em; background: %s; border-radius: 4px; height: 100%%;",
+              colors$background
+            ),
+            h4(
+              style = sprintf("color: %s; margin-bottom: 0.5em;", colors$warning),
+              "Scenario Independence"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
+              "Delay and market access scenarios are modeled as independent shifts. ",
+              "In reality, these factors may interact and compound."
+            )
+          )
+        )
+      )
+    ),
+    
+    # ========================================================================
+    # WHAT THIS DOES NOT DO
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = sprintf(
+        "margin-top: 1.5em; border-left: 4px solid %s;",
+        colors$danger
+      ),
+      
+      h3(
+        style = sprintf("color: %s;", colors$danger),
+        icon("times circle"),
+        "What This Framework Does NOT Do"
+      ),
+      
+      p(
+        style = sprintf("color: %s; line-height: 1.7; margin-bottom: 1em;", colors$text_secondary),
+        "Setting clear boundaries is essential for appropriate use. This framework:"
+      ),
+      
+      tags$ul(
+        style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
+        lapply(app_info$limitations, function(limitation) {
+          tags$li(
+            icon("times", style = sprintf("color: %s;", colors$danger)),
+            " ",
+            limitation
+          )
+        })
+      ),
+      
+      div(
+        style = sprintf(
+          "margin-top: 1em; padding: 1em; background: %s; border-radius: 4px;",
+          colors$background
+        ),
+        p(
+          style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_muted),
+          icon("info circle"),
+          " ",
+          strong("Appropriate Use: "),
+          "This framework is designed to structure conversations about launch ",
+          "assumptions and quantify how those assumptions translate into revenue ranges. ",
+          "It supports decision-making; it does not automate it."
+        )
+      )
+    ),
+    
+    # ========================================================================
+    # TECHNICAL DETAILS
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = "margin-top: 1.5em;",
+      
+      h3(
+        style = sprintf("color: %s;", colors$primary_dark),
+        icon("code"),
+        "Technical Implementation"
+      ),
+      
+      div(
+        class = "ui two column stackable grid",
+        style = "margin-top: 1em;",
+        
+        div(
+          class = "column",
+          h4(style = sprintf("color: %s;", colors$text_primary), "Technology Stack"),
+          tags$ul(
+            style = sprintf("color: %s;", colors$text_secondary),
+            tags$li("R / Shiny for application framework"),
+            tags$li("shiny.semantic for UI components"),
+            tags$li("ggiraph for interactive visualizations"),
+            tags$li("reactable for data tables"),
+            tags$li("Deployed on shinyapps.io")
+          )
+        ),
+        
+        div(
+          class = "column",
+          h4(style = sprintf("color: %s;", colors$text_primary), "Data Processing"),
+          tags$ul(
+            style = sprintf("color: %s;", colors$text_secondary),
+            tags$li("Quarterly revenue normalized to launch quarter (T=0)"),
+            tags$li("Percentiles calculated across analog set"),
+            tags$li("Revenue scaled to millions USD"),
+            tags$li("All data from public sources")
+          )
+        )
+      )
+    ),
+    
+    # ========================================================================
+    # REFERENCES
+    # ========================================================================
+    
+    div(
+      class = "ui segment",
+      style = "margin-top: 1.5em;",
+      
+      h3(
+        style = sprintf("color: %s;", colors$primary_dark),
+        icon("bookmark"),
+        "References"
+      ),
+      
+      p(
+        style = sprintf("color: %s; font-style: italic;", colors$text_muted),
+        "Selected references informing methodology and assumptions:"
+      ),
+      
+      tags$ol(
+        style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
+        tags$li("FDA Drug Approval Database. U.S. Food and Drug Administration."),
+        tags$li("SEC EDGAR Company Filings. U.S. Securities and Exchange Commission."),
+        tags$li("Oncology launch curve benchmarking literature (specific citations to be added).")
+      )
+    )
+  )
+}
+
+# ============================================================================
+# MODULE SERVER
+# ============================================================================
+
+mod_methods_server <- function(id, app_data) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+    
+    # ========================================================================
+    # OUTPUT: Inclusion Criteria Table
+    # ========================================================================
+    
+    output$inclusion_criteria_table <- renderReactable({
+      
+      criteria_data <- data.frame(
+        Criterion = c(
+          "Therapeutic Area",
+          "Line of Therapy",
+          "Launch Window",
+          "Revenue Threshold",
+          "Data Availability"
+        ),
+        Specification = c(
+          "Oncology (solid tumors and hematology)",
+          "Configurable: All lines, 1L only, or 2L+",
+          "FDA approval 2010-2024",
+          "Configurable minimum peak revenue",
+          "Product-level revenue disclosed in SEC filings"
+        ),
+        Rationale = c(
+          "Focus on therapeutic area with established launch patterns",
+          "Line of therapy significantly affects uptake dynamics",
+          "Recent launches more relevant; sufficient follow-up required",
+          "Exclude niche products with limited comparability",
+          "Ensures consistent measurement across analogs"
+        ),
+        stringsAsFactors = FALSE
+      )
+      
+      reactable(
+        criteria_data,
+        striped = TRUE,
+        highlight = TRUE,
+        columns = list(
+          Criterion = colDef(
+            width = 150,
+            style = list(fontWeight = "bold")
+          ),
+          Specification = colDef(width = 250),
+          Rationale = colDef(minWidth = 200)
+        ),
+        theme = reactableTheme(
+          headerStyle = list(
+            background = colors$background,
+            color = colors$text_primary,
+            fontWeight = "bold"
+          ),
+          stripedColor = colors$background
+        )
+      )
+    })
+    
+  })
+}

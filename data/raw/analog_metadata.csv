@@ -1,0 +1,11 @@
+product_name,company,fda_approval_year,tumor_class,indication_primary,moa_class,sec_filing_type,sec_ticker,notes
+Keytruda,Merck,2014,Solid,Melanoma (initial),PD-1 inhibitor,10-K,MRK,Expanded to multiple indications
+Opdivo,BMS,2014,Solid,Melanoma (initial),PD-1 inhibitor,10-K,BMY,Expanded to multiple indications
+Ibrance,Pfizer,2015,Solid,Breast cancer (HR+/HER2-),CDK4/6 inhibitor,10-K,PFE,
+Tagrisso,AstraZeneca,2015,Solid,NSCLC (EGFR T790M),EGFR TKI,20-F,AZN,
+Lynparza,AstraZeneca,2014,Solid,Ovarian cancer (BRCA),PARP inhibitor,20-F,AZN,Accelerated approval initially
+Tecentriq,Roche,2016,Solid,Bladder cancer (initial),PD-L1 inhibitor,20-F,RHHBY,Swiss company - 20-F filer
+Imbruvica,AbbVie/J&J,2013,Heme,CLL/MCL,BTK inhibitor,10-K,ABBV,Revenue split with J&J - use AbbVie filing
+Darzalex,J&J,2015,Heme,Multiple myeloma,CD38 antibody,10-K,JNJ,
+Venclexta,AbbVie,2016,Heme,CLL,BCL-2 inhibitor,10-K,ABBV,Collaboration with Roche
+Calquence,AstraZeneca,2017,Heme,MCL (initial),BTK inhibitor,20-F,AZN,

@@ -1,0 +1,3 @@
+Type: shiny
+Title: Oncology Launch Curve Forecaster
+Imports: shiny, shiny.semantic, bslib, dplyr, tidyr, purrr, stringr, scales, ggplot2, ggiraph, reactable, reactablefmtr

@@ -1,0 +1,42 @@
+# .rscignore - Files to exclude from shinyapps.io deployment
+# This file goes in app/ directory
+
+# CRITICAL: Never deploy .Rprofile (causes silent failures)
+.Rprofile
+
+# renv artifacts (wrong architecture for server)
+renv/
+renv.lock
+
+# Development artifacts
+.Rproj.user/
+rsconnect/
+*.Rproj
+
+# Documentation (not needed at runtime)
+*.md
+README*
+LICENSE
+
+# Git
+.git/
+.gitignore
+.gitkeep
+
+# Screenshots and docs
+screenshots/
+docs/
+
+# Development scripts (NEVER deploy these)
+scripts/
+
+# Raw data (only processed data needed)
+data/raw/
+
+# Test files
+tests/
+testthat/
+
+# Editor files
+.vscode/
+.idea/
