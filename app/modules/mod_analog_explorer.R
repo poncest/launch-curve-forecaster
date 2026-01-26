@@ -175,7 +175,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     
     observe({
       # Depend on startup trigger
-      shared$startup_complete
+      shared$startup_trigger
       
       if (!app_data$is_placeholder && nrow(app_data$analogs) > 0) {
         choices <- setNames(
@@ -204,7 +204,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     
     primary_data <- reactive({
       # Depend on startup trigger
-      shared$startup_complete
+      shared$startup_trigger
       
       # Use softer check - allow NULL but return NULL
       selected <- input$selected_analog
@@ -224,7 +224,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     
     primary_curves <- reactive({
       # Depend on startup trigger
-      shared$startup_complete
+      shared$startup_trigger
       
       selected <- input$selected_analog
       if (is.null(selected) || selected == "" || selected == "Load data first...") {
@@ -243,7 +243,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     compare_data <- reactive({
-      shared$startup_complete
+      shared$startup_trigger
       if (is.null(input$compare_analog) || input$compare_analog == "") return(NULL)
       if (app_data$is_placeholder) return(NULL)
       
@@ -256,7 +256,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     compare_curves <- reactive({
-      shared$startup_complete
+      shared$startup_trigger
       if (is.null(input$compare_analog) || input$compare_analog == "") return(NULL)
       if (app_data$is_placeholder) return(NULL)
       
@@ -296,6 +296,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$primary_analog_name <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      
       if (is.null(primary_data()) || nrow(primary_data()) == 0) {
         "Select an analog"
       } else {
@@ -304,6 +308,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     })
     
     output$primary_peak <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      
       metrics <- calc_metrics(primary_curves())
       if (is.na(metrics$peak)) return("--")
       
@@ -315,12 +323,20 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     })
     
     output$primary_ttp <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      
       metrics <- calc_metrics(primary_curves())
       if (is.na(metrics$quarters_to_peak)) return("--")
       as.character(metrics$quarters_to_peak)
     })
     
     output$primary_y1 <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      
       metrics <- calc_metrics(primary_curves())
       if (is.na(metrics$year1)) return("--")
       
@@ -332,6 +348,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     })
     
     output$primary_y3 <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      
       metrics <- calc_metrics(primary_curves())
       if (is.na(metrics$year3)) return("--")
       
@@ -343,18 +363,30 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     })
     
     output$primary_characteristics <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      
       if (is.null(primary_data()) || nrow(primary_data()) == 0) {
         return(p("Select an analog to view characteristics"))
       }
       
       product <- primary_data()
       
+      # Format approval date (handle character or Date)
+      approval_fmt <- tryCatch({
+        date_val <- as.Date(product$approval_date)
+        format(date_val, "%B %Y")
+      }, error = function(e) {
+        as.character(product$approval_date)
+      })
+      
       tags$ul(
         style = sprintf("color: %s;", colors$text_secondary),
         tags$li(paste0("Company: ", product$company)),
         tags$li(paste0("Indication: ", product$indication)),
         tags$li(paste0("Tumor Class: ", product$tumor_class)),
-        tags$li(paste0("Approval: ", format(product$approval_date, "%B %Y")))
+        tags$li(paste0("Approval: ", approval_fmt))
       )
     })
     
@@ -363,6 +395,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$compare_panel <- renderUI({
+      # Force dependencies
+      shared$startup_trigger
+      input$compare_analog
+      
       if (is.null(input$compare_analog) || input$compare_analog == "") {
         # Empty state
         div(
@@ -434,12 +470,20 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           
           h4(style = sprintf("color: %s;", colors$text_primary), "Characteristics"),
           if (!is.null(comp_product) && nrow(comp_product) > 0) {
+            # Format approval date safely
+            approval_fmt <- tryCatch({
+              date_val <- as.Date(comp_product$approval_date)
+              format(date_val, "%B %Y")
+            }, error = function(e) {
+              as.character(comp_product$approval_date)
+            })
+            
             tags$ul(
               style = sprintf("color: %s;", colors$text_secondary),
               tags$li(paste0("Company: ", comp_product$company)),
               tags$li(paste0("Indication: ", comp_product$indication)),
               tags$li(paste0("Tumor Class: ", comp_product$tumor_class)),
-              tags$li(paste0("Approval: ", format(comp_product$approval_date, "%B %Y")))
+              tags$li(paste0("Approval: ", approval_fmt))
             )
           } else {
             tags$ul(
@@ -456,8 +500,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$comparison_chart <- renderGirafe({
-      # Depend on startup trigger
-      shared$startup_complete
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      input$compare_analog
       
       if (app_data$is_placeholder) {
         p <- ggplot() +
@@ -596,8 +642,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$context_table <- renderReactable({
-      # Depend on startup trigger
-      shared$startup_complete
+      # Force dependencies
+      shared$startup_trigger
+      input$selected_analog
+      input$compare_analog
       
       primary <- primary_data()
       compare <- compare_data()
@@ -619,11 +667,18 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           check.names = FALSE
         )
       } else {
+        # Safe date formatting
+        fmt_date <- function(d) {
+          tryCatch({
+            format(as.Date(d), "%B %Y")
+          }, error = function(e) as.character(d))
+        }
+        
         primary_col <- c(
           primary$company,
           primary$indication,
           primary$tumor_class,
-          format(primary$approval_date, "%B %Y"),
+          fmt_date(primary$approval_date),
           fmt_rev(primary_m$peak),
           fmt_rev(primary_m$year1),
           paste0(primary_m$quarters_to_peak, " quarters")
@@ -634,7 +689,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
             compare$company,
             compare$indication,
             compare$tumor_class,
-            format(compare$approval_date, "%B %Y"),
+            fmt_date(compare$approval_date),
             fmt_rev(compare_m$peak),
             fmt_rev(compare_m$year1),
             paste0(compare_m$quarters_to_peak, " quarters")

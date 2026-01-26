@@ -32,14 +32,9 @@ server <- function(input, output, session) {
     # Calculated outputs (from scenario builder)
     scenario_outputs = NULL,
     
-    # Startup trigger (set by JavaScript after page load)
-    startup_complete = FALSE
+    # Startup trigger - initialized to 1 so reactive dependencies are satisfied
+    startup_trigger = 1
   )
-  
-  # React to JavaScript startup trigger
-  observeEvent(input$startup_trigger, {
-    shared$startup_complete <- TRUE
-  }, ignoreNULL = TRUE, once = TRUE)
   
   # ==========================================================================
   # MODULE SERVERS

@@ -295,7 +295,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     
     filtered_analogs <- reactive({
       # Depend on startup trigger to force initial evaluation
-      shared$startup_complete
+      shared$startup_trigger
       
       if (app_data$is_placeholder) {
         return(data.frame(
@@ -436,6 +436,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$analog_count_badge <- renderUI({
+      # Force dependency
+      shared$startup_trigger
+      
       n <- nrow(filtered_analogs())
       
       badge_color <- if (n == 0) {
@@ -460,6 +463,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$selection_status <- renderUI({
+      # Force dependency
+      shared$startup_trigger
+      
       current_filtered <- filtered_analogs()$product_name
       applied <- shared$selected_analogs
       
@@ -498,6 +504,12 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$analog_preview_table <- renderReactable({
+      # Force dependency on trigger and inputs directly
+      shared$startup_trigger
+      input$solid_tumors
+      input$hematology
+      input$min_peak
+      
       analogs <- filtered_analogs()
       
       # Show message if no data
