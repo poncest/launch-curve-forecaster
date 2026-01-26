@@ -174,6 +174,9 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     observe({
+      # Depend on startup trigger
+      shared$startup_complete
+      
       if (!app_data$is_placeholder && nrow(app_data$analogs) > 0) {
         choices <- setNames(
           app_data$analogs$product_name,
@@ -183,7 +186,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
         updateSelectInput(
           session,
           "selected_analog",
-          choices = choices
+          choices = choices,
+          selected = choices[1]  # Explicitly select first
         )
         
         updateSelectInput(
@@ -199,13 +203,93 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     primary_data <- reactive({
-      req(input$selected_analog)
+      # Depend on startup trigger
+      shared$startup_complete
+      
+      # Use softer check - allow NULL but return NULL
+      selected <- input$selected_analog
+      if (is.null(selected) || selected == "" || selected == "Load data first...") {
+        return(NULL)
+      }
       
       if (app_data$is_placeholder) return(NULL)
       
       app_data$analogs |>
-        filter(product_name == input$selected_analog)
+        filter(product_name == selected)
     })
+    
+    # ========================================================================
+    # REACTIVE: Primary Analog Curves
+    # ========================================================================
+    
+    primary_curves <- reactive({
+      # Depend on startup trigger
+      shared$startup_complete
+      
+      selected <- input$selected_analog
+      if (is.null(selected) || selected == "" || selected == "Load data first...") {
+        return(NULL)
+      }
+      
+      if (app_data$is_placeholder) return(NULL)
+      
+      app_data$curves |>
+        filter(product_name == selected) |>
+        arrange(years_since_launch)
+    })
+    
+    # ========================================================================
+    # REACTIVE: Comparison Analog Data
+    # ========================================================================
+    
+    compare_data <- reactive({
+      shared$startup_complete
+      if (is.null(input$compare_analog) || input$compare_analog == "") return(NULL)
+      if (app_data$is_placeholder) return(NULL)
+      
+      app_data$analogs |>
+        filter(product_name == input$compare_analog)
+    })
+    
+    # ========================================================================
+    # REACTIVE: Comparison Analog Curves
+    # ========================================================================
+    
+    compare_curves <- reactive({
+      shared$startup_complete
+      if (is.null(input$compare_analog) || input$compare_analog == "") return(NULL)
+      if (app_data$is_placeholder) return(NULL)
+      
+      app_data$curves |>
+        filter(product_name == input$compare_analog) |>
+        arrange(years_since_launch)
+    })
+    
+    # ========================================================================
+    # HELPER: Calculate metrics from curves
+    # ========================================================================
+    
+    calc_metrics <- function(curves_df) {
+      if (is.null(curves_df) || nrow(curves_df) == 0) {
+        return(list(
+          peak = NA,
+          quarters_to_peak = NA,
+          year1 = NA,
+          year3 = NA
+        ))
+      }
+      
+      peak_row <- curves_df[which.max(curves_df$revenue_millions), ]
+      year1_row <- curves_df[curves_df$years_since_launch == 1, ]
+      year3_row <- curves_df[curves_df$years_since_launch == 3, ]
+      
+      list(
+        peak = max(curves_df$revenue_millions, na.rm = TRUE),
+        quarters_to_peak = peak_row$years_since_launch * 4,
+        year1 = if (nrow(year1_row) > 0) year1_row$revenue_millions else NA,
+        year3 = if (nrow(year3_row) > 0) year3_row$revenue_millions else NA
+      )
+    }
     
     # ========================================================================
     # OUTPUTS: Primary Analog Info
@@ -220,20 +304,42 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     })
     
     output$primary_peak <- renderUI({
-      # Placeholder - will calculate from curves data
-      "$2.1B"
+      metrics <- calc_metrics(primary_curves())
+      if (is.na(metrics$peak)) return("--")
+      
+      if (metrics$peak >= 1000) {
+        paste0("$", round(metrics$peak / 1000, 1), "B")
+      } else {
+        paste0("$", round(metrics$peak), "M")
+      }
     })
     
     output$primary_ttp <- renderUI({
-      "12"
+      metrics <- calc_metrics(primary_curves())
+      if (is.na(metrics$quarters_to_peak)) return("--")
+      as.character(metrics$quarters_to_peak)
     })
     
     output$primary_y1 <- renderUI({
-      "$450M"
+      metrics <- calc_metrics(primary_curves())
+      if (is.na(metrics$year1)) return("--")
+      
+      if (metrics$year1 >= 1000) {
+        paste0("$", round(metrics$year1 / 1000, 1), "B")
+      } else {
+        paste0("$", round(metrics$year1), "M")
+      }
     })
     
     output$primary_y3 <- renderUI({
-      "$1.8B"
+      metrics <- calc_metrics(primary_curves())
+      if (is.na(metrics$year3)) return("--")
+      
+      if (metrics$year3 >= 1000) {
+        paste0("$", round(metrics$year3 / 1000, 1), "B")
+      } else {
+        paste0("$", round(metrics$year3), "M")
+      }
     })
     
     output$primary_characteristics <- renderUI({
@@ -247,7 +353,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
         style = sprintf("color: %s;", colors$text_secondary),
         tags$li(paste0("Company: ", product$company)),
         tags$li(paste0("Indication: ", product$indication)),
-        tags$li(paste0("Line of Therapy: ", product$line_of_therapy)),
+        tags$li(paste0("Tumor Class: ", product$tumor_class)),
         tags$li(paste0("Approval: ", format(product$approval_date, "%B %Y")))
       )
     })
@@ -273,6 +379,22 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           )
         )
       } else {
+        # Get comparison data
+        comp_product <- compare_data()
+        comp_metrics <- calc_metrics(compare_curves())
+        
+        # Format metrics
+        format_revenue <- function(val) {
+          if (is.na(val)) return("--")
+          if (val >= 1000) paste0("$", round(val / 1000, 1), "B")
+          else paste0("$", round(val), "M")
+        }
+        
+        format_quarters <- function(val) {
+          if (is.na(val)) return("--")
+          as.character(val)
+        }
+        
         # Comparison analog details
         div(
           class = "ui segment",
@@ -283,41 +405,48 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
             input$compare_analog
           ),
           
-          # Similar structure to primary
+          # Metrics from real data
           div(
             class = "ui four statistics mini",
             style = "margin: 1.5em 0;",
             
             div(
               class = "statistic",
-              div(class = "value", "$1.5B"),
+              div(class = "value", format_revenue(comp_metrics$peak)),
               div(class = "label", "Peak Revenue")
             ),
             div(
               class = "statistic",
-              div(class = "value", "16"),
+              div(class = "value", format_quarters(comp_metrics$quarters_to_peak)),
               div(class = "label", "Quarters to Peak")
             ),
             div(
               class = "statistic",
-              div(class = "value", "$280M"),
+              div(class = "value", format_revenue(comp_metrics$year1)),
               div(class = "label", "Year 1")
             ),
             div(
               class = "statistic",
-              div(class = "value", "$1.2B"),
+              div(class = "value", format_revenue(comp_metrics$year3)),
               div(class = "label", "Year 3")
             )
           ),
           
           h4(style = sprintf("color: %s;", colors$text_primary), "Characteristics"),
-          tags$ul(
-            style = sprintf("color: %s;", colors$text_secondary),
-            tags$li("Company: Example Pharma"),
-            tags$li("Indication: Solid tumor"),
-            tags$li("Line of Therapy: 2L+"),
-            tags$li("Approval: January 2019")
-          )
+          if (!is.null(comp_product) && nrow(comp_product) > 0) {
+            tags$ul(
+              style = sprintf("color: %s;", colors$text_secondary),
+              tags$li(paste0("Company: ", comp_product$company)),
+              tags$li(paste0("Indication: ", comp_product$indication)),
+              tags$li(paste0("Tumor Class: ", comp_product$tumor_class)),
+              tags$li(paste0("Approval: ", format(comp_product$approval_date, "%B %Y")))
+            )
+          } else {
+            tags$ul(
+              style = sprintf("color: %s;", colors$text_muted),
+              tags$li("Data not available")
+            )
+          }
         )
       }
     })
@@ -327,6 +456,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$comparison_chart <- renderGirafe({
+      # Depend on startup trigger
+      shared$startup_complete
       
       if (app_data$is_placeholder) {
         p <- ggplot() +
@@ -343,19 +474,121 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
         return(girafe(ggobj = p, width_svg = 10, height_svg = 4))
       }
       
-      # Placeholder chart
-      p <- ggplot() +
-        annotate(
-          "text",
-          x = 0.5, y = 0.5,
-          label = "Launch curve comparison chart\n(Implementation pending data)",
-          size = 5,
-          color = colors$text_secondary
-        ) +
-        theme_void() +
-        theme(plot.background = element_rect(fill = colors$card_bg, color = NA))
+      # Get primary curves
+      primary <- primary_curves()
       
-      girafe(ggobj = p, width_svg = 10, height_svg = 4)
+      if (is.null(primary) || nrow(primary) == 0) {
+        p <- ggplot() +
+          annotate(
+            "text",
+            x = 0.5, y = 0.5,
+            label = "Select an analog to view launch curve",
+            size = 5,
+            color = colors$text_muted
+          ) +
+          theme_void() +
+          theme(plot.background = element_rect(fill = colors$card_bg, color = NA))
+        
+        return(girafe(ggobj = p, width_svg = 10, height_svg = 4))
+      }
+      
+      # Build chart data
+      chart_data <- primary |>
+        mutate(
+          analog_type = "Primary",
+          product_label = input$selected_analog
+        )
+      
+      # Add comparison if selected
+      compare <- compare_curves()
+      if (!is.null(compare) && nrow(compare) > 0) {
+        compare_df <- compare |>
+          mutate(
+            analog_type = "Comparison",
+            product_label = input$compare_analog
+          )
+        chart_data <- bind_rows(chart_data, compare_df)
+      }
+      
+      # Define colors
+      line_colors <- c(
+        "Primary" = colors$primary,
+        "Comparison" = colors$secondary
+      )
+      
+      # Create chart
+      p <- ggplot(chart_data, aes(x = years_since_launch, y = revenue_millions, color = analog_type)) +
+        geom_line_interactive(
+          aes(
+            data_id = product_label,
+            tooltip = sprintf(
+              "%s\nYear %d: $%s",
+              product_label,
+              years_since_launch,
+              scales::comma(revenue_millions, suffix = "M")
+            )
+          ),
+          linewidth = 1.5
+        ) +
+        geom_point_interactive(
+          aes(
+            data_id = product_label,
+            tooltip = sprintf(
+              "%s\nYear %d: $%s",
+              product_label,
+              years_since_launch,
+              scales::comma(revenue_millions, suffix = "M")
+            )
+          ),
+          size = 3
+        ) +
+        scale_color_manual(
+          values = line_colors,
+          name = ""
+        ) +
+        scale_x_continuous(
+          breaks = 0:5,
+          labels = paste0("Y", 0:5),
+          expand = expansion(mult = 0.05)
+        ) +
+        scale_y_continuous(
+          labels = function(x) {
+            ifelse(x >= 1000, 
+                   paste0("$", x/1000, "B"),
+                   paste0("$", x, "M"))
+          },
+          expand = expansion(mult = 0.1)
+        ) +
+        labs(
+          x = "Years Since Launch",
+          y = "Annual Revenue"
+        ) +
+        theme_minimal(base_size = 12) +
+        theme(
+          plot.background = element_rect(fill = colors$card_bg, color = NA),
+          panel.background = element_rect(fill = colors$card_bg, color = NA),
+          panel.grid.major = element_line(color = colors$border, linewidth = 0.3),
+          panel.grid.minor = element_blank(),
+          axis.text = element_text(color = colors$text_secondary),
+          axis.title = element_text(color = colors$text_primary),
+          legend.position = "top",
+          legend.text = element_text(color = colors$text_primary)
+        )
+      
+      girafe(
+        ggobj = p,
+        width_svg = 10,
+        height_svg = 4,
+        options = list(
+          opts_hover(css = "stroke-width: 3px;"),
+          opts_tooltip(
+            css = sprintf(
+              "background-color: %s; color: %s; padding: 8px; border-radius: 4px; font-size: 12px;",
+              colors$primary_dark, "white"
+            )
+          )
+        )
+      )
     })
     
     # ========================================================================
@@ -363,29 +596,87 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$context_table <- renderReactable({
+      # Depend on startup trigger
+      shared$startup_complete
       
-      # Placeholder context data
-      context_data <- data.frame(
-        Factor = c(
-          "Competitive Landscape",
-          "Market Access",
-          "Label Breadth",
-          "Companion Diagnostic"
-        ),
-        `Primary Analog` = c(
-          "First-in-class",
-          "Rapid formulary",
-          "Multiple indications",
-          "Not required"
-        ),
-        `Comparison` = c(
-          "--",
-          "--",
-          "--",
-          "--"
-        ),
-        check.names = FALSE
-      )
+      primary <- primary_data()
+      compare <- compare_data()
+      primary_m <- calc_metrics(primary_curves())
+      compare_m <- calc_metrics(compare_curves())
+      
+      # Helper to format revenue
+      fmt_rev <- function(val) {
+        if (is.null(val) || is.na(val)) return("--")
+        if (val >= 1000) paste0("$", round(val / 1000, 1), "B")
+        else paste0("$", round(val), "M")
+      }
+      
+      # Build context data from available info
+      if (is.null(primary) || nrow(primary) == 0) {
+        context_data <- data.frame(
+          Factor = "Select an analog to view context",
+          `Primary Analog` = "--",
+          check.names = FALSE
+        )
+      } else {
+        primary_col <- c(
+          primary$company,
+          primary$indication,
+          primary$tumor_class,
+          format(primary$approval_date, "%B %Y"),
+          fmt_rev(primary_m$peak),
+          fmt_rev(primary_m$year1),
+          paste0(primary_m$quarters_to_peak, " quarters")
+        )
+        
+        if (!is.null(compare) && nrow(compare) > 0) {
+          compare_col <- c(
+            compare$company,
+            compare$indication,
+            compare$tumor_class,
+            format(compare$approval_date, "%B %Y"),
+            fmt_rev(compare_m$peak),
+            fmt_rev(compare_m$year1),
+            paste0(compare_m$quarters_to_peak, " quarters")
+          )
+          
+          context_data <- data.frame(
+            Factor = c(
+              "Company",
+              "Indication",
+              "Tumor Class",
+              "FDA Approval",
+              "Peak Revenue",
+              "Year 1 Revenue",
+              "Time to Peak"
+            ),
+            Primary = primary_col,
+            Comparison = compare_col,
+            check.names = FALSE
+          )
+          
+          # Rename columns with product names
+          names(context_data) <- c("Factor", input$selected_analog, input$compare_analog)
+          
+        } else {
+          context_data <- data.frame(
+            Factor = c(
+              "Company",
+              "Indication",
+              "Tumor Class",
+              "FDA Approval",
+              "Peak Revenue",
+              "Year 1 Revenue",
+              "Time to Peak"
+            ),
+            Primary = primary_col,
+            check.names = FALSE
+          )
+          
+          # Rename column with product name
+          names(context_data) <- c("Factor", input$selected_analog)
+        }
+      }
       
       reactable(
         context_data,
@@ -396,6 +687,13 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
             background = colors$background,
             color = colors$text_primary,
             fontWeight = "bold"
+          ),
+          stripedColor = colors$background
+        ),
+        columns = list(
+          Factor = colDef(
+            style = list(fontWeight = "bold", color = colors$text_primary),
+            minWidth = 120
           )
         )
       )
