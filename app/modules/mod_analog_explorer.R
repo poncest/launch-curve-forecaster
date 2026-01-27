@@ -176,6 +176,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     observe({
+      cat("[Analog Explorer] Dropdown observe firing\n")
+      cat("[Analog Explorer] is_placeholder =", app_data$is_placeholder, "\n")
+      cat("[Analog Explorer] nrow(analogs) =", nrow(app_data$analogs), "\n")
+      
       if (!app_data$is_placeholder && nrow(app_data$analogs) > 0) {
         
         # Create named choices
@@ -184,6 +188,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           app_data$analogs$product_name, 
           " (", app_data$analogs$company, ")"
         )
+        
+        cat("[Analog Explorer] Updating dropdowns with", length(choices), "choices\n")
         
         updateSelectInput(
           session, "primary_analog",
@@ -203,8 +209,15 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     observeEvent(input$view_btn, {
-      req(input$primary_analog)
-      req(input$primary_analog != "")
+      cat("[Analog Explorer] View button clicked!\n")
+      cat("[Analog Explorer] primary_analog =", input$primary_analog, "\n")
+      
+      # Check if primary_analog is valid
+      if (is.null(input$primary_analog) || input$primary_analog == "" || input$primary_analog == "Loading...") {
+        cat("[Analog Explorer] Invalid primary_analog, returning\n")
+        showNotification("Please select an analog first", type = "warning")
+        return()
+      }
       
       rv$primary_name <- input$primary_analog
       rv$compare_name <- if (!is.null(input$compare_analog) && input$compare_analog != "") {
@@ -213,6 +226,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
         NULL
       }
       rv$loaded <- TRUE
+      
+      cat("[Analog Explorer] rv$loaded set to TRUE, primary =", rv$primary_name, "\n")
       
       showNotification(
         paste("Loading data for", rv$primary_name),
@@ -264,9 +279,12 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$results_panel <- renderUI({
+      cat("[Analog Explorer] results_panel renderUI firing\n")
+      cat("[Analog Explorer] rv$loaded =", rv$loaded, "\n")
       
       # Don't show anything until button clicked
       if (!rv$loaded) {
+        cat("[Analog Explorer] Returning placeholder (not loaded)\n")
         return(
           div(
             class = "ui segment placeholder",
@@ -280,6 +298,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           )
         )
       }
+      
+      cat("[Analog Explorer] Building results for:", rv$primary_name, "\n")
       
       # Get data for selected analogs
       primary_data <- get_analog_data(rv$primary_name)
@@ -408,6 +428,23 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           style = "margin-top: 1.5em;",
           
           h3(style = sprintf("color: %s;", colors$primary_dark), "Launch Curve Comparison"),
+          
+          # P1 Guardrail: Prevent misinterpretation
+          div(
+            style = sprintf(
+              "margin-bottom: 1em; padding: 0.75em 1em; background: %s; border-left: 3px solid %s; border-radius: 4px;",
+              colors$background, colors$primary_light
+            ),
+            p(
+              style = sprintf("color: %s; margin: 0; font-size: 0.9em;", colors$text_secondary),
+              icon("info circle"),
+              " ",
+              strong("Interpretation note:"),
+              " No analog is treated as 'most representative.' The value of this framework lies in the ",
+              strong("distribution across analogs"),
+              ", not any single curve."
+            )
+          ),
           
           girafeOutput(ns("comparison_chart"), height = "400px")
         ),
@@ -573,6 +610,15 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
         )
       )
     })
+    
+    # ========================================================================
+    # FORCE OUTPUT TO RENDER (fix for CSS-based tabs)
+    # ========================================================================
+    
+    # This tells Shiny to render outputs even when the tab appears "hidden"
+    outputOptions(output, "results_panel", suspendWhenHidden = FALSE)
+    outputOptions(output, "comparison_chart", suspendWhenHidden = FALSE)
+    outputOptions(output, "context_table", suspendWhenHidden = FALSE)
     
   })
 }

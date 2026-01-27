@@ -83,12 +83,10 @@ server <- function(input, output, session) {
     })
   }, once = TRUE)
   
-  # Tab change handler - trigger updates when tabs become visible
+  # Tab change handler - only log for debugging, don't trigger reactives
+  # The renderReactable has explicit dependencies on inputs, so it should update automatically
   observeEvent(input$active_tab, {
-    cat("[Server] Active tab changed to:", input$active_tab, "\n")
-    
-    # Increment trigger to force reactive updates
-    shared$startup_trigger <- isolate(shared$startup_trigger) + 1
+    # No action needed - outputs depend on their inputs directly
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
   # ==========================================================================

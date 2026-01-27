@@ -176,7 +176,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Revenue at Risk"
+            "Revenue at Risk (Years 1–3)"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -234,7 +234,24 @@ mod_executive_brief_ui <- function(id) {
       ),
       
       # Interactive chart - full width
-      girafeOutput(ns("launch_curve_chart"), height = "420px")
+      girafeOutput(ns("launch_curve_chart"), height = "420px"),
+      
+      # Demand deferral assumption callout (P0 - must be impossible to miss)
+      div(
+        style = sprintf(
+          "margin-top: 1em; padding: 0.75em 1em; background: %s; border-left: 3px solid %s; border-radius: 4px;",
+          colors$background, colors$warning
+        ),
+        p(
+          style = sprintf("color: %s; margin: 0; font-size: 0.9em;", colors$text_secondary),
+          icon("info circle"),
+          " ",
+          strong("Key Assumption:"),
+          " This model assumes delayed demand is ",
+          strong("deferred, not destroyed"),
+          ". Competitive dynamics and market access restrictions are excluded by design."
+        )
+      )
     ),
     
     # ========================================================================
@@ -725,6 +742,17 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         )
       }
     })
+    
+    # ========================================================================
+    # FORCE OUTPUTS TO RENDER (fix for CSS-based tabs)
+    # ========================================================================
+    
+    outputOptions(output, "kpi_analogs", suspendWhenHidden = FALSE)
+    outputOptions(output, "kpi_peak_revenue", suspendWhenHidden = FALSE)
+    outputOptions(output, "kpi_revenue_at_risk", suspendWhenHidden = FALSE)
+    outputOptions(output, "kpi_time_to_peak", suspendWhenHidden = FALSE)
+    outputOptions(output, "launch_curve_chart", suspendWhenHidden = FALSE)
+    outputOptions(output, "analog_table", suspendWhenHidden = FALSE)
     
   })
 }

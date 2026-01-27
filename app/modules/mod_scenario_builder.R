@@ -73,7 +73,8 @@ mod_scenario_builder_ui <- function(id) {
           style = sprintf("color: %s;", colors$text_muted),
           tags$li("The table shows a ", tags$strong("preview"), " of matching analogs"),
           tags$li("Orange 'Changes pending' badge means you've changed filters but haven't applied"),
-          tags$li("Green 'Selection applied' badge means Executive Brief reflects your choices")
+          tags$li("Green 'Selection applied' badge means Executive Brief reflects your choices"),
+          tags$li("Use the ", tags$strong("Sensitivity Check"), " to test if results are driven by the top-performing analog (Keytruda)")
         )
       ),
       
@@ -159,6 +160,32 @@ mod_scenario_builder_ui <- function(id) {
             width = "100%"
           ),
           
+          # Sensitivity Check (P1)
+          div(
+            style = sprintf(
+              "margin-top: 1.5em; padding: 1em; background: %s; border-radius: 4px; border: 1px dashed %s;",
+              colors$background, colors$border
+            ),
+            h4(
+              style = sprintf("color: %s; margin: 0 0 0.75em 0; font-size: 0.95em;", colors$text_primary),
+              icon("flask"),
+              " Sensitivity Check"
+            ),
+            checkboxInput(
+              ns("exclude_top_analog"),
+              label = span(
+                "Exclude top analog (Keytruda)",
+                tags$br(),
+                tags$small(
+                  style = sprintf("color: %s; font-weight: normal;", colors$text_muted),
+                  "Test if results are driven by outlier"
+                )
+              ),
+              value = FALSE,
+              width = "100%"
+            )
+          ),
+          
           # Apply button
           div(
             style = "margin-top: 2em;",
@@ -213,7 +240,7 @@ mod_scenario_builder_ui <- function(id) {
             ),
             h4(
               style = sprintf("color: %s; margin: 0 0 0.5em 0;", colors$warning),
-              "Revenue at Risk (Year 1-3)"
+              "Revenue at Risk (Years 1–3)"
             ),
             div(
               style = sprintf("font-size: 1.8em; font-weight: bold; color: %s;", colors$primary),
@@ -386,22 +413,29 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         result <- result[result$peak_revenue_millions >= min_revenue, ]
       }
       
+      # P1: Sensitivity check - exclude top analog if requested
+      exclude_top <- if (is.null(input$exclude_top_analog)) FALSE else input$exclude_top_analog
+      if (exclude_top && nrow(result) > 0) {
+        # Find and exclude the highest peak revenue analog
+        top_analog <- result$product_name[which.max(result$peak_revenue_millions)]
+        result <- result[result$product_name != top_analog, ]
+      }
+      
       result[!duplicated(result$product_name), ]
     })
     
     # ========================================================================
-    # EAGER EVALUATION - Force table to render on startup
+    # EAGER EVALUATION - Force table to render on startup ONLY
     # ========================================================================
     
-    # This observe forces the reactive chain to evaluate immediately
-    observe({
-      # Trigger on startup
-      shared$startup_trigger
-      
+    # Use observeEvent with once=TRUE to only fire at startup
+    observeEvent(shared$startup_trigger, {
       # Force evaluation of filtered_analogs (this makes it "hot")
-      fa <- filtered_analogs()
-      cat("[Scenario Builder] Eager eval - filtered_analogs has", nrow(fa), "rows\n")
-    })
+      # isolate() prevents this observe from re-running on filter changes
+      isolate({
+        fa <- filtered_analogs()
+      })
+    }, once = TRUE, ignoreInit = FALSE)
     
     # ========================================================================
     # REACTIVE: Revenue at Risk Calculation
@@ -590,12 +624,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       solid <- input$solid_tumors
       heme <- input$hematology
       min_peak <- input$min_peak
-      
-      cat("[Scenario Builder] renderReactable firing, trigger =", trigger, "\n")
+      exclude_top <- input$exclude_top_analog
       
       analogs <- filtered_analogs()
-      
-      cat("[Scenario Builder] filtered_analogs has", nrow(analogs), "rows\n")
       
       # Show message if no data
       if (is.null(analogs) || nrow(analogs) == 0) {
@@ -671,54 +702,146 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     })
     
     # ========================================================================
-    # OUTPUT: Selection Rationale
+    # OUTPUT: Selection Rationale (P1 - dynamically enriched)
     # ========================================================================
     
     output$selection_rationale <- renderUI({
-      n <- nrow(filtered_analogs())
+      analogs <- filtered_analogs()
+      n <- nrow(analogs)
       
-      if (n == 0) {
-        return("No analogs selected. Adjust criteria above.")
+      if (is.null(analogs) || n == 0) {
+        return(
+          div(
+            style = sprintf("color: %s;", colors$warning),
+            icon("exclamation triangle"),
+            " No analogs selected. Adjust criteria above."
+          )
+        )
       }
       
-      criteria <- c()
-      
+      # Get filter settings (with safe defaults)
       solid <- if (is.null(input$solid_tumors)) TRUE else input$solid_tumors
       heme <- if (is.null(input$hematology)) TRUE else input$hematology
       min_peak_val <- if (is.null(input$min_peak)) "0" else input$min_peak
       delay_q <- if (is.null(input$delay_quarters)) 2 else input$delay_quarters
+      exclude_top <- if (is.null(input$exclude_top_analog)) FALSE else input$exclude_top_analog
       
+      # Calculate dynamic stats (with defensive checks)
+      n_solid <- sum(analogs$tumor_class == "Solid", na.rm = TRUE)
+      n_heme <- sum(analogs$tumor_class == "Heme", na.rm = TRUE)
+      
+      # Approval year range (defensive)
+      year_range_text <- tryCatch({
+        approval_years <- as.numeric(format(as.Date(analogs$approval_date), "%Y"))
+        approval_years <- approval_years[!is.na(approval_years)]
+        if (length(approval_years) == 0) {
+          "N/A"
+        } else {
+          year_min <- min(approval_years)
+          year_max <- max(approval_years)
+          if (year_min == year_max) as.character(year_min) else paste0(year_min, "–", year_max)
+        }
+      }, error = function(e) "N/A")
+      
+      # Median peak revenue (defensive)
+      median_peak_revenue <- tryCatch({
+        med <- median(analogs$peak_revenue_millions, na.rm = TRUE)
+        if (is.na(med) || is.infinite(med)) 0 else med
+      }, error = function(e) 0)
+      
+      # Build criteria description
+      criteria_parts <- c()
       if (solid && heme) {
-        criteria <- c(criteria, "all tumor types")
+        criteria_parts <- c(criteria_parts, "all tumor types")
       } else if (solid) {
-        criteria <- c(criteria, "solid tumors only")
+        criteria_parts <- c(criteria_parts, "solid tumors only")
       } else if (heme) {
-        criteria <- c(criteria, "hematology only")
+        criteria_parts <- c(criteria_parts, "hematology only")
       }
       
       if (min_peak_val != "0") {
-        # Format the threshold nicely
         min_val <- as.numeric(min_peak_val)
         if (min_val >= 1000) {
-          criteria <- c(criteria, paste0("peak revenue ≥$", min_val/1000, "B"))
+          criteria_parts <- c(criteria_parts, paste0("peak ≥$", min_val/1000, "B"))
         } else {
-          criteria <- c(criteria, paste0("peak revenue ≥$", min_val, "M"))
+          criteria_parts <- c(criteria_parts, paste0("peak ≥$", min_val, "M"))
         }
       }
       
-      delay_text <- if (delay_q > 0) {
-        paste0(" Delay scenario: ", delay_q, " quarter(s).")
+      # Build output elements separately for cleaner structure
+      summary_div <- div(
+        style = sprintf("color: %s; margin-bottom: 0.75em;", colors$text_primary),
+        strong(n), " analogs selected: ",
+        paste(criteria_parts, collapse = ", ")
+      )
+      
+      stats_div <- div(
+        style = sprintf(
+          "display: flex; flex-wrap: wrap; gap: 1em; padding: 0.75em; background: %s; border-radius: 4px; font-size: 0.9em;",
+          colors$background
+        ),
+        div(
+          style = sprintf("color: %s;", colors$text_secondary),
+          icon("chart pie", style = "margin-right: 0.25em;"),
+          strong(n_solid), " Solid / ", strong(n_heme), " Heme"
+        ),
+        div(
+          style = sprintf("color: %s;", colors$text_secondary),
+          icon("calendar", style = "margin-right: 0.25em;"),
+          "Approved: ", strong(year_range_text)
+        ),
+        div(
+          style = sprintf("color: %s;", colors$text_secondary),
+          icon("chart line", style = "margin-right: 0.25em;"),
+          "Median Peak: ", strong(
+            if (median_peak_revenue >= 1000) {
+              paste0("$", round(median_peak_revenue/1000, 1), "B")
+            } else {
+              paste0("$", round(median_peak_revenue), "M")
+            }
+          )
+        )
+      )
+      
+      delay_div <- if (delay_q > 0) {
+        div(
+          style = sprintf("color: %s; margin-top: 0.5em; font-size: 0.9em;", colors$text_muted),
+          icon("clock outline"),
+          " Delay scenario: ", strong(delay_q), " quarter(s)"
+        )
       } else {
-        ""
+        NULL
       }
       
-      paste0(
-        "Selection includes ", n, " oncology products meeting criteria: ",
-        paste(criteria, collapse = ", "), ".",
-        delay_text,
-        " This analog set informs the P25/P50/P75 scenario bounds."
-      )
+      sensitivity_div <- if (exclude_top) {
+        div(
+          style = sprintf(
+            "margin-top: 0.75em; padding: 0.5em 0.75em; background: %s; border-radius: 4px; font-size: 0.85em;",
+            "#FFF3CD"
+          ),
+          icon("flask", style = sprintf("color: %s;", colors$warning)),
+          span(
+            style = sprintf("color: %s;", colors$warning),
+            " Sensitivity mode: Top analog (Keytruda) excluded from analysis"
+          )
+        )
+      } else {
+        NULL
+      }
+      
+      # Combine all elements
+      tagList(summary_div, stats_div, delay_div, sensitivity_div)
     })
+    
+    # ========================================================================
+    # FORCE OUTPUTS TO RENDER (fix for CSS-based tabs)
+    # ========================================================================
+    
+    outputOptions(output, "analog_preview_table", suspendWhenHidden = FALSE)
+    outputOptions(output, "revenue_at_risk_display", suspendWhenHidden = FALSE)
+    outputOptions(output, "analog_count_badge", suspendWhenHidden = FALSE)
+    outputOptions(output, "selection_status", suspendWhenHidden = FALSE)
+    outputOptions(output, "selection_rationale", suspendWhenHidden = FALSE)
     
   })
 }

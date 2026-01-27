@@ -571,5 +571,11 @@ mod_methods_server <- function(id, app_data) {
       )
     })
     
+    # ========================================================================
+    # FORCE OUTPUTS TO RENDER (fix for CSS-based tabs)
+    # ========================================================================
+    
+    outputOptions(output, "inclusion_criteria_table", suspendWhenHidden = FALSE)
+    
   })
 }
