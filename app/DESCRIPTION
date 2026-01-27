@@ -1,3 +1,6 @@
 Type: shiny
 Title: Oncology Launch Curve Forecaster
-Imports: shiny, shiny.semantic, bslib, dplyr, tidyr, purrr, stringr, scales, ggplot2, ggiraph, reactable, reactablefmtr
+Version: 0.2.0
+Author: Steven Ponce
+Description: Pharmaceutical commercial analytics dashboard for exploring oncology launch curve scenarios and revenue-at-risk under launch timing uncertainty.
+Imports: shiny, shiny.semantic, dplyr, tidyr, purrr, stringr, scales, ggplot2, ggiraph, reactable, reactablefmtr

@@ -382,6 +382,55 @@ mod_methods_ui <- function(id) {
             )
           )
         )
+      ),
+      
+      # Second row of assumptions (Cross-cutting #7 and #8)
+      div(
+        class = "ui two column stackable grid",
+        style = "margin-top: 1em;",
+        
+        # Assumption 4: Label Expansion Bias (Cross-cutting #7)
+        div(
+          class = "column",
+          div(
+            style = sprintf(
+              "padding: 1em; background: %s; border-radius: 4px; height: 100%%;",
+              colors$background
+            ),
+            h4(
+              style = sprintf("color: %s; margin-bottom: 0.5em;", colors$warning),
+              "Label Expansion Bias"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
+              "Several analogs (Keytruda, Opdivo, Ibrance) received significant label expansions ",
+              "post-launch, inflating observed peak revenues. This creates potential ",
+              strong("upward bias"),
+              " in P50/P75 scenarios for products without similar expansion potential."
+            )
+          )
+        ),
+        
+        # Assumption 5: Era Effects (Cross-cutting #8)
+        div(
+          class = "column",
+          div(
+            style = sprintf(
+              "padding: 1em; background: %s; border-radius: 4px; height: 100%%;",
+              colors$background
+            ),
+            h4(
+              style = sprintf("color: %s; margin-bottom: 0.5em;", colors$warning),
+              "Era Effects"
+            ),
+            p(
+              style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
+              "Oncology launches post-2018 face different market conditions than 2013–2015 launches ",
+              "(pricing pressure, biosimilar competition, value-based contracting). ",
+              "Earlier analogs may not fully represent current launch dynamics."
+            )
+          )
+        )
       )
     ),
     
@@ -431,6 +480,33 @@ mod_methods_ui <- function(id) {
           "This framework is designed to structure conversations about launch ",
           "assumptions and quantify how those assumptions translate into revenue ranges. ",
           "It supports decision-making; it does not automate it."
+        )
+      ),
+      
+      # Design Decisions callout (Cross-cutting #9)
+      div(
+        style = sprintf(
+          "margin-top: 1em; padding: 1em; background: %s; border-left: 3px solid %s; border-radius: 4px;",
+          colors$background, colors$primary_light
+        ),
+        h4(
+          style = sprintf("color: %s; margin: 0 0 0.5em 0;", colors$primary_dark),
+          icon("lightbulb outline"),
+          " Why These Exclusions?"
+        ),
+        p(
+          style = sprintf("color: %s; font-size: 0.9em; margin: 0 0 0.5em 0;", colors$text_secondary),
+          strong("NPV/Financial Returns: "),
+          "Excluded by design because discount rates, cost assumptions, and terminal values ",
+          "require company-specific inputs that would compromise the framework's generalizability. ",
+          "Revenue scenarios provide the foundation; financial modeling is a downstream exercise."
+        ),
+        p(
+          style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
+          strong("Market Access Dynamics: "),
+          "Excluded because payer mix, rebate structures, and formulary timing vary dramatically ",
+          "by product, geography, and competitive context. Modeling these would require assumptions ",
+          "that obscure rather than clarify the core launch timing trade-offs."
         )
       )
     ),

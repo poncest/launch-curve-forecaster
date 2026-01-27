@@ -176,10 +176,6 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     observe({
-      cat("[Analog Explorer] Dropdown observe firing\n")
-      cat("[Analog Explorer] is_placeholder =", app_data$is_placeholder, "\n")
-      cat("[Analog Explorer] nrow(analogs) =", nrow(app_data$analogs), "\n")
-      
       if (!app_data$is_placeholder && nrow(app_data$analogs) > 0) {
         
         # Create named choices
@@ -188,8 +184,6 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           app_data$analogs$product_name, 
           " (", app_data$analogs$company, ")"
         )
-        
-        cat("[Analog Explorer] Updating dropdowns with", length(choices), "choices\n")
         
         updateSelectInput(
           session, "primary_analog",
@@ -209,12 +203,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     observeEvent(input$view_btn, {
-      cat("[Analog Explorer] View button clicked!\n")
-      cat("[Analog Explorer] primary_analog =", input$primary_analog, "\n")
-      
       # Check if primary_analog is valid
       if (is.null(input$primary_analog) || input$primary_analog == "" || input$primary_analog == "Loading...") {
-        cat("[Analog Explorer] Invalid primary_analog, returning\n")
         showNotification("Please select an analog first", type = "warning")
         return()
       }
@@ -226,8 +216,6 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
         NULL
       }
       rv$loaded <- TRUE
-      
-      cat("[Analog Explorer] rv$loaded set to TRUE, primary =", rv$primary_name, "\n")
       
       showNotification(
         paste("Loading data for", rv$primary_name),
@@ -279,12 +267,8 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     # ========================================================================
     
     output$results_panel <- renderUI({
-      cat("[Analog Explorer] results_panel renderUI firing\n")
-      cat("[Analog Explorer] rv$loaded =", rv$loaded, "\n")
-      
       # Don't show anything until button clicked
       if (!rv$loaded) {
-        cat("[Analog Explorer] Returning placeholder (not loaded)\n")
         return(
           div(
             class = "ui segment placeholder",
@@ -298,8 +282,6 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           )
         )
       }
-      
-      cat("[Analog Explorer] Building results for:", rv$primary_name, "\n")
       
       # Get data for selected analogs
       primary_data <- get_analog_data(rv$primary_name)
