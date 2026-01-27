@@ -17,17 +17,73 @@ mod_scenario_builder_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
-    # Header
+    # Header with help icon
     div(
       style = "margin-bottom: 1.5em;",
-      h2(
-        style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
-        icon("sliders horizontal"),
-        "Scenario Builder"
+      div(
+        style = "display: flex; justify-content: space-between; align-items: flex-start;",
+        div(
+          h2(
+            style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
+            icon("sliders horizontal"),
+            "Scenario Builder"
+          ),
+          p(
+            style = sprintf("color: %s;", colors$text_secondary),
+            "Configure analog selection criteria and delay scenarios"
+          )
+        ),
+        # Help icon button
+        tags$button(
+          class = "ui circular icon button basic",
+          style = "margin-top: 0.25em;",
+          onclick = sprintf("$('#%s').modal('show');", ns("help_modal")),
+          icon("question circle outline", style = "font-size: 1.2em;")
+        )
+      )
+    ),
+    
+    # Help Modal
+    div(
+      id = ns("help_modal"),
+      class = "ui modal small",
+      
+      div(class = "header", 
+          icon("question circle"),
+          " How to Use Scenario Builder"),
+      
+      div(
+        class = "content",
+        
+        h4(style = sprintf("color: %s;", colors$primary_dark), "Purpose"),
+        p("Configure which analog products to include in your analysis and model the impact of launch timing delays."),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Steps"),
+        tags$ol(
+          style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
+          tags$li(tags$strong("Set Therapeutic Focus"), " - Check/uncheck Solid Tumors and Hematology to filter by tumor type"),
+          tags$li(tags$strong("Set Minimum Peak Revenue"), " - Filter to analogs above a revenue threshold"),
+          tags$li(tags$strong("Click 'Apply Selection'"), " - Confirms your analog set and syncs to Executive Brief"),
+          tags$li(tags$strong("Adjust Launch Delay"), " - Use the slider to model 0-4 quarters of delay"),
+          tags$li(tags$strong("Review Revenue at Risk"), " - See cumulative revenue impact of the delay")
+        ),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Tips"),
+        tags$ul(
+          style = sprintf("color: %s;", colors$text_muted),
+          tags$li("The table shows a ", tags$strong("preview"), " of matching analogs"),
+          tags$li("Orange 'Changes pending' badge means you've changed filters but haven't applied"),
+          tags$li("Green 'Selection applied' badge means Executive Brief reflects your choices")
+        )
       ),
-      p(
-        style = sprintf("color: %s;", colors$text_secondary),
-        "Configure analog selection criteria and delay scenarios"
+      
+      div(
+        class = "actions",
+        div(
+          class = "ui primary button",
+          onclick = sprintf("$('#%s').modal('hide');", ns("help_modal")),
+          "Got it"
+        )
       )
     ),
     
@@ -334,6 +390,20 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     })
     
     # ========================================================================
+    # EAGER EVALUATION - Force table to render on startup
+    # ========================================================================
+    
+    # This observe forces the reactive chain to evaluate immediately
+    observe({
+      # Trigger on startup
+      shared$startup_trigger
+      
+      # Force evaluation of filtered_analogs (this makes it "hot")
+      fa <- filtered_analogs()
+      cat("[Scenario Builder] Eager eval - filtered_analogs has", nrow(fa), "rows\n")
+    })
+    
+    # ========================================================================
     # REACTIVE: Revenue at Risk Calculation
     # ========================================================================
     
@@ -469,16 +539,27 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       current_filtered <- filtered_analogs()$product_name
       applied <- shared$selected_analogs
       
-      if (is.null(applied)) {
-        div(
+      # Handle NULL or empty cases
+      if (is.null(applied) || length(applied) == 0) {
+        return(div(
           style = sprintf(
             "display: inline-block; padding: 0.4em 0.8em; background: %s; color: white; border-radius: 4px; font-size: 0.85em;",
             colors$warning
           ),
           icon("exclamation triangle"),
           " Click 'Apply Selection'"
-        )
-      } else if (setequal(current_filtered, applied)) {
+        ))
+      }
+      
+      # Sort both vectors for reliable comparison
+      current_sorted <- sort(as.character(current_filtered))
+      applied_sorted <- sort(as.character(applied))
+      
+      # Check if selections match
+      selections_match <- length(current_sorted) == length(applied_sorted) &&
+        all(current_sorted == applied_sorted)
+      
+      if (selections_match) {
         div(
           style = sprintf(
             "display: inline-block; padding: 0.4em 0.8em; background: %s; color: white; border-radius: 4px; font-size: 0.85em;",
@@ -505,12 +586,16 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     
     output$analog_preview_table <- renderReactable({
       # Force dependency on trigger and inputs directly
-      shared$startup_trigger
-      input$solid_tumors
-      input$hematology
-      input$min_peak
+      trigger <- shared$startup_trigger
+      solid <- input$solid_tumors
+      heme <- input$hematology
+      min_peak <- input$min_peak
+      
+      cat("[Scenario Builder] renderReactable firing, trigger =", trigger, "\n")
       
       analogs <- filtered_analogs()
+      
+      cat("[Scenario Builder] filtered_analogs has", nrow(analogs), "rows\n")
       
       # Show message if no data
       if (is.null(analogs) || nrow(analogs) == 0) {

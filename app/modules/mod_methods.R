@@ -12,17 +12,73 @@ mod_methods_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
-    # Header
+    # Header with help icon
     div(
       style = "margin-bottom: 1.5em;",
-      h2(
-        style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
-        icon("book"),
-        "Methods & Data"
+      div(
+        style = "display: flex; justify-content: space-between; align-items: flex-start;",
+        div(
+          h2(
+            style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
+            icon("book"),
+            "Methods & Data"
+          ),
+          p(
+            style = sprintf("color: %s;", colors$text_secondary),
+            "Methodology, data sources, assumptions, and limitations"
+          )
+        ),
+        # Help icon button
+        tags$button(
+          class = "ui circular icon button basic",
+          style = "margin-top: 0.25em;",
+          onclick = sprintf("$('#%s').modal('show');", ns("help_modal")),
+          icon("question circle outline", style = "font-size: 1.2em;")
+        )
+      )
+    ),
+    
+    # Help Modal
+    div(
+      id = ns("help_modal"),
+      class = "ui modal small",
+      
+      div(class = "header", 
+          icon("question circle"),
+          " About Methods & Data"),
+      
+      div(
+        class = "content",
+        
+        h4(style = sprintf("color: %s;", colors$primary_dark), "Purpose"),
+        p("Transparent documentation of how this framework operates, where the data comes from, and what limitations apply."),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Sections"),
+        tags$ul(
+          style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
+          tags$li(tags$strong("Framework Overview"), " - High-level description of the analytical approach"),
+          tags$li(tags$strong("Data Sources"), " - Where the analog data comes from (SEC filings, public reports)"),
+          tags$li(tags$strong("Analog Inclusion Criteria"), " - Rules that determined which products qualified"),
+          tags$li(tags$strong("Key Assumptions"), " - What the model assumes (and doesn't)"),
+          tags$li(tags$strong("Limitations"), " - Boundaries of what this framework can and cannot do"),
+          tags$li(tags$strong("Parameter Tables"), " - Reference data for model calculations")
+        ),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Why This Matters"),
+        p(
+          style = sprintf("color: %s;", colors$text_muted),
+          "Documenting methodology and limitations is essential for defensible analysis. ",
+          "This section demonstrates transparency and professional judgment."
+        )
       ),
-      p(
-        style = sprintf("color: %s;", colors$text_secondary),
-        "Methodology, data sources, assumptions, and limitations"
+      
+      div(
+        class = "actions",
+        div(
+          class = "ui primary button",
+          onclick = sprintf("$('#%s').modal('hide');", ns("help_modal")),
+          "Got it"
+        )
       )
     ),
     

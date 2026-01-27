@@ -13,17 +13,77 @@ mod_executive_brief_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
-    # Header
+    # Header with help icon
     div(
       style = "margin-bottom: 1.5em;",
-      h2(
-        style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
-        icon("dashboard"),
-        "Executive Brief"
+      div(
+        style = "display: flex; justify-content: space-between; align-items: flex-start;",
+        div(
+          h2(
+            style = sprintf("color: %s; margin-bottom: 0.25em;", colors$primary_dark),
+            icon("dashboard"),
+            "Executive Brief"
+          ),
+          p(
+            style = sprintf("color: %s;", colors$text_secondary),
+            "Key metrics, scenario comparison, and decision trade-offs"
+          )
+        ),
+        # Help icon button
+        tags$button(
+          class = "ui circular icon button basic",
+          style = "margin-top: 0.25em;",
+          onclick = sprintf("$('#%s').modal('show');", ns("help_modal")),
+          icon("question circle outline", style = "font-size: 1.2em;")
+        )
+      )
+    ),
+    
+    # Help Modal
+    div(
+      id = ns("help_modal"),
+      class = "ui modal small",
+      
+      div(class = "header", 
+          icon("question circle"),
+          " How to Use Executive Brief"),
+      
+      div(
+        class = "content",
+        
+        h4(style = sprintf("color: %s;", colors$primary_dark), "Purpose"),
+        p("VP-level summary showing key metrics and scenario outcomes based on your analog selection and delay assumptions."),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Key Sections"),
+        tags$ul(
+          style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
+          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, peak revenue (P50), revenue at risk, time to peak"),
+          tags$li(tags$strong("Launch Trajectory Chart"), " - P25/P50/P75 revenue bands over Years 0-5"),
+          tags$li(tags$strong("Decision Cards"), " - Launch timing impact and forecast range interpretation")
+        ),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "How It Connects"),
+        tags$ul(
+          style = sprintf("color: %s;", colors$text_muted),
+          tags$li("Metrics update when you ", tags$strong("Apply Selection"), " in Scenario Builder"),
+          tags$li("Revenue at Risk reflects your chosen delay scenario"),
+          tags$li("P25/P50/P75 bands are calculated from your selected analog set")
+        ),
+        
+        h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Tip"),
+        p(
+          style = sprintf("color: %s;", colors$text_muted),
+          "Hover over the (i) icons on each KPI card for metric-specific explanations."
+        )
       ),
-      p(
-        style = sprintf("color: %s;", colors$text_secondary),
-        "Key metrics, scenario comparison, and decision trade-offs"
+      
+      div(
+        class = "actions",
+        div(
+          class = "ui primary button",
+          onclick = sprintf("$('#%s').modal('hide');", ns("help_modal")),
+          "Got it"
+        )
       )
     ),
     

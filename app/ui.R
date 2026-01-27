@@ -346,7 +346,18 @@ ui <- semanticPage(
   tags$script(HTML("
     $(document).ready(function() {
       // Initialize Semantic UI tabs
-      $('.tabular.menu .item').tab();
+      $('.tabular.menu .item').tab({
+        onVisible: function(tabPath) {
+          // Notify Shiny when a tab becomes visible
+          Shiny.setInputValue('active_tab', tabPath, {priority: 'event'});
+          console.log('Tab switched to: ' + tabPath);
+        }
+      });
+      
+      // Fire initial tab signal
+      setTimeout(function() {
+        Shiny.setInputValue('active_tab', 'executive_brief', {priority: 'event'});
+      }, 100);
     });
   "))
 )

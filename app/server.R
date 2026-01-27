@@ -68,6 +68,30 @@ server <- function(input, output, session) {
   )
   
   # ==========================================================================
+  # STARTUP TRIGGER - Catch JavaScript signal and update shared reactive
+  # ==========================================================================
+  
+  # Primary: JavaScript fires input$startup_trigger after DOM ready
+  observeEvent(input$startup_trigger, {
+    shared$startup_trigger <- isolate(shared$startup_trigger) + 1
+  }, ignoreNULL = TRUE, once = TRUE)
+  
+  # Fallback: onFlushed fires after first render cycle  
+  session$onFlushed(function() {
+    isolate({
+      shared$startup_trigger <- shared$startup_trigger + 1
+    })
+  }, once = TRUE)
+  
+  # Tab change handler - trigger updates when tabs become visible
+  observeEvent(input$active_tab, {
+    cat("[Server] Active tab changed to:", input$active_tab, "\n")
+    
+    # Increment trigger to force reactive updates
+    shared$startup_trigger <- isolate(shared$startup_trigger) + 1
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  
+  # ==========================================================================
   # SESSION CLEANUP
   # ==========================================================================
   
