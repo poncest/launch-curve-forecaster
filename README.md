@@ -43,7 +43,7 @@ This framework supports that question by:
 ## Key Capabilities
 
 | Capability | Implementation |
-|---------------------------|---------------------------------------------|
+|----|----|
 | Governance-first analog selection | Inclusion criteria locked before examining outcomes |
 | Revenue-at-risk quantification | Year 1 impact from configurable delay scenarios |
 | Sensitivity testing | Option to exclude the top-performing analog (by peak revenue) |
@@ -75,23 +75,23 @@ NPV and market access modeling are excluded because they require company-specifi
 
 ------------------------------------------------------------------------
 
-## Dashboard Structure
+## Dashboard Preview
 
 ### Executive Brief
 
-High-level summary with key metrics (analog count, peak revenue range, Year 1 revenue at risk), scenario comparison chart, and decision framing.
+![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, peak revenue range, Year 1 revenue at risk), scenario comparison chart, and decision framing.*
 
 ### Scenario Builder
 
-Configure analog selection criteria, test delay scenarios, and examine dynamic selection rationale with live statistics and sensitivity checks.
+![Scenario Builder](screenshots/scenario_builder.png) *Configure analog selection criteria, test delay scenarios, and examine dynamic selection rationale with live statistics and sensitivity checks.*
 
 ### Analog Explorer
 
-Examine individual analog launch curves and performance characteristics, with guardrails against over-interpretation of any single analog.
+![Analog Explorer](screenshots/analog_explorer.png) *Examine individual analog launch curves and performance characteristics, with guardrails against over-interpretation of any single analog.*
 
 ### Methods & Data
 
-Transparent documentation of methodology, data sources, assumptions, limitations, and explicitly excluded modeling domains.
+![Methods & Data](screenshots/methods.png) *Transparent documentation of methodology, data sources, assumptions, limitations, and explicitly excluded modeling domains.*
 
 ------------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ This is a **Year 1 average-quarter approximation**, explicitly labeled to match 
 ## Data Sources
 
 | Source | Purpose | Access |
-|--------------------|--------------------------|--------------------------|
+|----|----|----|
 | SEC EDGAR filings | Product-level revenue (10-K reports) | [SEC EDGAR](https://www.sec.gov/edgar) |
 | FDA Drug Approvals | Approval dates (T=0), indications | [FDA.gov](https://www.fda.gov/drugs) |
 | Published literature | Launch curve patterns and benchmarks | Peer-reviewed sources |
