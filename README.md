@@ -1,160 +1,97 @@
 # Oncology Launch Curve Forecaster
 
-**Decision Support Framework for VP-Level Launch Planning**
+![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white){alt="R"} ![Shiny](https://img.shields.io/badge/Shiny-1A162D?style=for-the-badge&logo=rstudio&logoColor=white){alt="Shiny"} ![Framework](https://img.shields.io/badge/Framework-Appsilon-0B6E6E?style=for-the-badge){alt="Framework"} ![Status](https://img.shields.io/badge/Status-Active-2ECC71?style=for-the-badge){alt="Status"} ![License](https://img.shields.io/badge/License-MIT-A8E10C?style=for-the-badge){alt="License"}
 
-[![R](https://img.shields.io/badge/R-4.3+-blue.svg)](https://www.r-project.org/) [![Shiny](https://img.shields.io/badge/Shiny-1.8+-green.svg)](https://shiny.rstudio.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+**A governance-first decision support framework for pharmaceutical launch planning**
 
 ------------------------------------------------------------------------
 
 ## Overview
 
-This framework supports VP-level launch decisions by quantifying how uncertainty in uptake timing and analog selection translates into revenue risk and investment trade-offs.
+This project presents a decision support framework for pre-launch planning that quantifies how uncertainty in uptake timing and analog selection translates into **revenue risk and forecast trade-offs**.
 
-**Target Persona:** Brand VP / Commercial Lead\
-**Decision Window:** Pre-launch (12-18 months from approval)\
-**Domain:** Oncology therapeutics
+The framework is designed for commercial launch planning contexts where leaders must reason under uncertainty, evaluate assumptions transparently, and communicate trade-offs clearly across functions.
+
+**Intended Use Context**
+
+-   **Decision Window:** Pre-launch planning (12–18 months from approval)
+-   **Domain:** Oncology therapeutics (solid tumors and hematologic malignancies)
+-   **Typical Users:** Commercial, brand, and planning leaders involved in launch readiness and forecasting discussions
 
 ------------------------------------------------------------------------
 
-## Key Questions Addressed
+## Live Dashboard
 
-| Decision | Trade-off | Quantified Consequence |
-|----|----|----|
-| **Launch Timing** | Speed vs. readiness | Cumulative revenue at risk (\$M) |
-| **Forecast Commitment** | Alignment vs. credibility risk | P25/P50/P75 scenario ranges |
-| **Analog Selection** | Breadth vs. relevance | Impact on forecast bounds |
+🔗 **Interactive Shiny dashboard:**\
+[Launch Curve Forecaster](https://0l6jpd-steven-ponce.shinyapps.io/launch-curve-forecaster/) (ShinyApps.io)
+
+------------------------------------------------------------------------
+
+## Core Decision Question
+
+> **What is the revenue at risk if launch timing shifts under uncertainty?**
+
+This framework supports that question by:
+
+-   Structuring analog-based launch scenarios using a governance-first methodology
+-   Quantifying **Year 1 revenue at risk** under configurable launch delay assumptions
+-   Supporting P25 / P50 / P75 forecast trade-off discussions across stakeholders
+-   Documenting assumptions, exclusions, and sensitivities transparently for audit and review
+
+------------------------------------------------------------------------
+
+## Key Capabilities
+
+| Capability | Implementation |
+|---------------------------|---------------------------------------------|
+| Governance-first analog selection | Inclusion criteria locked before examining outcomes |
+| Revenue-at-risk quantification | Year 1 impact from configurable delay scenarios |
+| Sensitivity testing | Option to exclude the top-performing analog (by peak revenue) |
+| Dynamic selection rationale | Live statistics: solid/heme count, approval-year range, median peak |
+| Transparent methodology | Assumptions, limitations, and exclusions clearly documented |
 
 ------------------------------------------------------------------------
 
 ## What This Framework Does
 
 ✅ Structures analog-based launch scenario analysis\
-✅ Quantifies revenue ranges from analog variation\
-✅ Supports trade-off conversations with stakeholders\
-✅ Documents assumptions transparently
-
-## What This Framework Does NOT Do
-
-❌ Predict whether a specific launch will succeed\
-❌ Recommend specific investment levels\
-❌ Model competitive response timing\
-❌ Estimate NPV or financial returns\
-❌ Replace clinical or regulatory judgment
+✅ Quantifies revenue ranges from analog variation (P25 / P50 / P75)\
+✅ Supports structured trade-off conversations under uncertainty\
+✅ Documents assumptions and limitations transparently\
+✅ Provides sensitivity checks to test analytical robustness
 
 ------------------------------------------------------------------------
 
-## Screenshots
+## What This Framework Does *Not* Do
+
+❌ Predict whether a specific launch will succeed\
+❌ Recommend specific investment or resourcing levels\
+❌ Model competitive response or market access dynamics\
+❌ Estimate NPV or financial returns\
+❌ Replace clinical, regulatory, or strategic judgment
+
+**By design:**\
+NPV and market access modeling are excluded because they require company-specific inputs that would compromise generalizability. Revenue scenarios are treated as **foundational inputs**, not final financial outputs.
+
+------------------------------------------------------------------------
+
+## Dashboard Structure
 
 ### Executive Brief
 
-VP-level summary with key metrics, scenario comparison, and decision trade-offs.
-
-![Executive Brief](screenshots/executive_brief.png)
+High-level summary with key metrics (analog count, peak revenue range, Year 1 revenue at risk), scenario comparison chart, and decision framing.
 
 ### Scenario Builder
 
-Configure analog selection criteria and scenario parameters.
-
-![Scenario Builder](screenshots/scenario_builder.png)
+Configure analog selection criteria, test delay scenarios, and examine dynamic selection rationale with live statistics and sensitivity checks.
 
 ### Analog Explorer
 
-Examine individual analog launch curves and performance characteristics.
-
-![Analog Explorer](screenshots/analog_explorer.png)
+Examine individual analog launch curves and performance characteristics, with guardrails against over-interpretation of any single analog.
 
 ### Methods & Data
 
-Transparent methodology, data sources, and limitations documentation.
-
-![Methods](screenshots/methods.png)
-
-------------------------------------------------------------------------
-
-## Data Sources
-
-| Source | Purpose | Access |
-|----|----|----|
-| **FDA Drug Approvals** | Approval dates (T=0), indications | [FDA.gov](https://www.fda.gov/drugs) |
-| **SEC EDGAR Filings** | Product-level revenue | [SEC EDGAR](https://www.sec.gov/edgar) |
-| **Published Literature** | Launch curve patterns | PubMed, peer-reviewed sources |
-
-All data is publicly available. No proprietary or confidential data is used.
-
-------------------------------------------------------------------------
-
-## Technology Stack
-
--   **Framework:** R / Shiny
--   **UI Components:** shiny.semantic (Appsilon)
--   **Visualizations:** ggiraph, ggplot2
--   **Tables:** reactable
--   **Deployment:** shinyapps.io
-
-------------------------------------------------------------------------
-
-## Project Structure
-
-```         
-launch-curve-forecaster/
-├── app/                    # Shiny application (deployed)
-│   ├── app.R               # Entry point
-│   ├── global.R            # Configuration and data loading
-│   ├── ui.R                # Main UI
-│   ├── server.R            # Main server
-│   ├── modules/            # Shiny modules
-│   │   ├── mod_executive_brief.R
-│   │   ├── mod_scenario_builder.R
-│   │   ├── mod_analog_explorer.R
-│   │   └── mod_methods.R
-│   ├── data/processed/     # App data
-│   └── www/                # Static assets
-├── scripts/                # Development scripts (not deployed)
-│   ├── 00_setup_packages.R
-│   ├── 01_data_collection.R
-│   └── 02_data_preparation.R
-├── data/                   # Raw and processed data
-│   ├── raw/
-│   └── processed/
-└── docs/                   # Documentation
-```
-
-------------------------------------------------------------------------
-
-## Getting Started
-
-### Prerequisites
-
--   R 4.3+
--   RStudio (recommended)
-
-### Installation
-
-1.  Clone the repository:
-
-``` bash
-git clone https://github.com/poncest/launch-curve-forecaster.git
-cd launch-curve-forecaster
-```
-
-2.  Install packages:
-
-``` r
-source("scripts/00_setup_packages.R")
-```
-
-3.  Prepare data (after collecting from SEC filings):
-
-``` r
-source("scripts/01_data_collection.R")
-source("scripts/02_data_preparation.R")
-```
-
-4.  Run the app:
-
-``` r
-shiny::runApp("app/")
-```
+Transparent documentation of methodology, data sources, assumptions, limitations, and explicitly excluded modeling domains.
 
 ------------------------------------------------------------------------
 
@@ -164,45 +101,121 @@ shiny::runApp("app/")
 
 Inclusion criteria are specified **before** examining outcome data to ensure defensible analysis:
 
-1.  **Therapeutic Area:** Oncology (solid tumors and hematology)
-2.  **Line of Therapy:** Configurable (All, 1L, 2L+)
-3.  **Launch Window:** FDA approval 2010-2024
-4.  **Revenue Threshold:** Configurable minimum peak
-5.  **Data Availability:** Product-level revenue in SEC filings
+-   **Therapeutic area:** Oncology (solid tumors and/or hematology)
+-   **Peak revenue threshold:** Configurable minimum (filters speculative analogs)
+-   **Data availability:** Product-level revenue disclosed in SEC filings
+-   **Sensitivity check:** Option to exclude the top-performing analog to test robustness
+
+------------------------------------------------------------------------
 
 ### Scenario Construction
 
-Percentile bands (P25/P50/P75) are calculated from selected analog performance:
+Percentile bands are derived from observed analog performance:
 
 -   **P50 (Base Case):** Median analog trajectory
--   **P75 (Optimistic):** Upper quartile performance
--   **P25 (Conservative):** Lower quartile performance
+-   **P75 (Upper Range):** Upper quartile performance
+-   **P25 (Lower Range):** Lower quartile performance
 
-These are **observed analog ranges**, not statistical confidence intervals.
+> **Important:** These represent observed analog ranges, not statistical confidence intervals.
+
+------------------------------------------------------------------------
+
+### Revenue-at-Risk Calculation
+
+```         
+Revenue at Risk (Year 1) = delay_quarters × (median Year 1 revenue / 4)
+```
+
+This is a **Year 1 average-quarter approximation**, explicitly labeled to match the calculation methodology.
+
+------------------------------------------------------------------------
+
+## Key Assumptions Documented
+
+-   **Demand deferral:** Delayed demand is deferred, not destroyed
+-   **Label expansion bias:** Some analogs experienced post-launch indication expansion, creating potential upward bias
+-   **Era effects:** Launch dynamics differ between earlier (2013–2015) and more recent oncology approvals
+
+------------------------------------------------------------------------
+
+## Data Sources
+
+| Source | Purpose | Access |
+|--------------------|--------------------------|--------------------------|
+| SEC EDGAR filings | Product-level revenue (10-K reports) | [SEC EDGAR](https://www.sec.gov/edgar) |
+| FDA Drug Approvals | Approval dates (T=0), indications | [FDA.gov](https://www.fda.gov/drugs) |
+| Published literature | Launch curve patterns and benchmarks | Peer-reviewed sources |
+
+All data used is publicly available. No proprietary or confidential information is included.
+
+------------------------------------------------------------------------
+
+## Analog Set (10 Oncology Products)
+
+The framework includes established oncology launches with disclosed product-level revenue:
+
+-   **Solid tumors:** Keytruda, Opdivo, Ibrance, Tagrisso, Lynparza, Tecentriq
+-   **Hematology:** Imbruvica, Darzalex, Venclexta, Calquence
+
+------------------------------------------------------------------------
+
+## Technology Stack
+
+| Component     | Technology                   |
+|---------------|------------------------------|
+| Language      | R (4.3+)                     |
+| Framework     | Shiny (modular architecture) |
+| UI components | shiny.semantic (Appsilon)    |
+| Visualization | ggplot2, ggiraph             |
+| Tables        | reactable, reactablefmtr     |
+| Deployment    | shinyapps.io                 |
+
+------------------------------------------------------------------------
+
+## Design Principles
+
+-   **Governance-first thinking** — lock criteria before examining outcomes
+-   **Transparency over performance** — document assumptions and limitations
+-   **Appropriate restraint** — clearly state what the tool does *not* do
+-   **Decision support, not automation** — inform judgment, do not prescribe
+-   **Executive communication** — lead with insights, support with data
+
+------------------------------------------------------------------------
+
+## Limitations
+
+-   Revenue data from SEC filings may include ex-US sales
+-   Label expansion can introduce upward bias in peak revenues
+-   Earlier analogs may not fully reflect current launch environments
+-   Revenue-at-risk calculation is simplified (not a full DCF model)
+-   Competitive dynamics and market access are not modeled
 
 ------------------------------------------------------------------------
 
 ## Author
 
 **Steven Ponce**\
-Data Professional \| Pharmaceutical Analytics
+Data Analyst \| R Shiny Developer \| Pharmaceutical Analytics
 
--   [LinkedIn](https://www.linkedin.com/in/stevenponce/)
--   [GitHub](https://github.com/poncest)
--   [Portfolio](https://stevenponce.netlify.app/)
+-   🔗 Portfolio: [stevenponce.netlify.app](https://stevenponce.netlify.app)
+-   🐙 GitHub: [\@poncest](https://github.com/poncest)
+-   💼 LinkedIn: [stevenponce](https://www.linkedin.com/in/stevenponce)
 
 ------------------------------------------------------------------------
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Released under the MIT License.
 
 ------------------------------------------------------------------------
 
 ## Disclaimer
 
-This is a portfolio project for demonstration purposes. It uses publicly available data and should not be used for actual commercial decisions. All analysis reflects publicly reported information only.
+This project is a **portfolio case study** intended to demonstrate analytical framing, governance, and decision-support design using publicly available data.
+
+It is **not intended for real-world commercial decision-making** and is not affiliated with any pharmaceutical company. Product names are used for analytical illustration only.
 
 ------------------------------------------------------------------------
 
-*Built with lessons learned from Clinical Trial Forecaster, Apple ESG Dashboard, Microsoft Financial Dashboard, and Pharma R&D Simulator projects.*
+**Version:** 1.0.0\
+**Last updated:** January 2026

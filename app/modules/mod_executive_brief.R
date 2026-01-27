@@ -167,7 +167,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Estimated cumulative revenue at risk during first 3 years if launch is delayed by 6 months",
+            title = "Estimated revenue at risk during first year if launch is delayed by 2 quarters",
             icon("info circle")
           ),
           div(
@@ -176,7 +176,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Revenue at Risk (Years 1–3)"
+            "Revenue at Risk (Year 1)"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -546,8 +546,8 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         delay_months <- m$delay_quarters * 3
         paste0(
           "A ", m$delay_quarters, "-quarter (", delay_months, "-month) delay scenario suggests approximately $",
-          format(round(m$revenue_at_risk), big.mark = ","), "M in cumulative revenue at risk ",
-          "during the first 3 years post-launch. This estimate assumes demand is deferred, not destroyed, ",
+          format(round(m$revenue_at_risk), big.mark = ","), "M in revenue at risk ",
+          "during the first year post-launch. This estimate assumes demand is deferred, not destroyed, ",
           "and does not account for competitive dynamics."
         )
       }

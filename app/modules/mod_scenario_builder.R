@@ -74,7 +74,7 @@ mod_scenario_builder_ui <- function(id) {
           tags$li("The table shows a ", tags$strong("preview"), " of matching analogs"),
           tags$li("Orange 'Changes pending' badge means you've changed filters but haven't applied"),
           tags$li("Green 'Selection applied' badge means Executive Brief reflects your choices"),
-          tags$li("Use the ", tags$strong("Sensitivity Check"), " to test if results are driven by the top-performing analog (Keytruda)")
+          tags$li("Use the ", tags$strong("Sensitivity Check"), " to test if results are driven by the top-performing analog (by peak revenue)")
         )
       ),
       
@@ -174,7 +174,7 @@ mod_scenario_builder_ui <- function(id) {
             checkboxInput(
               ns("exclude_top_analog"),
               label = span(
-                "Exclude top analog (Keytruda)",
+                "Exclude top analog (by peak revenue)",
                 tags$br(),
                 tags$small(
                   style = sprintf("color: %s; font-weight: normal;", colors$text_muted),
@@ -240,7 +240,7 @@ mod_scenario_builder_ui <- function(id) {
             ),
             h4(
               style = sprintf("color: %s; margin: 0 0 0.5em 0;", colors$warning),
-              "Revenue at Risk (Years 1–3)"
+              "Revenue at Risk (Year 1)"
             ),
             div(
               style = sprintf("font-size: 1.8em; font-weight: bold; color: %s;", colors$primary),
@@ -248,7 +248,7 @@ mod_scenario_builder_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.5em; margin-bottom: 0;", colors$text_muted),
-              "Cumulative revenue foregone in first 3 years"
+              "Revenue foregone in first year post-launch"
             )
           ),
           
@@ -726,6 +726,27 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       delay_q <- if (is.null(input$delay_quarters)) 2 else input$delay_quarters
       exclude_top <- if (is.null(input$exclude_top_analog)) FALSE else input$exclude_top_analog
       
+      # Find which analog would be excluded (compute from original data)
+      excluded_analog_name <- tryCatch({
+        if (exclude_top) {
+          # Rebuild the pre-exclusion dataset
+          base_data <- app_data$analogs
+          if (!solid) base_data <- base_data[base_data$tumor_class != "Solid", ]
+          if (!heme) base_data <- base_data[base_data$tumor_class != "Heme", ]
+          if (min_peak_val != "0") {
+            min_rev <- as.numeric(min_peak_val)
+            base_data <- base_data[base_data$peak_revenue_millions >= min_rev, ]
+          }
+          if (nrow(base_data) > 0) {
+            base_data$product_name[which.max(base_data$peak_revenue_millions)]
+          } else {
+            "N/A"
+          }
+        } else {
+          NULL
+        }
+      }, error = function(e) "N/A")
+      
       # Calculate dynamic stats (with defensive checks)
       n_solid <- sum(analogs$tumor_class == "Solid", na.rm = TRUE)
       n_heme <- sum(analogs$tumor_class == "Heme", na.rm = TRUE)
@@ -813,7 +834,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         NULL
       }
       
-      sensitivity_div <- if (exclude_top) {
+      sensitivity_div <- if (exclude_top && !is.null(excluded_analog_name)) {
         div(
           style = sprintf(
             "margin-top: 0.75em; padding: 0.5em 0.75em; background: %s; border-radius: 4px; font-size: 0.85em;",
@@ -822,7 +843,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
           icon("flask", style = sprintf("color: %s;", colors$warning)),
           span(
             style = sprintf("color: %s;", colors$warning),
-            " Sensitivity mode: Top analog (Keytruda) excluded from analysis"
+            " Sensitivity mode: Excluded ", strong(excluded_analog_name), " (top analog by peak revenue)"
           )
         )
       } else {
