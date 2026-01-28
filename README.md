@@ -1,6 +1,6 @@
 # Oncology Launch Curve Forecaster
 
-![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white){alt="R"} ![Shiny](https://img.shields.io/badge/Shiny-1A162D?style=for-the-badge&logo=rstudio&logoColor=white){alt="Shiny"} ![Framework](https://img.shields.io/badge/Framework-Appsilon-0B6E6E?style=for-the-badge){alt="Framework"} ![Status](https://img.shields.io/badge/Status-Active-2ECC71?style=for-the-badge){alt="Status"} ![License](https://img.shields.io/badge/License-MIT-A8E10C?style=for-the-badge){alt="License"}
+![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white) ![Shiny](https://img.shields.io/badge/Shiny-1A162D?style=for-the-badge&logo=rstudio&logoColor=white) ![Framework](https://img.shields.io/badge/Framework-Appsilon-0B6E6E?style=for-the-badge) ![Status](https://img.shields.io/badge/Status-Active-2ECC71?style=for-the-badge) ![License](https://img.shields.io/badge/License-MIT-A8E10C?style=for-the-badge)
 
 **A governance-first decision support framework for pharmaceutical launch planning**
 
