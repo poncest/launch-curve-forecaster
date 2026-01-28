@@ -23,7 +23,7 @@ The framework is designed for commercial launch planning contexts where leaders 
 ## Live Dashboard
 
 🔗 **Interactive Shiny dashboard:**\
-[Launch Curve Forecaster](https://0l6jpd-steven-ponce.shinyapps.io/launch-curve-forecaster/) (ShinyApps.io)
+[Launch Curve Forecaster](https://0l6jpd-steven-ponce.shinyapps.io/launch_curve_forecaster/) (ShinyApps.io)
 
 ------------------------------------------------------------------------
 

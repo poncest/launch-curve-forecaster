@@ -8,8 +8,7 @@
 # Source global configuration
 source("global.R")
 
-# Load app data
-app_data <- load_app_data(getwd())
+
 
 # Source modules
 source("modules/mod_executive_brief.R")
@@ -18,8 +17,8 @@ source("modules/mod_analog_explorer.R")
 source("modules/mod_methods.R")
 
 # Source UI and Server
-source("ui.R")
-source("server.R")
+source("ui_main.R")
+source("server_main.R")
 
 # Launch
 shinyApp(ui = ui, server = server)
