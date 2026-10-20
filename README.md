@@ -46,8 +46,8 @@ This framework supports that question by:
 |----|----|
 | Governance-first analog selection | Inclusion criteria locked before examining outcomes |
 | Revenue-at-risk quantification | Year 1 impact from configurable delay scenarios |
-| Sensitivity testing | Option to exclude the top-performing analog (by peak revenue) |
-| Dynamic selection rationale | Live statistics: solid/heme count, approval-year range, median peak |
+| Sensitivity testing | Option to exclude the top-performing analog (by Year-5 revenue) |
+| Dynamic selection rationale | Live statistics: solid/heme count, approval-year range, median Year-5 revenue |
 | Transparent methodology | Assumptions, limitations, and exclusions clearly documented |
 
 ------------------------------------------------------------------------
@@ -79,7 +79,7 @@ NPV and market access modeling are excluded because they require company-specifi
 
 ### Executive Brief
 
-![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, peak revenue range, Year 1 revenue at risk), scenario comparison chart, and decision framing.*
+![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, Year-5 revenue range, Year 1 revenue at risk, median Year-1 revenue), scenario comparison chart, and decision framing.*
 
 ### Scenario Builder
 
@@ -102,7 +102,7 @@ NPV and market access modeling are excluded because they require company-specifi
 Inclusion criteria are specified **before** examining outcome data to ensure defensible analysis:
 
 -   **Therapeutic area:** Oncology (solid tumors and/or hematology)
--   **Peak revenue threshold:** Configurable minimum (filters speculative analogs)
+-   **Year-5 revenue threshold:** Configurable minimum (filters speculative analogs)
 -   **Data availability:** Product-level revenue disclosed in SEC filings
 -   **Sensitivity check:** Option to exclude the top-performing analog to test robustness
 
@@ -117,6 +117,8 @@ Percentile bands are derived from observed analog performance:
 -   **P25 (Lower Range):** Lower quartile performance
 
 > **Important:** These represent observed analog ranges, not statistical confidence intervals.
+
+> **Year-5 revenue, not peak:** every analog is observed from its approval year through the fifth full year after launch, and all were still growing at Year 5. Revenue figures therefore describe Year-5 revenue, not a lifetime peak.
 
 ------------------------------------------------------------------------
 
@@ -185,7 +187,7 @@ The framework includes established oncology launches with disclosed product-leve
 ## Limitations
 
 -   Revenue data from SEC filings may include ex-US sales
--   Label expansion can introduce upward bias in peak revenues
+-   Label expansion can introduce upward bias in Year-5 revenues
 -   Earlier analogs may not fully reflect current launch environments
 -   Revenue-at-risk calculation is simplified (not a full DCF model)
 -   Competitive dynamics and market access are not modeled

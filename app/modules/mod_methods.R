@@ -218,13 +218,13 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
-              "Product-level revenue from 10-K and 10-Q filings via ",
+              "Product-level annual revenue from 10-K and 20-F filings via ",
               tags$a(href = "https://www.sec.gov/edgar", target = "_blank", "SEC EDGAR"),
               "."
             ),
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
-              tags$li("Quarterly/annual revenue"),
+              tags$li("Annual worldwide product revenue, by fiscal year"),
               tags$li("Geographic breakdown (when available)"),
               tags$li("Product-specific disclosures")
             )
@@ -404,7 +404,7 @@ mod_methods_ui <- function(id) {
             p(
               style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
               "Several analogs (Keytruda, Opdivo, Ibrance) received significant label expansions ",
-              "post-launch, inflating observed peak revenues. This creates potential ",
+              "post-launch, inflating observed Year-5 revenues. This creates potential ",
               strong("upward bias"),
               " in P50/P75 scenarios for products without similar expansion potential."
             )
@@ -547,7 +547,8 @@ mod_methods_ui <- function(id) {
           h4(style = sprintf("color: %s;", colors$text_primary), "Data Processing"),
           tags$ul(
             style = sprintf("color: %s;", colors$text_secondary),
-            tags$li("Quarterly revenue normalized to launch quarter (T=0)"),
+            tags$li("Annual revenue aligned to approval year (Year 0 = partial launch year; Year 1 = first full year)"),
+            tags$li("Every analog is observed through Year 5, so the app reports Year-5 revenue rather than a lifetime peak; every analog was still growing at Year 5"),
             tags$li("Percentiles calculated across analog set"),
             tags$li("Revenue scaled to millions USD"),
             tags$li("All data from public sources")
@@ -578,8 +579,7 @@ mod_methods_ui <- function(id) {
       tags$ol(
         style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
         tags$li("FDA Drug Approval Database. U.S. Food and Drug Administration."),
-        tags$li("SEC EDGAR Company Filings. U.S. Securities and Exchange Commission."),
-        tags$li("Oncology launch curve benchmarking literature (specific citations to be added).")
+        tags$li("SEC EDGAR Company Filings. U.S. Securities and Exchange Commission.")
       )
     )
   )
@@ -602,22 +602,19 @@ mod_methods_server <- function(id, app_data) {
       criteria_data <- data.frame(
         Criterion = c(
           "Therapeutic Area",
-          "Line of Therapy",
           "Launch Window",
           "Revenue Threshold",
           "Data Availability"
         ),
         Specification = c(
           "Oncology (solid tumors and hematology)",
-          "Configurable: All lines, 1L only, or 2L+",
-          "FDA approval 2010-2024",
-          "Configurable minimum peak revenue",
+          "FDA approval 2013-2017",
+          "Configurable minimum Year-5 revenue",
           "Product-level revenue disclosed in SEC filings"
         ),
         Rationale = c(
           "Focus on therapeutic area with established launch patterns",
-          "Line of therapy significantly affects uptake dynamics",
-          "Recent launches more relevant; sufficient follow-up required",
+          "Recent enough to be relevant, early enough for five full years of disclosed revenue",
           "Exclude niche products with limited comparability",
           "Ensures consistent measurement across analogs"
         ),
