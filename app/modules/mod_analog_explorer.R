@@ -64,7 +64,7 @@ mod_analog_explorer_ui <- function(id) {
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "What You'll See"),
         tags$ul(
           style = sprintf("color: %s;", colors$text_muted),
-          tags$li(tags$strong("Key Metrics"), " - Peak revenue, time to peak, Year 1 and Year 3 revenue"),
+          tags$li(tags$strong("Key Metrics"), " - Year-5 revenue, cumulative revenue from launch to Year 5, Year 1 and Year 3 revenue"),
           tags$li(tags$strong("Characteristics"), " - Company, indication, tumor class, approval date"),
           tags$li(tags$strong("Launch Curve Chart"), " - Interactive chart showing revenue trajectory"),
           tags$li(tags$strong("Context Table"), " - Side-by-side comparison of selected analogs")
@@ -241,16 +241,17 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
     
     calc_metrics <- function(curves_df) {
       if (is.null(curves_df) || nrow(curves_df) == 0) {
-        return(list(peak = NA, quarters_to_peak = NA, year1 = NA, year3 = NA))
+        return(list(peak = NA, cumulative = NA, year1 = NA, year3 = NA))
       }
       
-      peak_idx <- which.max(curves_df$revenue_millions)
+      year5_row <- curves_df[curves_df$years_since_launch == 5, ]
       year1_row <- curves_df[curves_df$years_since_launch == 1, ]
       year3_row <- curves_df[curves_df$years_since_launch == 3, ]
       
       list(
-        peak = max(curves_df$revenue_millions, na.rm = TRUE),
-        quarters_to_peak = curves_df$years_since_launch[peak_idx] * 4,
+        # "peak" = Year-5 revenue: every analog is observed through year 5 only
+        peak = if (nrow(year5_row) > 0) year5_row$revenue_millions[1] else NA,
+        cumulative = sum(curves_df$revenue_millions[curves_df$years_since_launch <= 5], na.rm = TRUE),
         year1 = if (nrow(year1_row) > 0) year1_row$revenue_millions[1] else NA,
         year3 = if (nrow(year3_row) > 0) year3_row$revenue_millions[1] else NA
       )
@@ -315,10 +316,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
                 
                 div(class = "statistic",
                     div(class = "value", format_revenue(primary_metrics$peak)),
-                    div(class = "label", "Peak Revenue")),
+                    div(class = "label", "Year-5 Revenue")),
                 div(class = "statistic",
-                    div(class = "value", ifelse(is.na(primary_metrics$quarters_to_peak), "--", primary_metrics$quarters_to_peak)),
-                    div(class = "label", "Quarters to Peak")),
+                    div(class = "value", format_revenue(primary_metrics$cumulative)),
+                    div(class = "label", "Cumulative to Y5")),
                 div(class = "statistic",
                     div(class = "value", format_revenue(primary_metrics$year1)),
                     div(class = "label", "Year 1")),
@@ -374,10 +375,10 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
                   
                   div(class = "statistic",
                       div(class = "value", format_revenue(compare_metrics$peak)),
-                      div(class = "label", "Peak Revenue")),
+                      div(class = "label", "Year-5 Revenue")),
                   div(class = "statistic",
-                      div(class = "value", ifelse(is.na(compare_metrics$quarters_to_peak), "--", compare_metrics$quarters_to_peak)),
-                      div(class = "label", "Quarters to Peak")),
+                      div(class = "value", format_revenue(compare_metrics$cumulative)),
+                      div(class = "label", "Cumulative to Y5")),
                   div(class = "statistic",
                       div(class = "value", format_revenue(compare_metrics$year1)),
                       div(class = "label", "Year 1")),
@@ -538,7 +539,7 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
       }
       
       # Build comparison table
-      factors <- c("Company", "Tumor Class", "Initial Indication", "Approval Year", "Peak Revenue")
+      factors <- c("Company", "Tumor Class", "Initial Indication", "Approval Year", "Year-5 Revenue")
       
       primary_vals <- c(
         primary_data$company,

@@ -57,7 +57,7 @@ mod_executive_brief_ui <- function(id) {
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Key Sections"),
         tags$ul(
           style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
-          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, peak revenue (P50), revenue at risk, time to peak"),
+          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, Year-5 revenue (P50), revenue at risk, median Year-1 revenue"),
           tags$li(tags$strong("Launch Trajectory Chart"), " - P25/P50/P75 revenue bands over Years 0-5"),
           tags$li(tags$strong("Decision Cards"), " - Launch timing impact and forecast range interpretation")
         ),
@@ -137,7 +137,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Median (P50) peak annual revenue across selected analogs. Range shows P25-P75 bounds.",
+            title = "Median (P50) Year-5 annual revenue across selected analogs: the fifth full year after launch, the last year observed for every analog (not a lifetime peak). Range shows P25-P75 bounds.",
             icon("info circle")
           ),
           div(
@@ -146,7 +146,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Base Case Peak (P50)"
+            "Base Case Year-5 Revenue (P50)"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -197,7 +197,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Median number of quarters from launch to peak annual revenue across selected analogs",
+            title = "Median revenue in the first full year after launch across selected analogs. This is the basis of the revenue-at-risk estimate.",
             icon("info circle")
           ),
           div(
@@ -206,7 +206,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Quarters to Peak"
+            "Median Year-1 Revenue"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -452,6 +452,10 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         peak_p25 = quantile(peaks$peak_revenue, 0.25, na.rm = TRUE),
         peak_p75 = quantile(peaks$peak_revenue, 0.75, na.rm = TRUE),
         revenue_at_risk = revenue_at_risk_calc,
+        year1_median = if (nrow(year1_data) > 0) year1_median else 0,
+        year1_range = if (nrow(year1_data) > 0) {
+          quantile(year1_data$revenue_millions, c(0.25, 0.75), na.rm = TRUE)
+        } else c(0, 0),
         delay_quarters = delay_q,
         quarters_to_peak = round(median(peaks$years_to_peak, na.rm = TRUE) * 4),
         quarters_range = c(
@@ -464,6 +468,10 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     # ========================================================================
     # KPI OUTPUTS
     # ========================================================================
+    
+    fmt_revenue <- function(val) {
+      if (val >= 1000) paste0("$", round(val / 1000, 1), "B") else paste0("$", round(val), "M")
+    }
     
     output$kpi_analogs <- renderUI({
       m <- metrics()
@@ -522,15 +530,16 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     
     output$kpi_time_to_peak <- renderUI({
       m <- metrics()
-      if (m$quarters_to_peak == 0) "--" else m$quarters_to_peak
+      if (m$year1_median == 0) "--" else fmt_revenue(m$year1_median)
     })
     
     output$kpi_time_context <- renderUI({
       m <- metrics()
-      if (m$quarters_to_peak == 0) {
-        "From launch"
+      if (m$year1_median == 0) {
+        "First full year after launch"
       } else {
-        paste0("Range: ", m$quarters_range[1], "-", m$quarters_range[2], " quarters")
+        paste0("Range: ", fmt_revenue(m$year1_range[1]), " - ", fmt_revenue(m$year1_range[2]),
+               " (basis for revenue at risk)")
       }
     })
     
@@ -559,7 +568,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         "Configure analogs in Scenario Builder to see forecast analysis."
       } else {
         paste0(
-          "Committing to P50 forecast ($", round(m$peak_p50 / 1000, 1), "B peak) ",
+          "Committing to P50 forecast ($", round(m$peak_p50 / 1000, 1), "B Year-5 revenue) ",
           "implies accepting that ~50% of analogs underperformed this level. ",
           "P25 conservative scenario ($", round(m$peak_p25 / 1000, 1), "B) ",
           "reduces credibility risk but may understate opportunity."

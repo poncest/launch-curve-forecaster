@@ -62,7 +62,7 @@ mod_scenario_builder_ui <- function(id) {
         tags$ol(
           style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
           tags$li(tags$strong("Set Therapeutic Focus"), " - Check/uncheck Solid Tumors and Hematology to filter by tumor type"),
-          tags$li(tags$strong("Set Minimum Peak Revenue"), " - Filter to analogs above a revenue threshold"),
+          tags$li(tags$strong("Set Minimum Year-5 Revenue"), " - Filter to analogs above a revenue threshold"),
           tags$li(tags$strong("Click 'Apply Selection'"), " - Confirms your analog set and syncs to Executive Brief"),
           tags$li(tags$strong("Adjust Launch Delay"), " - Use the slider to model 0-4 quarters of delay"),
           tags$li(tags$strong("Review Revenue at Risk"), " - See cumulative revenue impact of the delay")
@@ -74,7 +74,7 @@ mod_scenario_builder_ui <- function(id) {
           tags$li("The table shows a ", tags$strong("preview"), " of matching analogs"),
           tags$li("Orange 'Changes pending' badge means you've changed filters but haven't applied"),
           tags$li("Green 'Selection applied' badge means Executive Brief reflects your choices"),
-          tags$li("Use the ", tags$strong("Sensitivity Check"), " to test if results are driven by the top-performing analog (by peak revenue)")
+          tags$li("Use the ", tags$strong("Sensitivity Check"), " to test if results are driven by the top-performing analog (by Year-5 revenue)")
         )
       ),
       
@@ -142,7 +142,7 @@ mod_scenario_builder_ui <- function(id) {
           # Minimum Peak Revenue
           h4(
             style = sprintf("color: %s; margin-top: 1.5em;", colors$text_primary),
-            "Minimum Peak Revenue"
+            "Minimum Year-5 Revenue"
           ),
           selectInput(
             ns("min_peak"),
@@ -172,7 +172,7 @@ mod_scenario_builder_ui <- function(id) {
             # Plain-text label so clicking the words toggles the box
             checkboxInput(
               ns("exclude_top_analog"),
-              label = "Exclude top analog (by peak revenue)",
+              label = "Exclude top analog (by Year-5 revenue)",
               value = FALSE
             ),
             tags$small(
@@ -670,7 +670,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         Product = analogs$product_name,
         Company = analogs$company,
         `Tumor Type` = analogs$tumor_class,
-        `Peak (Annual)` = sapply(analogs$peak_revenue_millions, format_revenue),
+        `Year-5 Revenue` = sapply(analogs$peak_revenue_millions, format_revenue),
         stringsAsFactors = FALSE,
         check.names = FALSE
       )
@@ -707,7 +707,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
               )
             }
           ),
-          `Peak (Annual)` = colDef(minWidth = 100, align = "right")
+          `Year-5 Revenue` = colDef(minWidth = 100, align = "right")
         )
       )
     })
@@ -794,9 +794,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       if (min_peak_val != "0") {
         min_val <- as.numeric(min_peak_val)
         if (min_val >= 1000) {
-          criteria_parts <- c(criteria_parts, paste0("peak ≥$", min_val/1000, "B"))
+          criteria_parts <- c(criteria_parts, paste0("Year-5 ≥$", min_val/1000, "B"))
         } else {
-          criteria_parts <- c(criteria_parts, paste0("peak ≥$", min_val, "M"))
+          criteria_parts <- c(criteria_parts, paste0("Year-5 ≥$", min_val, "M"))
         }
       }
       
@@ -825,7 +825,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         div(
           style = sprintf("color: %s;", colors$text_secondary),
           icon("chart line", style = "margin-right: 0.25em;"),
-          "Median Peak: ", strong(
+          "Median Year-5: ", strong(
             if (median_peak_revenue >= 1000) {
               paste0("$", round(median_peak_revenue/1000, 1), "B")
             } else {
@@ -854,7 +854,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
           icon("flask", style = sprintf("color: %s;", colors$warning)),
           span(
             style = sprintf("color: %s;", colors$warning),
-            " Sensitivity mode: Excluded ", strong(excluded_analog_name), " (top analog by peak revenue)"
+            " Sensitivity mode: Excluded ", strong(excluded_analog_name), " (top analog by Year-5 revenue)"
           )
         )
       } else {
