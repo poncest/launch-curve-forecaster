@@ -16,7 +16,6 @@ library(scales)
 library(ggplot2)
 library(ggiraph)
 library(reactable)
-library(reactablefmtr)
 
 # ============================================================================
 # APP METADATA

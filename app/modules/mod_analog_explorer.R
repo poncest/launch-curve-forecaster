@@ -484,10 +484,12 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
       # Build plot
       p <- ggplot(chart_data, aes(x = years_since_launch, y = revenue_millions, color = analog_type)) +
         geom_line_interactive(
+          # Per-point tooltips would split the line into one group per point,
+          # so the line gets a per-product tooltip and explicit grouping
           aes(
+            group = product_label,
             data_id = product_label,
-            tooltip = sprintf("%s\nYear %d: $%sM", product_label, years_since_launch, 
-                              scales::comma(revenue_millions))
+            tooltip = product_label
           ),
           linewidth = 1.5
         ) +
