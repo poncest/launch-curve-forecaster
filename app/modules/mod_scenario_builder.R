@@ -130,14 +130,12 @@ mod_scenario_builder_ui <- function(id) {
             checkboxInput(
               ns("solid_tumors"),
               "Solid Tumors",
-              value = TRUE,
-              width = "100%"
+              value = TRUE
             ),
             checkboxInput(
               ns("hematology"),
               "Hematology",
-              value = TRUE,
-              width = "100%"
+              value = TRUE
             )
           ),
           
@@ -171,18 +169,15 @@ mod_scenario_builder_ui <- function(id) {
               icon("flask"),
               " Sensitivity Check"
             ),
+            # Plain-text label so clicking the words toggles the box
             checkboxInput(
               ns("exclude_top_analog"),
-              label = span(
-                "Exclude top analog (by peak revenue)",
-                tags$br(),
-                tags$small(
-                  style = sprintf("color: %s; font-weight: normal;", colors$text_muted),
-                  "Test if results are driven by outlier"
-                )
-              ),
-              value = FALSE,
-              width = "100%"
+              label = "Exclude top analog (by peak revenue)",
+              value = FALSE
+            ),
+            tags$small(
+              style = sprintf("display: block; margin-top: 0.4em; color: %s;", colors$text_muted),
+              "Test if results are driven by an outlier"
             )
           ),
           
@@ -230,6 +225,10 @@ mod_scenario_builder_ui <- function(id) {
             step = 1,
             width = "100%",
             ticks = TRUE
+          ),
+          p(
+            style = sprintf("color: %s; font-size: 0.8em; margin-top: 0.3em;", colors$text_muted),
+            "Updates the Executive Brief immediately; analog criteria above take effect on Apply."
           ),
           
           # Revenue at risk output
@@ -494,6 +493,18 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     
     observeEvent(input$apply_filters, {
       new_selection <- filtered_analogs()$product_name
+
+      # Guard: an empty selection would leave the Executive Brief with nothing
+      # to summarize, so keep the last applied selection instead
+      if (length(new_selection) == 0) {
+        showNotification(
+          "No analogs match these criteria. Selection not applied; adjust the criteria.",
+          type = "warning",
+          duration = 4
+        )
+        return()
+      }
+
       shared$selected_analogs <- new_selection
       
       # Store delay for Executive Brief

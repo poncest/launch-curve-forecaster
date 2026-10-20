@@ -167,7 +167,7 @@ The framework includes established oncology launches with disclosed product-leve
 | Framework     | Shiny (modular architecture) |
 | UI components | shiny.semantic (Appsilon)    |
 | Visualization | ggplot2, ggiraph             |
-| Tables        | reactable, reactablefmtr     |
+| Tables        | reactable                    |
 | Deployment    | shinyapps.io                 |
 
 ------------------------------------------------------------------------

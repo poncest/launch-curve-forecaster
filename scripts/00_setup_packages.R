@@ -42,7 +42,6 @@ packages <- c(
 "ggplot2",
 "ggiraph",
 "reactable",
-"reactablefmtr",
 "plotly",
   
   # Data import

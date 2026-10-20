@@ -350,6 +350,8 @@ ui <- semanticPage(
         onVisible: function(tabPath) {
           // Notify Shiny when a tab becomes visible
           Shiny.setInputValue('active_tab', tabPath, {priority: 'event'});
+          // Tell Shiny this tab's outputs are now visible so suspended outputs re-render
+          $('.ui.tab[data-tab=' + tabPath + ']').trigger('shown');
           console.log('Tab switched to: ' + tabPath);
         }
       });
