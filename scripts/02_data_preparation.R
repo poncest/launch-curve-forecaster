@@ -169,7 +169,7 @@ product_metrics <- revenue |>
 analogs <- metadata |>
   left_join(product_metrics, by = "product_name") |>
   mutate(
-    approval_date = as.Date(paste0(fda_approval_year, "-09-01")),
+    approval_date = as.Date(fda_approval_date),  # first FDA approval
     years_to_peak = year_of_peak - fda_approval_year
   ) |>
   select(
@@ -210,6 +210,7 @@ curves <- revenue |>
     geography,
     tumor_class,
     source_filing,
+    verification,
     notes
   ) |>
   arrange(product_name, years_since_launch)
@@ -283,6 +284,13 @@ if (!dir.exists("app/data/processed")) {
 
 file.copy(paths$analogs_out, "app/data/processed/oncology_analogs.rds", overwrite = TRUE)
 file.copy(paths$curves_out, "app/data/processed/launch_curves.rds", overwrite = TRUE)
+# CSV fallbacks read by app/global.R when the RDS files are absent; keep in sync
+write.csv(curves[, c("product_name", "fiscal_year", "years_since_launch", "revenue_millions",
+                     "tumor_class", "verification")],
+          "app/data/processed/launch_curves.csv", row.names = FALSE)
+write.csv(analogs[, c("product_name", "company", "approval_date", "tumor_class", "indication",
+                      "peak_revenue_millions")],
+          "app/data/processed/oncology_analogs.csv", row.names = FALSE)
 
 cat("  ✓ Copied to app/data/processed/\n")
 

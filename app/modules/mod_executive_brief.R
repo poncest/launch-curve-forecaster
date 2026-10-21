@@ -167,7 +167,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Estimated revenue at risk during first year if launch is delayed by 2 quarters",
+            title = "First-year revenue shifted later by the launch delay set in the Scenario Builder (deferred, not lost)",
             icon("info circle")
           ),
           div(
@@ -653,7 +653,12 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           labs(
             x = "Years Since Launch",
             y = "Revenue ($M)",
-            caption = "Gray lines = individual analogs | Blue line = P50 median | Shaded area = P25-P75 range"
+            caption = paste0(
+              "Gray lines = individual analogs | Blue line = P50 median | Shaded area = P25-P75 range | ",
+              "n = ", dplyr::n_distinct(curves$product_name), " analogs",
+              if (dplyr::n_distinct(curves$product_name) < 5)
+                " (with fewer than 5, P25/P75 interpolate between single products: read as a rough spread)" else ""
+            )
           ) +
           scale_x_continuous(breaks = 0:5, limits = c(0, 5)) +
           scale_y_continuous(labels = scales::comma_format()) +

@@ -200,13 +200,12 @@ mod_methods_ui <- function(id) {
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
               tags$li("Approval dates (T=0 for launch)"),
-              tags$li("Indication scope"),
-              tags$li("Accelerated approval status")
+              tags$li("Initial indication")
             )
           )
         ),
         
-        # Source 2: SEC Filings
+        # Source 2: Company-reported revenue
         div(
           class = "column",
           div(
@@ -214,24 +213,26 @@ mod_methods_ui <- function(id) {
             style = sprintf("border-top: 3px solid %s;", colors$secondary),
             h4(
               style = sprintf("color: %s;", colors$primary_dark),
-              "SEC EDGAR Filings"
+              "Company-Reported Revenue"
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
-              "Product-level annual revenue from 10-K and 20-F filings via ",
+              "Full-year worldwide product sales from each owner's annual report or full-year ",
+              "results release (SEC 10-K and 8-K filings via ",
               tags$a(href = "https://www.sec.gov/edgar", target = "_blank", "SEC EDGAR"),
-              "."
+              "; AstraZeneca and Roche results announcements). Every value cites its source in ",
+              tags$code("data/raw/sec_product_revenue.csv"), "."
             ),
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
-              tags$li("Annual worldwide product revenue, by fiscal year"),
-              tags$li("Geographic breakdown (when available)"),
-              tags$li("Product-specific disclosures")
+              tags$li("Annual worldwide product sales, by fiscal year"),
+              tags$li("USD; Roche figures converted from CHF"),
+              tags$li("Re-sourced and verified October 2026")
             )
           )
         ),
         
-        # Source 3: Literature
+        # Source 3: Definitions that differ by product
         div(
           class = "column",
           div(
@@ -239,17 +240,18 @@ mod_methods_ui <- function(id) {
             style = sprintf("border-top: 3px solid %s;", colors$warning),
             h4(
               style = sprintf("color: %s;", colors$primary_dark),
-              "Published Literature"
+              "Definitions & Data Status"
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
-              "Launch curve patterns and uptake dynamics from peer-reviewed sources."
+              "Where a product's reporting differs, the rule used or the exception is noted:"
             ),
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
-              tags$li("Oncology launch benchmarks"),
-              tags$li("Market access timelines"),
-              tags$li("Competitive dynamics")
+              tags$li("Tecentriq: Roche reports CHF; converted at the Federal Reserve annual average rate"),
+              tags$li("Imbruvica: US sales (Pharmacyclics, then AbbVie) plus J&J ex-US sales"),
+              tags$li("Opdivo: BMS-reported, excluding Ono's territories (Japan, Korea, Taiwan), so it understates global sales"),
+              tags$li(data_status_note)
             )
           )
         )
@@ -274,7 +276,16 @@ mod_methods_ui <- function(id) {
         style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
         "Analog selection follows a governance-first approach: inclusion criteria are ",
         "specified ", strong("before"), " examining outcome data. This separation ensures ",
-        "defensible analysis and prevents post-hoc rationalization."
+        "defensible analysis and prevents post-hoc rationalization. The two filters in the ",
+        "Scenario Builder that use outcomes (minimum Year-5 revenue, excluding the top analog) ",
+        "are therefore sensitivity checks, not selection criteria."
+      ),
+      p(
+        style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
+        strong("Known gap: "), "the criteria below would admit more launches than the ten included ",
+        "(for example Kisqali, Zejula, Rubraca, Ninlaro, Empliciti, Imfinzi). The ten are commercially ",
+        "prominent products, so the set leans toward successful launches and the bands likely overstate a ",
+        "typical launch. Treat P50 as a benchmark from strong launches, not an expected outcome."
       ),
       
       h4(
@@ -293,7 +304,7 @@ mod_methods_ui <- function(id) {
         style = sprintf("color: %s;", colors$text_secondary),
         tags$li("Products with loss of exclusivity during observation period"),
         tags$li("Products with major safety withdrawals"),
-        tags$li("Products with incomplete revenue disclosure"),
+        tags$li("Products without separately reported revenue for Years 1-5"),
         tags$li("Biosimilars and generics")
       )
     ),
@@ -356,9 +367,9 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
-              "Product-level revenue reflects launch performance. ",
-              "Some products have revenue combined with other assets or ",
-              "include ex-US sales not separately disclosed."
+              "Values are company-reported worldwide product sales, which combine uptake, ",
+              "price and label expansion. Reporting conventions differ slightly by company ",
+              "(see Definitions & Data Status above)."
             )
           )
         ),
@@ -373,12 +384,11 @@ mod_methods_ui <- function(id) {
             ),
             h4(
               style = sprintf("color: %s; margin-bottom: 0.5em;", colors$warning),
-              "Scenario Independence"
+              "Launch-Year Alignment"
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
-              "Delay and market access scenarios are modeled as independent shifts. ",
-              "In reality, these factors may interact and compound."
+              year0_note
             )
           )
         )
@@ -425,7 +435,7 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
-              "Oncology launches post-2018 face different market conditions than 2013–2015 launches ",
+              "The analogs cover FDA approvals from 2013 to 2017 only; launches after 2018 face different market conditions ",
               "(pricing pressure, biosimilar competition, value-based contracting). ",
               "Earlier analogs may not fully represent current launch dynamics."
             )
@@ -603,19 +613,16 @@ mod_methods_server <- function(id, app_data) {
         Criterion = c(
           "Therapeutic Area",
           "Launch Window",
-          "Revenue Threshold",
           "Data Availability"
         ),
         Specification = c(
           "Oncology (solid tumors and hematology)",
           "FDA approval 2013-2017",
-          "Configurable minimum Year-5 revenue",
-          "Product-level revenue disclosed in SEC filings"
+          "Product-level revenue reported by the owner for Years 1-5"
         ),
         Rationale = c(
           "Focus on therapeutic area with established launch patterns",
           "Recent enough to be relevant, early enough for five full years of disclosed revenue",
-          "Exclude niche products with limited comparability",
           "Ensures consistent measurement across analogs"
         ),
         stringsAsFactors = FALSE
