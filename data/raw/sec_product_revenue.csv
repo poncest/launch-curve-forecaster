@@ -1,61 +1,61 @@
-product_name,company,fiscal_year,revenue_usd_millions,geography,years_since_launch,source_filing,extraction_date,notes
-Keytruda,Merck,2014,83,WW,0,10-K 2014,2026-01-25,Launch year - partial (Sep-Dec)
-Keytruda,Merck,2015,566,WW,1,10-K 2015,2026-01-25,First full year
-Keytruda,Merck,2016,1402,WW,2,10-K 2016,2026-01-25,
-Keytruda,Merck,2017,3809,WW,3,10-K 2017,2026-01-25,
-Keytruda,Merck,2018,7171,WW,4,10-K 2018,2026-01-25,
-Keytruda,Merck,2019,11084,WW,5,10-K 2019,2026-01-25,
-Opdivo,BMS,2014,27,WW,0,10-K 2014,2026-01-25,Launch year - partial (Dec only)
-Opdivo,BMS,2015,942,WW,1,10-K 2015,2026-01-25,First full year
-Opdivo,BMS,2016,3774,WW,2,10-K 2016,2026-01-25,
-Opdivo,BMS,2017,4948,WW,3,10-K 2017,2026-01-25,
-Opdivo,BMS,2018,6735,WW,4,10-K 2018,2026-01-25,
-Opdivo,BMS,2019,7204,WW,5,10-K 2019,2026-01-25,
-Ibrance,Pfizer,2015,723,WW,0,10-K 2015,2026-01-25,Launch year - partial (Feb-Dec)
-Ibrance,Pfizer,2016,2135,WW,1,10-K 2016,2026-01-25,
-Ibrance,Pfizer,2017,3129,WW,2,10-K 2017,2026-01-25,
-Ibrance,Pfizer,2018,4115,WW,3,10-K 2018,2026-01-25,
-Ibrance,Pfizer,2019,4961,WW,4,10-K 2019,2026-01-25,
-Ibrance,Pfizer,2020,5392,WW,5,10-K 2020,2026-01-25,
-Tagrisso,AstraZeneca,2015,29,WW,0,20-F 2015,2026-01-25,Launch year - partial (Nov-Dec)
-Tagrisso,AstraZeneca,2016,423,WW,1,20-F 2016,2026-01-25,
-Tagrisso,AstraZeneca,2017,955,WW,2,20-F 2017,2026-01-25,
-Tagrisso,AstraZeneca,2018,1860,WW,3,20-F 2018,2026-01-25,
-Tagrisso,AstraZeneca,2019,3189,WW,4,20-F 2019,2026-01-25,
-Tagrisso,AstraZeneca,2020,4328,WW,5,20-F 2020,2026-01-25,
-Lynparza,AstraZeneca,2014,19,WW,0,20-F 2014,2026-01-25,Launch year - partial (Dec only)
-Lynparza,AstraZeneca,2015,115,WW,1,20-F 2015,2026-01-25,
-Lynparza,AstraZeneca,2016,218,WW,2,20-F 2016,2026-01-25,
-Lynparza,AstraZeneca,2017,348,WW,3,20-F 2017,2026-01-25,
-Lynparza,AstraZeneca,2018,682,WW,4,20-F 2018,2026-01-25,
-Lynparza,AstraZeneca,2019,1195,WW,5,20-F 2019,2026-01-25,
-Tecentriq,Roche,2016,78,WW,0,20-F 2016,2026-01-25,Launch year - partial (May-Dec)
-Tecentriq,Roche,2017,428,WW,1,20-F 2017,2026-01-25,
-Tecentriq,Roche,2018,772,WW,2,20-F 2018,2026-01-25,
-Tecentriq,Roche,2019,1885,WW,3,20-F 2019,2026-01-25,
-Tecentriq,Roche,2020,2832,WW,4,20-F 2020,2026-01-25,
-Tecentriq,Roche,2021,3462,WW,5,20-F 2021,2026-01-25,
-Imbruvica,AbbVie/J&J,2013,53,WW,0,10-K 2013,2026-01-25,Launch year - partial (Nov-Dec); combined revenue
-Imbruvica,AbbVie/J&J,2014,548,WW,1,10-K 2014,2026-01-25,Combined AbbVie + J&J
-Imbruvica,AbbVie/J&J,2015,1620,WW,2,10-K 2015,2026-01-25,Combined AbbVie + J&J
-Imbruvica,AbbVie/J&J,2016,2487,WW,3,10-K 2016,2026-01-25,Combined AbbVie + J&J
-Imbruvica,AbbVie/J&J,2017,3266,WW,4,10-K 2017,2026-01-25,Combined AbbVie + J&J
-Imbruvica,AbbVie/J&J,2018,4562,WW,5,10-K 2018,2026-01-25,Combined AbbVie + J&J
-Darzalex,J&J,2015,37,WW,0,10-K 2015,2026-01-25,Launch year - partial (Nov-Dec)
-Darzalex,J&J,2016,572,WW,1,10-K 2016,2026-01-25,
-Darzalex,J&J,2017,1249,WW,2,10-K 2017,2026-01-25,
-Darzalex,J&J,2018,2026,WW,3,10-K 2018,2026-01-25,
-Darzalex,J&J,2019,2998,WW,4,10-K 2019,2026-01-25,
-Darzalex,J&J,2020,4190,WW,5,10-K 2020,2026-01-25,
-Venclexta,AbbVie,2016,37,WW,0,10-K 2016,2026-01-25,Launch year - partial (Apr-Dec)
-Venclexta,AbbVie,2017,157,WW,1,10-K 2017,2026-01-25,
-Venclexta,AbbVie,2018,315,WW,2,10-K 2018,2026-01-25,
-Venclexta,AbbVie,2019,792,WW,3,10-K 2019,2026-01-25,
-Venclexta,AbbVie,2020,1376,WW,4,10-K 2020,2026-01-25,
-Venclexta,AbbVie,2021,1831,WW,5,10-K 2021,2026-01-25,
-Calquence,AstraZeneca,2017,12,WW,0,20-F 2017,2026-01-25,Launch year - partial (Oct-Dec)
-Calquence,AstraZeneca,2018,113,WW,1,20-F 2018,2026-01-25,
-Calquence,AstraZeneca,2019,372,WW,2,20-F 2019,2026-01-25,
-Calquence,AstraZeneca,2020,828,WW,3,20-F 2020,2026-01-25,
-Calquence,AstraZeneca,2021,1462,WW,4,20-F 2021,2026-01-25,
-Calquence,AstraZeneca,2022,2052,WW,5,20-F 2022,2026-01-25,
+product_name,company,fiscal_year,revenue_usd_millions,geography,years_since_launch,source_filing,extraction_date,notes,source_url,verification
+Keytruda,Merck,2014,55,WW,0,Merck 10-K FY2016,2026-10-21,Launch year - partial (Sep-Dec),https://www.sec.gov/Archives/edgar/data/0000310158/000031015817000010/mrk1231201610k.htm,verified
+Keytruda,Merck,2015,566,WW,1,Merck 10-K FY2016,2026-10-21,,https://www.sec.gov/Archives/edgar/data/0000310158/000031015817000010/mrk1231201610k.htm,verified
+Keytruda,Merck,2016,1402,WW,2,Merck 10-K FY2016,2026-10-21,,https://www.sec.gov/Archives/edgar/data/0000310158/000031015817000010/mrk1231201610k.htm,verified
+Keytruda,Merck,2017,3809,WW,3,Merck 10-K FY2019,2026-10-21,,https://www.sec.gov/Archives/edgar/data/0000310158/000031015820000005/mrk1231201910k.htm,verified
+Keytruda,Merck,2018,7171,WW,4,Merck 10-K FY2019,2026-10-21,,https://www.sec.gov/Archives/edgar/data/0000310158/000031015820000005/mrk1231201910k.htm,verified
+Keytruda,Merck,2019,11084,WW,5,Merck 10-K FY2019,2026-10-21,,https://www.sec.gov/Archives/edgar/data/0000310158/000031015820000005/mrk1231201910k.htm,verified
+Opdivo,BMS,2014,6,WW,0,BMS 10-K FY2016,2026-10-21,"Launch year - partial (Dec only); BMS-reported; excludes Ono territories (Japan, Korea, Taiwan)",https://www.sec.gov/Archives/edgar/data/14272/000001427217000047/bmy-20161231x10xk.htm,verified
+Opdivo,BMS,2015,942,WW,1,BMS 10-K FY2016,2026-10-21,"BMS-reported; excludes Ono territories (Japan, Korea, Taiwan)",https://www.sec.gov/Archives/edgar/data/14272/000001427217000047/bmy-20161231x10xk.htm,verified
+Opdivo,BMS,2016,3774,WW,2,BMS 10-K FY2016,2026-10-21,"BMS-reported; excludes Ono territories (Japan, Korea, Taiwan)",https://www.sec.gov/Archives/edgar/data/14272/000001427217000047/bmy-20161231x10xk.htm,verified
+Opdivo,BMS,2017,4948,WW,3,BMS Q4 2017 results (8-K Ex 99.1),2026-10-21,"BMS-reported; excludes Ono territories (Japan, Korea, Taiwan)",https://www.sec.gov/Archives/edgar/data/0000014272/000001427218000022/q42017ex991.htm,verified
+Opdivo,BMS,2018,6735,WW,4,BMS Q4 2019 results (8-K Ex 99.1),2026-10-21,"BMS-reported; excludes Ono territories (Japan, Korea, Taiwan)",https://www.sec.gov/Archives/edgar/data/0000014272/000001427220000075/q42019ex991.htm,verified
+Opdivo,BMS,2019,7204,WW,5,BMS Q4 2019 results (8-K Ex 99.1),2026-10-21,"BMS-reported; excludes Ono territories (Japan, Korea, Taiwan)",https://www.sec.gov/Archives/edgar/data/0000014272/000001427220000075/q42019ex991.htm,verified
+Ibrance,Pfizer,2015,723,WW,0,Pfizer FY2015 results (not retrieved),2026-10-21,"Launch year - partial (Feb-Dec); value kept from original dataset, primary source not yet retrieved",,unverified
+Ibrance,Pfizer,2016,2135,WW,1,Pfizer FY2016 results (not retrieved),2026-10-21,"Value kept from original dataset, primary source not yet retrieved",,unverified
+Ibrance,Pfizer,2017,3126,WW,2,Pfizer product revenues incl. historicals (Q1 2019),2026-10-21,,https://s21.q4cdn.com/317678438/files/doc_downloads/2019/04/29/Q1-2019-PFE-Product-Revenues-(Includes-Historicals).pdf,verified
+Ibrance,Pfizer,2018,4118,WW,3,Pfizer product revenues incl. historicals (Q1 2019),2026-10-21,,https://s21.q4cdn.com/317678438/files/doc_downloads/2019/04/29/Q1-2019-PFE-Product-Revenues-(Includes-Historicals).pdf,verified
+Ibrance,Pfizer,2019,4961,WW,4,Pfizer Q4 2020 earnings release,2026-10-21,,https://www.pfizer.com.sg/files/Q4-2020-PFE-Earnings-Release.pdf,verified
+Ibrance,Pfizer,2020,5392,WW,5,Pfizer Q4 2020 earnings release,2026-10-21,,https://www.pfizer.com.sg/files/Q4-2020-PFE-Earnings-Release.pdf,verified
+Tagrisso,AstraZeneca,2015,19,WW,0,AstraZeneca FY2015 results announcement,2026-10-21,Launch year - partial (Nov-Dec); Product Sales,https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20160204070007_012686007.html,verified
+Tagrisso,AstraZeneca,2016,423,WW,1,AstraZeneca FY2016 results announcement,2026-10-21,Product Sales,https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/azn-fy16-and-q4-2016-results/4809013,verified
+Tagrisso,AstraZeneca,2017,955,WW,2,AstraZeneca FY2017 results announcement,2026-10-21,Product Sales,https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20180202070004_13519109.html,verified
+Tagrisso,AstraZeneca,2018,1860,WW,3,AstraZeneca FY2018 results announcement,2026-10-21,Product Sales,https://www.sec.gov/Archives/edgar/data/901832/000165495419001546/a9540p.htm,verified
+Tagrisso,AstraZeneca,2019,3189,WW,4,AstraZeneca FY2019 results announcement,2026-10-21,Product Sales,https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20200214070005_3494151.html,verified
+Tagrisso,AstraZeneca,2020,4328,WW,5,AstraZeneca FY2020 results announcement,2026-10-21,Product Sales,https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/azn-full-year-2020-results/6329729,verified
+Lynparza,AstraZeneca,2014,,WW,0,AstraZeneca FY2014 results announcement,2026-10-21,Launch year (approved Dec 2014); not separately reported,https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/final-results/3894677,not_reported
+Lynparza,AstraZeneca,2015,94,WW,1,AstraZeneca FY2015 results announcement,2026-10-21,Product Sales (excludes collaboration revenue),https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20160204070007_012686007.html,verified
+Lynparza,AstraZeneca,2016,218,WW,2,AstraZeneca FY2016 results announcement,2026-10-21,Product Sales (excludes collaboration revenue),https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/azn-fy16-and-q4-2016-results/4809013,verified
+Lynparza,AstraZeneca,2017,297,WW,3,AstraZeneca FY2017 results announcement,2026-10-21,Product Sales (excludes collaboration revenue),https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20180202070004_13519109.html,verified
+Lynparza,AstraZeneca,2018,647,WW,4,AstraZeneca FY2018 results announcement,2026-10-21,Product Sales (excludes collaboration revenue),https://www.sec.gov/Archives/edgar/data/901832/000165495419001546/a9540p.htm,verified
+Lynparza,AstraZeneca,2019,1198,WW,5,AstraZeneca FY2019 results announcement,2026-10-21,Product Sales (excludes collaboration revenue),https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20200214070005_3494151.html,verified
+Tecentriq,Roche,2016,159,WW,0,Roche Finance Report 2017,2026-10-21,Launch year - partial (May-Dec); CHF 157m converted at 0.9848 CHF/USD (Fed annual average),https://assets.roche.com/f/176343/x/ab217136ac/fb17e.pdf ; https://fred.stlouisfed.org/data/AEXSZUS,verified
+Tecentriq,Roche,2017,495,WW,1,Roche Finance Report 2017,2026-10-21,CHF 487m converted at 0.9842 CHF/USD (Fed annual average),https://assets.roche.com/f/176343/x/ab217136ac/fb17e.pdf ; https://fred.stlouisfed.org/data/AEXSZUS,verified
+Tecentriq,Roche,2018,789,WW,2,Roche FY2018 results release,2026-10-21,CHF 772m converted at 0.9784 CHF/USD (Fed annual average),https://www.roche.com/media/releases/med-cor-2019-01-31 ; https://fred.stlouisfed.org/data/AEXSZUS,verified
+Tecentriq,Roche,2019,1887,WW,3,Roche FY2019 results release,2026-10-21,CHF 1875m converted at 0.9937 CHF/USD (Fed annual average),https://www.roche.com/de/media/releases/med-cor-2020-01-30 ; https://fred.stlouisfed.org/data/AEXSZUS,verified
+Tecentriq,Roche,2020,2916,WW,4,Roche FY2020 results release,2026-10-21,CHF 2738m converted at 0.9389 CHF/USD (Fed annual average),https://www.roche.com/media/releases/med-cor-2021-02-04 ; https://fred.stlouisfed.org/data/AEXSZUS,verified
+Tecentriq,Roche,2021,3625,WW,5,Roche FY2021 results release,2026-10-21,CHF 3315m converted at 0.9144 CHF/USD (Fed annual average),https://www.roche.com/de/media/releases/med-cor-2022-02-03 ; https://fred.stlouisfed.org/data/AEXSZUS,verified
+Imbruvica,AbbVie/J&J,2013,14,WW,0,Pharmacyclics FY2014 results (8-K Ex 99.1),2026-10-21,Launch year - partial (Nov-Dec); US only (ex-US launch Oct 2014),https://www.sec.gov/Archives/edgar/data/0000949699/000092189515000474/ex991to8k07380004_02182015.htm,verified
+Imbruvica,AbbVie/J&J,2014,548,WW,1,Pharmacyclics FY2014 results (8-K Ex 99.1),2026-10-21,Worldwide: US $492m + ex-US $56m,https://www.sec.gov/Archives/edgar/data/0000949699/000092189515000474/ex991to8k07380004_02182015.htm,verified
+Imbruvica,AbbVie/J&J,2015,1669,WW,2,Pharmacyclics Q1 2015; AbbVie Q3/Q4 2015; J&J 10-K FY2017,2026-10-21,US $980m est. (Q1 $189m + Apr 1-May 25 est. $132m + May 26-Jun 30 $97m + Q3 $267m + Q4 $295m) + J&J ex-US $689m; Apr 1-May 25 interpolated (no filing covers it),https://www.sec.gov/Archives/edgar/data/0000949699/000092189515001122/ex991to8k07380004_05012015.htm ; https://www.sec.gov/Archives/edgar/data/0001551152/000110465915074329/a15-21950_1ex99d1.htm ; https://www.1stoncology.com/blog/?p=20720 ; https://www.sec.gov/Archives/edgar/data/0000200406/000020040618000005/form10-k20171231.htm,estimate
+Imbruvica,AbbVie/J&J,2016,2831,WW,3,AbbVie FY2016 results; J&J 10-K FY2018,2026-10-21,"AbbVie US $1,580m + J&J ex-US $1,251m",https://news.abbvie.com/2017-01-27-AbbVie-Reports-Full-Year-and-Fourth-Quarter-2016-Financial-Results ; https://www.sec.gov/Archives/edgar/data/200406/000020040619000009/form10-k20181230.htm,verified
+Imbruvica,AbbVie/J&J,2017,4037,WW,4,AbbVie 10-K FY2019; J&J 10-K FY2018,2026-10-21,"AbbVie US $2,144m + J&J ex-US $1,893m",https://www.sec.gov/Archives/edgar/data/1551152/000155115220000007/R39.htm ; https://www.sec.gov/Archives/edgar/data/200406/000020040619000009/form10-k20181230.htm,verified
+Imbruvica,AbbVie/J&J,2018,5583,WW,5,AbbVie 10-K FY2019; J&J 10-K FY2018,2026-10-21,"AbbVie US $2,968m + J&J ex-US $2,615m",https://www.sec.gov/Archives/edgar/data/1551152/000155115220000007/R39.htm ; https://www.sec.gov/Archives/edgar/data/200406/000020040619000009/form10-k20181230.htm,verified
+Darzalex,J&J,2015,20,WW,0,J&J 10-K FY2017,2026-10-21,Launch year - partial (Nov-Dec),https://www.sec.gov/Archives/edgar/data/0000200406/000020040618000005/form10-k20171231.htm,verified
+Darzalex,J&J,2016,572,WW,1,J&J 10-K FY2018,2026-10-21,,https://www.sec.gov/Archives/edgar/data/200406/000020040619000009/form10-k20181230.htm,verified
+Darzalex,J&J,2017,1242,WW,2,J&J 10-K FY2018,2026-10-21,,https://www.sec.gov/Archives/edgar/data/200406/000020040619000009/form10-k20181230.htm,verified
+Darzalex,J&J,2018,2025,WW,3,J&J 10-K FY2018,2026-10-21,,https://www.sec.gov/Archives/edgar/data/200406/000020040619000009/form10-k20181230.htm,verified
+Darzalex,J&J,2019,2998,WW,4,Genmab release citing J&J-reported sales,2026-10-21,,https://www.biopharmawatch.com/news/GMAB/genmab-announces-2019-net-sales-figures-for-darzalex-xae-daratumumab-and-achievement-of-us-gmab-20200122,verified
+Darzalex,J&J,2020,4190,WW,5,Genmab release citing J&J-reported sales,2026-10-21,,https://www.1stoncology.com/blog/?p=54250,verified
+Venclexta,AbbVie,2016,,WW,0,AbbVie FY2016 results,2026-10-21,Launch year (approved Apr 2016); not separately reported,https://www.sec.gov/Archives/edgar/data/0001551152/000110465917004435/a17-3277_1ex99d1.htm,not_reported
+Venclexta,AbbVie,2017,122,WW,1,AbbVie 10-K FY2019,2026-10-21,AbbVie net revenues (US + international),https://www.sec.gov/Archives/edgar/data/1551152/000155115220000007/R39.htm,verified
+Venclexta,AbbVie,2018,344,WW,2,AbbVie 10-K FY2019,2026-10-21,AbbVie net revenues (US + international),https://www.sec.gov/Archives/edgar/data/1551152/000155115220000007/R39.htm,verified
+Venclexta,AbbVie,2019,792,WW,3,AbbVie 10-K FY2021,2026-10-21,AbbVie net revenues (US + international),https://www.sec.gov/Archives/edgar/data/1551152/000155115222000007/R41.htm,verified
+Venclexta,AbbVie,2020,1337,WW,4,AbbVie 10-K FY2021,2026-10-21,AbbVie net revenues (US + international),https://www.sec.gov/Archives/edgar/data/1551152/000155115222000007/R41.htm,verified
+Venclexta,AbbVie,2021,1820,WW,5,AbbVie 10-K FY2021,2026-10-21,AbbVie net revenues (US + international),https://www.sec.gov/Archives/edgar/data/1551152/000155115222000007/R41.htm,verified
+Calquence,AstraZeneca,2017,3,WW,0,AstraZeneca FY2017 results announcement,2026-10-21,Launch year - partial (Oct-Dec); Product Sales,https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20180202070004_13519109.html,verified
+Calquence,AstraZeneca,2018,62,WW,1,AstraZeneca FY2018 results announcement,2026-10-21,Product Sales,https://www.sec.gov/Archives/edgar/data/901832/000165495419001546/a9540p.htm,verified
+Calquence,AstraZeneca,2019,164,WW,2,AstraZeneca FY2019 results announcement,2026-10-21,Product Sales,https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20200214070005_3494151.html,verified
+Calquence,AstraZeneca,2020,522,WW,3,AstraZeneca FY2020 results announcement,2026-10-21,Product Sales,https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/azn-full-year-2020-results/6329729,verified
+Calquence,AstraZeneca,2021,1238,WW,4,AstraZeneca FY2021 results announcement,2026-10-21,Product Sales,https://www.sec.gov/Archives/edgar/data/901832/000165495422001372/a2250b.htm,verified
+Calquence,AstraZeneca,2022,2057,WW,5,AstraZeneca FY2022 results announcement,2026-10-21,Product Sales,https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/final-results/7404050,verified

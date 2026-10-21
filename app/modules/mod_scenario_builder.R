@@ -62,10 +62,10 @@ mod_scenario_builder_ui <- function(id) {
         tags$ol(
           style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
           tags$li(tags$strong("Set Therapeutic Focus"), " - Check/uncheck Solid Tumors and Hematology to filter by tumor type"),
-          tags$li(tags$strong("Set Minimum Year-5 Revenue"), " - Filter to analogs above a revenue threshold"),
+          tags$li(tags$strong("Optional sensitivity checks"), " - Drop the top analog or analogs below a Year-5 revenue level, to see how much outcomes drive the range"),
           tags$li(tags$strong("Click 'Apply Selection'"), " - Confirms your analog set and syncs to Executive Brief"),
           tags$li(tags$strong("Adjust Launch Delay"), " - Use the slider to model 0-4 quarters of delay"),
-          tags$li(tags$strong("Review Revenue at Risk"), " - See cumulative revenue impact of the delay")
+          tags$li(tags$strong("Review Revenue at Risk"), " - See first-year revenue shifted out by the delay")
         ),
         
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Tips"),
@@ -139,25 +139,6 @@ mod_scenario_builder_ui <- function(id) {
             )
           ),
           
-          # Minimum Peak Revenue
-          h4(
-            style = sprintf("color: %s; margin-top: 1.5em;", colors$text_primary),
-            "Minimum Year-5 Revenue"
-          ),
-          selectInput(
-            ns("min_peak"),
-            label = NULL,
-            choices = c(
-              "No minimum" = "0",
-              "$500M+" = "500",
-              "$1B+" = "1000",
-              "$2B+" = "2000",
-              "$3B+" = "3000"
-            ),
-            selected = "0",
-            width = "100%"
-          ),
-          
           # Sensitivity Check (P1)
           div(
             style = sprintf(
@@ -178,6 +159,26 @@ mod_scenario_builder_ui <- function(id) {
             tags$small(
               style = sprintf("display: block; margin-top: 0.4em; color: %s;", colors$text_muted),
               "Test if results are driven by an outlier"
+            ),
+            div(
+              style = "margin-top: 1em;",
+              tags$label(style = "font-weight: 600; font-size: 0.9em;", "Minimum Year-5 revenue"),
+              selectInput(
+                ns("min_peak"),
+                label = NULL,
+                choices = c(
+                  "No minimum" = "0",
+                  "$2B+" = "2000",
+                  "$4B+" = "4000",
+                  "$6B+" = "6000"
+                ),
+                selected = "0",
+                width = "100%"
+              )
+            ),
+            tags$small(
+              style = sprintf("display: block; margin-top: 0.4em; color: %s;", colors$text_muted),
+              "Both checks filter on outcomes, so they show sensitivity, not a defensible analog set"
             )
           ),
           
@@ -247,7 +248,7 @@ mod_scenario_builder_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.5em; margin-bottom: 0;", colors$text_muted),
-              "Revenue foregone in first year post-launch"
+              "First-year revenue deferred by the delay (shifted later, not lost)"
             )
           ),
           

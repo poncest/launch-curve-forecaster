@@ -25,6 +25,10 @@ The framework is designed for commercial launch planning contexts where leaders 
 🔗 **Interactive Shiny dashboard:**\
 [Launch Curve Forecaster](https://0l6jpd-steven-ponce.shinyapps.io/launch_curve_forecaster/) (ShinyApps.io)
 
+📝 **Case study write-up:** [Launch Curve Forecaster: a governance-first case study](https://stevenponce.netlify.app/projects/standalone_visualizations/sa_2026-01-28.html)
+
+> **Data correction (October 2026).** All 60 revenue values were re-sourced from the companies' own annual reports and full-year results releases; 35 changed. The original dataset had Tecentriq in Swiss francs labeled as US dollars, an Imbruvica series that mixed two definitions, and several values that did not match the filings (for example Calquence 2019: $164M reported vs $372M stored). Every value now carries its source link and a verification status in `data/raw/sec_product_revenue.csv`.
+
 ------------------------------------------------------------------------
 
 ## Core Decision Question
@@ -102,9 +106,12 @@ NPV and market access modeling are excluded because they require company-specifi
 Inclusion criteria are specified **before** examining outcome data to ensure defensible analysis:
 
 -   **Therapeutic area:** Oncology (solid tumors and/or hematology)
--   **Year-5 revenue threshold:** Configurable minimum (filters speculative analogs)
--   **Data availability:** Product-level revenue disclosed in SEC filings
--   **Sensitivity check:** Option to exclude the top-performing analog to test robustness
+-   **Launch window:** FDA approval 2013–2017
+-   **Data availability:** Product-level revenue reported by the owner for Years 1–5
+
+Two optional filters use outcomes (excluding the top analog, and a minimum Year-5 revenue). Because they look at results, they are offered as **sensitivity checks**, not selection criteria.
+
+**Alignment:** Year 0 is the calendar year of first FDA approval, so it covers anywhere from 10 days (Opdivo) to about 11 months (Ibrance) on market; Year-0 values are not comparable across analogs, and Years 1–5 can be offset by up to about 11 months.
 
 ------------------------------------------------------------------------
 
@@ -144,9 +151,13 @@ This is a **Year 1 average-quarter approximation**, explicitly labeled to match 
 
 | Source | Purpose | Access |
 |----|----|----|
-| SEC EDGAR filings | Product-level revenue (10-K reports) | [SEC EDGAR](https://www.sec.gov/edgar) |
+| Company annual reports and full-year results releases | Worldwide product sales by fiscal year (SEC 10-K and 8-K filings; AstraZeneca and Roche results announcements) | Source URL per value in `data/raw/sec_product_revenue.csv` |
+| Federal Reserve (FRED series AEXSZUS) | Annual average CHF/USD rate, to convert Roche's Tecentriq sales | [FRED](https://fred.stlouisfed.org/series/AEXSZUS) |
 | FDA Drug Approvals | Approval dates (T=0), indications | [FDA.gov](https://www.fda.gov/drugs) |
-| Published literature | Launch curve patterns and benchmarks | Peer-reviewed sources |
+
+**Definitions where reporting differs:** Imbruvica = US sales (Pharmacyclics, then AbbVie) + J&J ex-US sales; Opdivo = BMS-reported, excluding Ono's territories (Japan, Korea, Taiwan); Tecentriq converted from CHF.
+
+**Data status:** 55 of 60 values verified against a primary source. Imbruvica 2015 is an estimate (no filing covers April 1–May 25, 2015, around AbbVie's acquisition of Pharmacyclics). Ibrance 2015–2016 are not yet traced to a primary source. Launch-year sales are not reported for Lynparza (approved December 2014) and Venclexta (April 2016).
 
 All data used is publicly available. No proprietary or confidential information is included.
 
@@ -186,7 +197,8 @@ The framework includes established oncology launches with disclosed product-leve
 
 ## Limitations
 
--   Revenue data from SEC filings may include ex-US sales
+-   Reporting definitions differ slightly by company (see Data Sources)
+-   Year 0 covers different lengths of time on market across analogs
 -   Label expansion can introduce upward bias in Year-5 revenues
 -   Earlier analogs may not fully reflect current launch environments
 -   Revenue-at-risk calculation is simplified (not a full DCF model)
@@ -219,5 +231,5 @@ It is **not intended for real-world commercial decision-making** and is not affi
 
 ------------------------------------------------------------------------
 
-**Version:** 1.1.0\
+**Version:** 1.2.0\
 **Last updated:** October 2026
