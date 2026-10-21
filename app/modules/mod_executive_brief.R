@@ -762,6 +762,13 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     outputOptions(output, "kpi_time_to_peak", suspendWhenHidden = FALSE)
     outputOptions(output, "launch_curve_chart", suspendWhenHidden = FALSE)
     outputOptions(output, "analog_table", suspendWhenHidden = FALSE)
+    # Small text outputs that depend on the selection: always render them so
+    # they can never lag the headline KPIs, even where tab visibility
+    # detection fails (hidden panes, embedded iframes)
+    for (id in c("kpi_analogs_context", "kpi_peak_context", "kpi_risk_context",
+                 "kpi_time_context", "decision_timing", "decision_forecast")) {
+      outputOptions(output, id, suspendWhenHidden = FALSE)
+    }
     
   })
 }
