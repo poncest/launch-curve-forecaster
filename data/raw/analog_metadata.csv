@@ -2,10 +2,10 @@ product_name,company,fda_approval_year,fda_approval_date,tumor_class,indication_
 Keytruda,Merck,2014,2014-09-04,Solid,Melanoma (initial),PD-1 inhibitor,10-K,MRK,Expanded to multiple indications
 Opdivo,BMS,2014,2014-12-22,Solid,Melanoma (initial),PD-1 inhibitor,10-K,BMY,Expanded to multiple indications
 Ibrance,Pfizer,2015,2015-02-03,Solid,Breast cancer (HR+/HER2-),CDK4/6 inhibitor,10-K,PFE,
-Tagrisso,AstraZeneca,2015,2015-11-13,Solid,NSCLC (EGFR T790M),EGFR TKI,20-F,AZN,
-Lynparza,AstraZeneca,2014,2014-12-19,Solid,Ovarian cancer (BRCA),PARP inhibitor,20-F,AZN,Accelerated approval initially
+Tagrisso,AstraZeneca,2015,2015-11-13,Solid,NSCLC (EGFR T790M),EGFR TKI,Results announcement,AZN,
+Lynparza,AstraZeneca,2014,2014-12-19,Solid,Ovarian cancer (BRCA),PARP inhibitor,Results announcement,AZN,Accelerated approval initially
 Tecentriq,Roche,2016,2016-05-18,Solid,Bladder cancer (initial),PD-L1 inhibitor,Annual report (CHF),RHHBY,Reports in CHF; converted to USD at annual average rate
 Imbruvica,AbbVie/J&J,2013,2013-11-13,Heme,CLL/MCL,BTK inhibitor,10-K,ABBV,Worldwide = US (Pharmacyclics then AbbVie) + J&J ex-US sales
 Darzalex,J&J,2015,2015-11-16,Heme,Multiple myeloma,CD38 antibody,10-K,JNJ,
 Venclexta,AbbVie,2016,2016-04-11,Heme,CLL,BCL-2 inhibitor,10-K,ABBV,Collaboration with Roche
-Calquence,AstraZeneca,2017,2017-10-31,Heme,MCL (initial),BTK inhibitor,20-F,AZN,
+Calquence,AstraZeneca,2017,2017-10-31,Heme,MCL (initial),BTK inhibitor,Results announcement,AZN,

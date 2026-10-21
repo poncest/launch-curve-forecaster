@@ -244,13 +244,13 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
-              "Where a product's reporting differs, one consistent rule is applied and noted:"
+              "Where a product's reporting differs, the rule used or the exception is noted:"
             ),
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
               tags$li("Tecentriq: Roche reports CHF; converted at the Federal Reserve annual average rate"),
               tags$li("Imbruvica: US sales (Pharmacyclics, then AbbVie) plus J&J ex-US sales"),
-              tags$li("Opdivo: BMS-reported, excluding Ono's territories (Japan, Korea, Taiwan)"),
+              tags$li("Opdivo: BMS-reported, excluding Ono's territories (Japan, Korea, Taiwan), so it understates global sales"),
               tags$li(data_status_note)
             )
           )
@@ -280,6 +280,13 @@ mod_methods_ui <- function(id) {
         "Scenario Builder that use outcomes (minimum Year-5 revenue, excluding the top analog) ",
         "are therefore sensitivity checks, not selection criteria."
       ),
+      p(
+        style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
+        strong("Known gap: "), "the criteria below would admit more launches than the ten included ",
+        "(for example Kisqali, Zejula, Rubraca, Ninlaro, Empliciti, Imfinzi). The ten are commercially ",
+        "prominent products, so the set leans toward successful launches and the bands likely overstate a ",
+        "typical launch. Treat P50 as a benchmark from strong launches, not an expected outcome."
+      ),
       
       h4(
         style = sprintf("color: %s; margin-top: 1.5em;", colors$text_primary),
@@ -297,7 +304,7 @@ mod_methods_ui <- function(id) {
         style = sprintf("color: %s;", colors$text_secondary),
         tags$li("Products with loss of exclusivity during observation period"),
         tags$li("Products with major safety withdrawals"),
-        tags$li("Products with incomplete revenue disclosure"),
+        tags$li("Products without separately reported revenue for Years 1-5"),
         tags$li("Biosimilars and generics")
       )
     ),
@@ -428,7 +435,7 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
-              "Oncology launches post-2018 face different market conditions than 2013–2015 launches ",
+              "The analogs cover FDA approvals from 2013 to 2017 only; launches after 2018 face different market conditions ",
               "(pricing pressure, biosimilar competition, value-based contracting). ",
               "Earlier analogs may not fully represent current launch dynamics."
             )

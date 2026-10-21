@@ -303,16 +303,17 @@ local({
   products_no_y0 <- setdiff(an$product_name, cv$product_name[cv$years_since_launch == 0])
   estimates  <- if (has_status) cv[cv$verification %in% "estimate", ] else cv[0, ]
   unverified <- if (has_status) cv[cv$verification %in% "unverified", ] else cv[0, ]
-  data_status_note <<- paste0(
+  parts <- c(
     if (has_status) paste0(sum(cv$verification %in% "verified"), " of ",
-                           nrow(cv) + length(products_no_y0), " values verified against a primary source") else "",
-    if (nrow(estimates) > 0) paste0("; ", paste(estimates$product_name, estimates$fiscal_year, collapse = ", "),
-                                    " estimated (part of a quarter is not covered by any filing)") else "",
-    if (nrow(unverified) > 0) paste0("; ", paste(unverified$product_name, unverified$fiscal_year, collapse = ", "),
-                                     " not yet traced to a primary source") else "",
-    if (length(products_no_y0) > 0) paste0("; launch-year sales not reported for ",
-                                           paste(products_no_y0, collapse = " and ")) else ""
+                           nrow(cv) + length(products_no_y0), " values verified against a primary source"),
+    if (nrow(estimates) > 0) paste0(paste(estimates$product_name, estimates$fiscal_year, collapse = ", "),
+                                    " estimated (part of a quarter is not covered by any filing)"),
+    if (nrow(unverified) > 0) paste0(paste(unverified$product_name, unverified$fiscal_year, collapse = ", "),
+                                     " not yet traced to a primary source"),
+    if (length(products_no_y0) > 0) paste0("launch-year sales not reported for ",
+                                           paste(products_no_y0, collapse = " and "))
   )
+  data_status_note <<- paste(parts, collapse = "; ")
 
   # Year 0 = calendar year of first FDA approval; days on market in that year
   appr <- as.Date(an$approval_date)

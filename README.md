@@ -27,7 +27,7 @@ The framework is designed for commercial launch planning contexts where leaders 
 
 📝 **Case study write-up:** [Launch Curve Forecaster: a governance-first case study](https://stevenponce.netlify.app/projects/standalone_visualizations/sa_2026-01-28.html)
 
-> **Data correction (October 2026).** All 60 revenue values were re-sourced from the companies' own annual reports and full-year results releases; 35 changed. The original dataset had Tecentriq in Swiss francs labeled as US dollars, an Imbruvica series that mixed two definitions, and several values that did not match the filings (for example Calquence 2019: $164M reported vs $372M stored). Every value now carries its source link and a verification status in `data/raw/sec_product_revenue.csv`.
+> **Data correction (October 2026).** All 60 revenue values were re-checked against company reports; 35 changed and 55 are now verified against a primary source (status per value below). The original dataset had Tecentriq in Swiss francs labeled as US dollars, an Imbruvica series that mixed two definitions, and several values that did not match the filings (for example Calquence 2019: $164M reported vs $372M stored). Each value carries its source and verification status in `data/raw/sec_product_revenue.csv`.
 
 ------------------------------------------------------------------------
 
@@ -143,7 +143,7 @@ This is a **Year 1 average-quarter approximation**, explicitly labeled to match 
 
 -   **Demand deferral:** Delayed demand is deferred, not destroyed
 -   **Label expansion bias:** Some analogs experienced post-launch indication expansion, creating potential upward bias
--   **Era effects:** Launch dynamics differ between earlier (2013–2015) and more recent oncology approvals
+-   **Era effects:** The analogs cover FDA approvals from 2013 to 2017 only; launches after 2018 face different conditions
 
 ------------------------------------------------------------------------
 
@@ -199,6 +199,8 @@ The framework includes established oncology launches with disclosed product-leve
 
 -   Reporting definitions differ slightly by company (see Data Sources)
 -   Year 0 covers different lengths of time on market across analogs
+-   Selection bias: the stated criteria would admit more launches than the ten included (e.g. Kisqali, Zejula, Ninlaro); the ten are commercially prominent, so the bands likely overstate a typical launch
+-   Opdivo excludes Ono's territories (Japan, Korea, Taiwan), so its curve understates global sales
 -   Label expansion can introduce upward bias in Year-5 revenues
 -   Earlier analogs may not fully reflect current launch environments
 -   Revenue-at-risk calculation is simplified (not a full DCF model)

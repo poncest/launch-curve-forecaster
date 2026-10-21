@@ -285,9 +285,11 @@ if (!dir.exists("app/data/processed")) {
 file.copy(paths$analogs_out, "app/data/processed/oncology_analogs.rds", overwrite = TRUE)
 file.copy(paths$curves_out, "app/data/processed/launch_curves.rds", overwrite = TRUE)
 # CSV fallbacks read by app/global.R when the RDS files are absent; keep in sync
-write.csv(curves[, c("product_name", "years_since_launch", "revenue_millions", "tumor_class")],
+write.csv(curves[, c("product_name", "fiscal_year", "years_since_launch", "revenue_millions",
+                     "tumor_class", "verification")],
           "app/data/processed/launch_curves.csv", row.names = FALSE)
-write.csv(analogs[, intersect(names(analogs), names(read.csv("app/data/processed/oncology_analogs.csv", nrows = 1)))],
+write.csv(analogs[, c("product_name", "company", "approval_date", "tumor_class", "indication",
+                      "peak_revenue_millions")],
           "app/data/processed/oncology_analogs.csv", row.names = FALSE)
 
 cat("  ✓ Copied to app/data/processed/\n")

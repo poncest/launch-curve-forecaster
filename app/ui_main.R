@@ -313,7 +313,7 @@ ui <- semanticPage(
       tags$ul(
         style = sprintf("color: %s;", colors$text_secondary),
         tags$li("FDA drug approval database (approval dates)"),
-        tags$li("Company annual reports and full-year results releases (product-level revenue; each value cited in the repository)")
+        tags$li("Company annual reports and full-year results releases (product-level revenue; source and verification status per value in the repository)")
       ),
       p(
         style = sprintf("color: %s;", colors$text_secondary),
