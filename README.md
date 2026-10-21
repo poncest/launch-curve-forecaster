@@ -219,5 +219,5 @@ It is **not intended for real-world commercial decision-making** and is not affi
 
 ------------------------------------------------------------------------
 
-**Version:** 1.0.0\
-**Last updated:** January 2026
+**Version:** 1.1.0\
+**Last updated:** October 2026

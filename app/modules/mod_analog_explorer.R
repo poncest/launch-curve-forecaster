@@ -195,6 +195,15 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           session, "compare_analog",
           choices = c("None" = "", choices)
         )
+        
+        # Show the default analog immediately instead of an empty panel
+        isolate({
+          if (!isTRUE(rv$loaded)) {
+            rv$primary_name <- unname(choices[1])
+            rv$compare_name <- NULL
+            rv$loaded <- TRUE
+          }
+        })
       }
     })
     
@@ -480,10 +489,11 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
       }
       
       # Colors
-      line_colors <- c("Primary" = colors$primary, "Comparison" = colors$secondary)
+      line_colors <- setNames(c(colors$primary, colors$secondary)[seq_along(unique(chart_data$product_label))],
+                              unique(chart_data$product_label))
       
       # Build plot
-      p <- ggplot(chart_data, aes(x = years_since_launch, y = revenue_millions, color = analog_type)) +
+      p <- ggplot(chart_data, aes(x = years_since_launch, y = revenue_millions, color = product_label)) +
         geom_line_interactive(
           # Per-point tooltips would split the line into one group per point,
           # so the line gets a per-product tooltip and explicit grouping
