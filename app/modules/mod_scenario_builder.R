@@ -195,6 +195,31 @@ mod_scenario_builder_ui <- function(id) {
         ),
         
         # ================================================================
+        # YOUR PRODUCT CARD - scale analog shapes to an expected Year 5
+        # ================================================================
+        div(
+          class = "ui segment",
+          style = "margin-top: 1.5em;",
+          h3(
+            style = sprintf("color: %s;", colors$primary_dark),
+            icon("crosshairs"),
+            "Your Product (optional)"
+          ),
+          p(
+            style = sprintf("color: %s; font-size: 0.85em; margin-bottom: 1em;", colors$text_muted),
+            "Analogs supply the launch shape, not the size. Enter the Year-5 revenue you expect for your ",
+            "product (for example from a patient-based forecast) and the Executive Brief scales each ",
+            "analog's curve, as a share of its own Year 5, to that figure. Leave blank to see the ",
+            "analogs' own revenue."
+          ),
+          shiny::numericInput(
+            ns("expected_y5"),
+            label = "Expected Year-5 revenue ($M)",
+            value = NA, min = 1, step = 50, width = "100%"
+          )
+        ),
+
+        # ================================================================
         # DELAY SCENARIO CARD - Core Decision Support
         # ================================================================
         div(
@@ -249,7 +274,7 @@ mod_scenario_builder_ui <- function(id) {
             p(
               style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.5em; margin-bottom: 0;", colors$text_muted),
               "Lost if the exclusivity end date is fixed: the delayed quarters come off the end of ",
-              "exclusivity, valued at the P50 Year-5 run rate (a lower bound).",
+              "exclusivity, valued at the Year-5 run rate (analogs' P50, or your input; a lower bound).",
               uiOutput(ns("deferred_display"))
             )
           ),
@@ -488,6 +513,14 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       
       year5 <- yearly_median$revenue_millions[yearly_median$years_since_launch == 5]
       attr(risk, "lost_fixed_expiry") <- if (length(year5) == 1) delay_q / 4 * year5 else NA
+
+      # Product mode: same formulas on the analog shapes scaled to the input
+      expected <- shared$expected_y5
+      if (valid_expected(expected)) {
+        sh <- analog_shapes(selected_curves)
+        risk <- delay_q * median(sh$shape[sh$years_since_launch == 1], na.rm = TRUE) * expected / 4
+        attr(risk, "lost_fixed_expiry") <- delay_q / 4 * expected
+      }
       risk
     })
     
@@ -525,6 +558,11 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     # Also update delay reactively (without requiring button click)
     observe({
       shared$delay_quarters <- input$delay_quarters
+    })
+
+    # Expected Year-5 revenue for the user's product (NA when blank or invalid)
+    observe({
+      shared$expected_y5 <- if (valid_expected(input$expected_y5)) input$expected_y5 else NA
     })
     
     # ========================================================================
