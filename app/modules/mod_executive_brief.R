@@ -57,7 +57,7 @@ mod_executive_brief_ui <- function(id) {
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Key Sections"),
         tags$ul(
           style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
-          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, Year-5 revenue (P50), revenue at risk, median Year-1 revenue"),
+          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, Year-5 revenue (P50), cost of delay, median Year-1 revenue"),
           tags$li(tags$strong("Launch Trajectory Chart"), " - P25/P50/P75 revenue bands over Years 0-5"),
           tags$li(tags$strong("Decision Cards"), " - Launch timing impact and forecast range interpretation")
         ),
@@ -66,7 +66,7 @@ mod_executive_brief_ui <- function(id) {
         tags$ul(
           style = sprintf("color: %s;", colors$text_muted),
           tags$li("Metrics update when you ", tags$strong("Apply Selection"), " in Scenario Builder"),
-          tags$li("Revenue at Risk reflects your chosen delay scenario"),
+          tags$li("Cost of Delay reflects your chosen delay scenario"),
           tags$li("P25/P50/P75 bands are calculated from your selected analog set")
         ),
         
@@ -167,7 +167,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "First-year revenue shifted later by the launch delay set in the Scenario Builder (deferred, not lost)",
+            title = "Sales lost to the launch delay set in the Scenario Builder if the exclusivity end date is fixed: the delayed quarters come off the end of exclusivity, valued at the P50 Year-5 run rate (a lower bound, since analogs were still growing). The smaller figure is first-year sales that are only deferred.",
             icon("info circle")
           ),
           div(
@@ -176,7 +176,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Revenue at Risk (Year 1)"
+            "Cost of Delay (Fixed Expiry)"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -197,7 +197,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Median revenue in the first full year after launch across selected analogs. This is the basis of the revenue-at-risk estimate.",
+            title = "Median revenue in the first full year after launch across selected analogs. This is the basis of the deferred-sales figure.",
             icon("info circle")
           ),
           div(
@@ -247,9 +247,10 @@ mod_executive_brief_ui <- function(id) {
           icon("info circle"),
           " ",
           strong("Key Assumption:"),
-          " This model assumes delayed demand is ",
-          strong("deferred, not destroyed"),
-          ". Competitive dynamics and market access restrictions are excluded by design."
+          " A delay usually does not move the exclusivity end date, so the delayed months are ",
+          strong("lost at the end of exclusivity, near peak sales"),
+          ", not just shifted. First-year sales that are only deferred are shown for comparison. ",
+          "Share lost to earlier competitors and market access are not modeled."
         )
       )
     ),
@@ -452,6 +453,10 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         peak_p25 = quantile(peaks$peak_revenue, 0.25, na.rm = TRUE),
         peak_p75 = quantile(peaks$peak_revenue, 0.75, na.rm = TRUE),
         revenue_at_risk = revenue_at_risk_calc,
+        # If the exclusivity end date is fixed, a delay of d quarters removes d
+        # quarters of sales at the end of exclusivity. Valued at the P50 Year-5
+        # run rate: a lower bound, since every analog was still growing at Year 5.
+        revenue_lost_fixed_expiry = delay_q / 4 * median(peaks$peak_revenue, na.rm = TRUE),
         year1_median = if (nrow(year1_data) > 0) year1_median else 0,
         year1_range = if (nrow(year1_data) > 0) {
           quantile(year1_data$revenue_millions, c(0.25, 0.75), na.rm = TRUE)
@@ -511,10 +516,10 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     
     output$kpi_revenue_at_risk <- renderUI({
       m <- metrics()
-      if (m$revenue_at_risk == 0) {
+      if (is.null(m$revenue_lost_fixed_expiry) || m$revenue_lost_fixed_expiry == 0) {
         "--"
       } else {
-        paste0("$", format(round(m$revenue_at_risk), big.mark = ","), "M")
+        fmt_money(m$revenue_lost_fixed_expiry)
       }
     })
     
@@ -524,7 +529,8 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       if (is.null(delay_q) || delay_q == 0) {
         "No delay selected"
       } else {
-        paste0(delay_q, "-quarter delay scenario")
+        paste0(delay_q, "-quarter delay; $", format(round(m$revenue_at_risk), big.mark = ","),
+               "M of Year-1 sales only deferred")
       }
     })
     
@@ -539,7 +545,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         "First full year after launch"
       } else {
         paste0("Range: ", fmt_revenue(m$year1_range[1]), " - ", fmt_revenue(m$year1_range[2]),
-               " (basis for revenue at risk)")
+               " (basis for deferred sales)")
       }
     })
     
@@ -554,10 +560,11 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       } else {
         delay_months <- m$delay_quarters * 3
         paste0(
-          "A ", m$delay_quarters, "-quarter (", delay_months, "-month) delay scenario suggests approximately $",
-          format(round(m$revenue_at_risk), big.mark = ","), "M in revenue at risk ",
-          "during the first year post-launch. This estimate assumes demand is deferred, not destroyed, ",
-          "and does not account for competitive dynamics."
+          "A ", m$delay_quarters, "-quarter (", delay_months, "-month) delay moves about $",
+          format(round(m$revenue_at_risk), big.mark = ","), "M of first-year sales later. ",
+          "If the exclusivity end date is fixed, it also removes the last ", delay_months,
+          " months of exclusivity: at least ", fmt_money(m$revenue_lost_fixed_expiry),
+          " at the P50 Year-5 run rate. Share lost to earlier competitors would add to this."
         )
       }
     })

@@ -65,7 +65,7 @@ mod_scenario_builder_ui <- function(id) {
           tags$li(tags$strong("Optional sensitivity checks"), " - Drop the top analog or analogs below a Year-5 revenue level, to see how much outcomes drive the range"),
           tags$li(tags$strong("Click 'Apply Selection'"), " - Confirms your analog set and syncs to Executive Brief"),
           tags$li(tags$strong("Adjust Launch Delay"), " - Use the slider to model 0-4 quarters of delay"),
-          tags$li(tags$strong("Review Revenue at Risk"), " - See first-year revenue shifted out by the delay")
+          tags$li(tags$strong("Review Cost of Delay"), " - Sales lost at the end of exclusivity, and first-year sales only deferred")
         ),
         
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Tips"),
@@ -240,7 +240,7 @@ mod_scenario_builder_ui <- function(id) {
             ),
             h4(
               style = sprintf("color: %s; margin: 0 0 0.5em 0;", colors$warning),
-              "Revenue at Risk (Year 1)"
+              "Cost of Delay"
             ),
             div(
               style = sprintf("font-size: 1.8em; font-weight: bold; color: %s;", colors$primary),
@@ -248,7 +248,9 @@ mod_scenario_builder_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.5em; margin-bottom: 0;", colors$text_muted),
-              "First-year revenue deferred by the delay (shifted later, not lost)"
+              "Lost if the exclusivity end date is fixed: the delayed quarters come off the end of ",
+              "exclusivity, valued at the P50 Year-5 run rate (a lower bound).",
+              uiOutput(ns("deferred_display"))
             )
           ),
           
@@ -261,9 +263,8 @@ mod_scenario_builder_ui <- function(id) {
             p(
               style = sprintf("color: %s; font-size: 0.8em; margin: 0; line-height: 1.5;", colors$text_muted),
               icon("info circle"),
-              " This model evaluates the impact of launch timing delays assuming ",
-              strong("demand is deferred, not destroyed"), 
-              ". Competitive dynamics and access restrictions are excluded by design."
+              " Share lost to earlier competitors and market access effects are not modeled, ",
+              "so both figures understate the cost of a delay."
             )
           )
         ),
@@ -485,7 +486,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       # This is a simplification: assumes linear quarterly accrual
       risk <- delay_q * (year1_revenue / 4)
       
-      round(risk, 0)
+      year5 <- yearly_median$revenue_millions[yearly_median$years_since_launch == 5]
+      attr(risk, "lost_fixed_expiry") <- if (length(year5) == 1) delay_q / 4 * year5 else NA
+      risk
     })
     
     # ========================================================================
@@ -543,8 +546,16 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
           "Apply selection to calculate"
         )
       } else {
-        paste0("$", format(risk, big.mark = ","), "M")
+        fmt_money(attr(risk, "lost_fixed_expiry"))
       }
+    })
+
+    output$deferred_display <- renderUI({
+      risk <- revenue_at_risk()
+      if (is.null(input$delay_quarters) || input$delay_quarters == 0 || risk == 0) return(NULL)
+      div(style = "margin-top: 0.4em;",
+          strong(fmt_money(risk)), " of Year-1 sales is only deferred (shifted later), ",
+          "if exclusivity instead runs from launch.")
     })
     
     # ========================================================================
@@ -872,6 +883,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     
     outputOptions(output, "analog_preview_table", suspendWhenHidden = FALSE)
     outputOptions(output, "revenue_at_risk_display", suspendWhenHidden = FALSE)
+    outputOptions(output, "deferred_display", suspendWhenHidden = FALSE)
     outputOptions(output, "analog_count_badge", suspendWhenHidden = FALSE)
     outputOptions(output, "selection_status", suspendWhenHidden = FALSE)
     outputOptions(output, "selection_rationale", suspendWhenHidden = FALSE)
