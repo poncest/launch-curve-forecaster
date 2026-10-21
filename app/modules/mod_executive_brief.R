@@ -146,7 +146,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Base Case Year-5 Revenue (P50)"
+            uiOutput(ns("kpi_peak_label"), inline = TRUE)
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -206,7 +206,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Median Year-1 Revenue"
+            uiOutput(ns("kpi_time_label"), inline = TRUE)
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -445,6 +445,23 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       
       # Revenue at risk = delay quarters * (Year 1 revenue / 4)
       revenue_at_risk_calc <- delay_q * (year1_median / 4)
+      year1_range_calc <- if (nrow(year1_data) > 0) {
+        quantile(year1_data$revenue_millions, c(0.25, 0.75), na.rm = TRUE)
+      } else c(0, 0)
+      lost_calc <- delay_q / 4 * median(peaks$peak_revenue, na.rm = TRUE)
+
+      # Product mode: scale the analogs' launch shapes (share of own Year 5)
+      # to the expected Year-5 revenue entered in the Scenario Builder
+      expected <- shared$expected_y5
+      product_mode <- valid_expected(expected)
+      if (product_mode) {
+        y1_shape <- analog_shapes(curves)
+        y1_shape <- y1_shape$shape[y1_shape$years_since_launch == 1]
+        year1_median <- median(y1_shape, na.rm = TRUE) * expected
+        year1_range_calc <- quantile(y1_shape, c(0.25, 0.75), na.rm = TRUE) * expected
+        revenue_at_risk_calc <- delay_q * (year1_median / 4)
+        lost_calc <- delay_q / 4 * expected
+      }
       
       # Calculate percentiles
       list(
@@ -456,11 +473,11 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         # If the exclusivity end date is fixed, a delay of d quarters removes d
         # quarters of sales at the end of exclusivity. Valued at the P50 Year-5
         # run rate: a lower bound, since every analog was still growing at Year 5.
-        revenue_lost_fixed_expiry = delay_q / 4 * median(peaks$peak_revenue, na.rm = TRUE),
+        revenue_lost_fixed_expiry = lost_calc,
+        product_mode = product_mode,
+        expected_y5 = if (product_mode) expected else NA,
         year1_median = if (nrow(year1_data) > 0) year1_median else 0,
-        year1_range = if (nrow(year1_data) > 0) {
-          quantile(year1_data$revenue_millions, c(0.25, 0.75), na.rm = TRUE)
-        } else c(0, 0),
+        year1_range = year1_range_calc,
         delay_quarters = delay_q,
         quarters_to_peak = round(median(peaks$years_to_peak, na.rm = TRUE) * 4),
         quarters_range = c(
@@ -492,8 +509,17 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       }
     })
     
+    output$kpi_peak_label <- renderUI({
+      if (isTRUE(metrics()$product_mode)) "Your Year-5 Revenue (Input)" else "Base Case Year-5 Revenue (P50)"
+    })
+
+    output$kpi_time_label <- renderUI({
+      if (isTRUE(metrics()$product_mode)) "Implied Year-1 Revenue" else "Median Year-1 Revenue"
+    })
+
     output$kpi_peak_revenue <- renderUI({
       m <- metrics()
+      if (isTRUE(m$product_mode)) return(fmt_money(m$expected_y5))
       if (m$peak_p50 == 0) {
         "--"
       } else {
@@ -504,6 +530,9 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     
     output$kpi_peak_context <- renderUI({
       m <- metrics()
+      if (isTRUE(m$product_mode)) {
+        return(paste0("Analogs' P50 is ", fmt_money(m$peak_p50), "; Years 0-4 follow their launch shapes"))
+      }
       if (m$peak_p50 == 0) {
         "Annual revenue"
       } else {
@@ -564,14 +593,22 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           format(round(m$revenue_at_risk), big.mark = ","), "M of first-year sales later. ",
           "If the exclusivity end date is fixed, it also removes the last ", delay_months,
           " months of exclusivity: at least ", fmt_money(m$revenue_lost_fixed_expiry),
-          " at the P50 Year-5 run rate. Share lost to earlier competitors would add to this."
+          if (isTRUE(m$product_mode)) " at your Year-5 run rate." else " at the P50 Year-5 run rate.",
+          " Share lost to earlier competitors would add to this."
         )
       }
     })
     
     output$decision_forecast <- renderUI({
       m <- metrics()
-      if (m$peak_p50 == 0) {
+      if (isTRUE(m$product_mode)) {
+        paste0(
+          "Scaled to your Year-5 input of ", fmt_money(m$expected_y5), ", the analogs' median launch shape ",
+          "implies ", fmt_money(m$year1_median), " in Year 1 (P25-P75 shapes: ", fmt_money(m$year1_range[1]),
+          " to ", fmt_money(m$year1_range[2]), "). A Year-1 plan below the P25 shape implies a slower ",
+          "start than three-quarters of the analogs."
+        )
+      } else if (m$peak_p50 == 0) {
         "Configure analogs in Scenario Builder to see forecast analysis."
       } else {
         paste0(
@@ -611,6 +648,13 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         # Filter to selected analogs
         curves <- app_data$curves |>
           filter(product_name %in% selected_data()$product_name)
+
+        # Product mode: each analog's shape scaled to the user's Year-5 input
+        m_now <- metrics()
+        if (isTRUE(m_now$product_mode)) {
+          curves <- analog_shapes(curves)
+          curves$revenue_millions <- curves$shape * m_now$expected_y5
+        }
         
         # Calculate percentile bands
         bands <- curves |>
@@ -659,8 +703,10 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           # Labels
           labs(
             x = "Years Since Launch",
-            y = "Revenue ($M)",
+            y = if (isTRUE(m_now$product_mode)) "Projected revenue for your product ($M)" else "Revenue ($M)",
             caption = paste0(
+              if (isTRUE(m_now$product_mode))
+                paste0("Analog launch shapes scaled to your Year-5 input of ", fmt_money(m_now$expected_y5), "\n") else "",
               "Gray lines = individual analogs | Blue line = P50 median | Shaded area = P25-P75 range | ",
               "n = ", dplyr::n_distinct(curves$product_name), " analogs",
               if (dplyr::n_distinct(curves$product_name) < 5)
@@ -778,7 +824,8 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     # they can never lag the headline KPIs, even where tab visibility
     # detection fails (hidden panes, embedded iframes)
     for (id in c("kpi_analogs_context", "kpi_peak_context", "kpi_risk_context",
-                 "kpi_time_context", "decision_timing", "decision_forecast")) {
+                 "kpi_time_context", "decision_timing", "decision_forecast",
+                 "kpi_peak_label", "kpi_time_label")) {
       outputOptions(output, id, suspendWhenHidden = FALSE)
     }
     

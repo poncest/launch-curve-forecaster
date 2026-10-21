@@ -560,6 +560,7 @@ mod_methods_ui <- function(id) {
             tags$li("Annual revenue aligned to approval year (Year 0 = partial launch year; Year 1 = first full year)"),
             tags$li("Every analog is observed through Year 5, so the app reports Year-5 revenue rather than a lifetime peak; every analog was still growing at Year 5"),
             tags$li("Percentiles calculated across analog set"),
+            tags$li("Optional product mode: each analog's revenue divided by its own Year-5 revenue gives its launch shape; the shapes are scaled to the Year-5 revenue entered for your product, so analogs inform the ramp, not the size"),
             tags$li("Revenue scaled to millions USD"),
             tags$li("All data from public sources")
           )

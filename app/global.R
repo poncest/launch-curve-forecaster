@@ -293,6 +293,19 @@ tabs <- list(
 
 app_data <- load_app_data()
 
+# Launch shapes: each analog's revenue as a share of its own Year-5 revenue,
+# so curves of very different sizes can be compared and scaled to a new product
+analog_shapes <- function(curves) {
+  y5 <- curves[curves$years_since_launch == 5, c("product_name", "revenue_millions")]
+  names(y5)[2] <- "year5"
+  out <- merge(curves, y5, by = "product_name")
+  out$shape <- out$revenue_millions / out$year5
+  out[order(out$product_name, out$years_since_launch), ]
+}
+
+# Expected Year-5 revenue entered for the user's own product (NA = not given)
+valid_expected <- function(x) !is.null(x) && length(x) == 1 && !is.na(x) && x > 0
+
 # $M below $1B, $B (one decimal) above, e.g. fmt_money(2150) -> "$2.1B"
 fmt_money <- function(x) {
   if (is.na(x)) return("--")

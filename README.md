@@ -136,7 +136,13 @@ Lost if exclusivity end is fixed = delay_quarters / 4 × P50 Year-5 revenue   (l
 Deferred first-year sales       = delay_quarters × (median Year-1 revenue / 4)
 ```
 
-This is a **Year 1 average-quarter approximation**, explicitly labeled to match the calculation methodology.
+**Product mode (optional).** Enter the Year-5 revenue you expect for your own product in the Scenario Builder, for example from a patient-based forecast. Each analog's curve is divided by its own Year-5 revenue to give its launch *shape*, and the shapes are scaled to your figure. The analogs then inform how fast revenue ramps, not how large it gets, and the cost of delay uses your numbers:
+
+```
+Implied Year-t revenue = expected Year-5 revenue × P50 analog shape at Year t
+```
+
+The deferred figure is a Year-1 average-quarter approximation; the lost figure is a lower bound, since every analog was still growing at Year 5.
 
 ------------------------------------------------------------------------
 
