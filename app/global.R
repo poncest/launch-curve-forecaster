@@ -293,6 +293,12 @@ tabs <- list(
 
 app_data <- load_app_data()
 
+# $M below $1B, $B (one decimal) above, e.g. fmt_money(2150) -> "$2.1B"
+fmt_money <- function(x) {
+  if (is.na(x)) return("--")
+  if (abs(x) >= 1000) sprintf("$%.1fB", x / 1000) else paste0("$", format(round(x), big.mark = ","), "M")
+}
+
 # ----------------------------------------------------------------------------
 # Data notes computed from the data (Methods tab)
 # ----------------------------------------------------------------------------

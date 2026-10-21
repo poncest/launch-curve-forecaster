@@ -38,7 +38,7 @@ The framework is designed for commercial launch planning contexts where leaders 
 This framework supports that question by:
 
 -   Structuring analog-based launch scenarios using a governance-first methodology
--   Quantifying **Year 1 revenue at risk** under configurable launch delay assumptions
+-   Quantifying the **cost of a launch delay** under configurable assumptions: sales lost at the end of exclusivity when the expiry date is fixed, versus first-year sales that are only deferred
 -   Supporting P25 / P50 / P75 forecast trade-off discussions across stakeholders
 -   Documenting assumptions, exclusions, and sensitivities transparently for audit and review
 
@@ -83,7 +83,7 @@ NPV and market access modeling are excluded because they require company-specifi
 
 ### Executive Brief
 
-![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, Year-5 revenue range, Year 1 revenue at risk, median Year-1 revenue), scenario comparison chart, and decision framing.*
+![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, Year-5 revenue range, cost of delay, median Year-1 revenue), scenario comparison chart, and decision framing.*
 
 ### Scenario Builder
 
@@ -132,7 +132,8 @@ Percentile bands are derived from observed analog performance:
 ### Revenue-at-Risk Calculation
 
 ```         
-Revenue at Risk (Year 1) = delay_quarters × (median Year 1 revenue / 4)
+Lost if exclusivity end is fixed = delay_quarters / 4 × P50 Year-5 revenue   (lower bound; analogs still growing at Year 5)
+Deferred first-year sales       = delay_quarters × (median Year-1 revenue / 4)
 ```
 
 This is a **Year 1 average-quarter approximation**, explicitly labeled to match the calculation methodology.
@@ -141,7 +142,7 @@ This is a **Year 1 average-quarter approximation**, explicitly labeled to match 
 
 ## Key Assumptions Documented
 
--   **Demand deferral:** Delayed demand is deferred, not destroyed
+-   **Exclusivity:** A delay usually leaves the exclusivity end date unchanged, so delayed months are lost at the end of exclusivity; the deferred view is shown for comparison. Share lost to earlier competitors is not modeled
 -   **Label expansion bias:** Some analogs experienced post-launch indication expansion, creating potential upward bias
 -   **Era effects:** The analogs cover FDA approvals from 2013 to 2017 only; launches after 2018 face different conditions
 
@@ -211,7 +212,7 @@ The framework includes established oncology launches with disclosed product-leve
 ## Author
 
 **Steven Ponce**\
-Data Analyst \| R Shiny Developer \| Pharmaceutical Analytics
+Senior Manager, Clinical Analytics & Centralized Monitoring \| R & Shiny
 
 -   🔗 Portfolio: [stevenponce.netlify.app](https://stevenponce.netlify.app)
 -   🐙 GitHub: [\@poncest](https://github.com/poncest)
