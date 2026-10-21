@@ -688,7 +688,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         data.frame(
           Product = "No analogs selected",
           Company = "--",
-          `Approval Year` = "--",
+          `Approval Date` = "--",
           Indication = "--"
         ) |>
           reactable(
@@ -709,7 +709,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         table_data <- data.frame(
           Product = raw_data$product_name,
           Company = raw_data$company,
-          `Approval Year` = raw_data$approval_date,
+          `Approval Date` = raw_data$approval_date,
           Indication = raw_data$indication,
           stringsAsFactors = FALSE,
           check.names = FALSE
@@ -745,7 +745,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           columns = list(
             Product = colDef(minWidth = 100),
             Company = colDef(minWidth = 100),
-            `Approval Year` = colDef(minWidth = 100, align = "center"),
+            `Approval Date` = colDef(minWidth = 100, align = "center"),
             Indication = colDef(minWidth = 150)
           )
         )

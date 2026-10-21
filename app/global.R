@@ -24,7 +24,7 @@ library(reactable)
 app_info <- list(
   title = "Oncology Launch Curve Forecaster",
   subtitle = "Decision Support for Commercial Launch Planning",
-  version = "0.1.0",
+  version = "1.1.0",
   author = "Steven Ponce",
   
   # Canonical positioning statement
