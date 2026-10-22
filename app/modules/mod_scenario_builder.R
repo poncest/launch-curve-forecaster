@@ -558,6 +558,24 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     })
     
     # ========================================================================
+    # CRITERIA SNAPSHOT: what the controls say now vs what was last applied
+    # ========================================================================
+    default_criteria <- list(solid = TRUE, heme = TRUE, min_peak = "0", exclude_top = FALSE)
+    current_criteria <- reactive(list(
+      solid = !isFALSE(input$solid_tumors),
+      heme = !isFALSE(input$hematology),
+      min_peak = if (is.null(input$min_peak)) "0" else input$min_peak,
+      exclude_top = isTRUE(input$exclude_top_analog)
+    ))
+    # Before the first Apply, the app uses every analog, i.e. the default criteria
+    applied_criteria <- reactive(if (is.null(shared$applied_criteria)) default_criteria else shared$applied_criteria)
+    changes_pending <- reactive({
+      applied <- shared$selected_analogs
+      !identical(current_criteria(), applied_criteria()) ||
+        (!is.null(applied) && !setequal(filtered_analogs()$product_name, applied))
+    })
+
+    # ========================================================================
     # DOWNLOAD: Scenario record (governance artifact)
     # ========================================================================
     output$download_record <- downloadHandler(
@@ -566,12 +584,15 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         an <- app_data$analogs
         applied <- if (is.null(shared$selected_analogs)) an$product_name else shared$selected_analogs
         sel <- an[an$product_name %in% applied, ]
-        solid <- !isFALSE(input$solid_tumors); heme <- !isFALSE(input$hematology)
-        min_peak <- if (is.null(input$min_peak)) "0" else input$min_peak
-        excl_top <- isTRUE(input$exclude_top_analog)
+        # Criteria come from the snapshot saved at Apply, so they always match
+        # the products and results in the record; unapplied control changes
+        # are reported but not used
+        crit <- applied_criteria()
+        solid <- crit$solid; heme <- crit$heme
+        min_peak <- crit$min_peak; excl_top <- crit$exclude_top
         delay_q <- if (is.null(shared$delay_quarters)) 2 else shared$delay_quarters
         expected <- shared$expected_y5
-        pending <- !setequal(filtered_analogs()$product_name, applied)
+        pending <- changes_pending()
 
         cv <- app_data$curves[app_data$curves$product_name %in% applied, ]
         y5 <- cv$revenue_millions[cv$years_since_launch == 5]
@@ -605,7 +626,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
           paste0("- Created: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S UTC", tz = "UTC")),
           paste0("- App version: ", app_info$version),
           paste0("- Data version: ", if (!is.null(dq$built)) paste0("built ", dq$built, ", raw revenue file md5 ", dq$raw_md5) else "unknown"),
-          paste0("- Selection status: ", if (pending) "criteria changed since the last Apply (record shows the APPLIED selection)" else "applied"),
+          paste0("- Selection status: ", if (pending) "the controls have unapplied changes; this record describes the last APPLIED selection and its criteria, not the pending ones" else "applied"),
           "",
           "## Rationale",
           "",
@@ -669,6 +690,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       }
 
       shared$selected_analogs <- new_selection
+      shared$applied_criteria <- current_criteria()
       
       # Store delay for Executive Brief
       shared$delay_quarters <- input$delay_quarters
@@ -772,13 +794,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         ))
       }
       
-      # Sort both vectors for reliable comparison
-      current_sorted <- sort(as.character(current_filtered))
-      applied_sorted <- sort(as.character(applied))
-      
-      # Check if selections match
-      selections_match <- length(current_sorted) == length(applied_sorted) &&
-        all(current_sorted == applied_sorted)
+      # Pending if the criteria differ from the applied snapshot, even when
+      # they happen to select the same products
+      selections_match <- !changes_pending()
       
       if (selections_match) {
         div(
