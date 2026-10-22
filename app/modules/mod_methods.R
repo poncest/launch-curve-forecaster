@@ -248,7 +248,9 @@ mod_methods_ui <- function(id) {
             ),
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
-              tags$li("Tecentriq: Roche reports CHF; converted at the Federal Reserve annual average rate"),
+              tags$li("CHF, EUR and JPY figures (Roche, Bayer, Merck KGaA, Eisai, Takeda) converted at Federal Reserve average rates for the same period"),
+              tags$li("Worldwide sales are aligned to the US approval date. Where a drug was sold elsewhere first (Alecensa in Japan from 2014), early launch years include those sales; where it launched outside the US later, they are lower than a simultaneous global launch"),
+              tags$li("Nerlynx: Puma's product revenue (mostly US; partners outside the US pay royalties). Bavencio: Merck KGaA's sales. Takeda figures include royalty and service income"),
               tags$li("Imbruvica: US sales (Pharmacyclics, then AbbVie) plus J&J ex-US sales"),
               tags$li("Opdivo: BMS-reported, excluding Ono's territories (Japan, Korea, Taiwan), so it understates global sales"),
               tags$li(data_status_note)
@@ -290,6 +292,12 @@ mod_methods_ui <- function(id) {
         "and imaging products, reformulations). Each decision and its reason is listed in ",
         tags$code("data/raw/expansion/candidates.csv"), ". An earlier version used ten prominent launches, ",
         "which put the P50 Year-5 revenue about four times higher."
+      ),
+      p(
+        style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
+        strong("Remaining bias, direction unknown: "), "the 16 dropped drugs include small launches ",
+        "(Farydak, Odomzo, Portrazza) and large ones (Tafinlar + Mekinist, Zejula), so dropping them could ",
+        "push the bands either way, and the size of the effect is not known."
       ),
       
       h4(

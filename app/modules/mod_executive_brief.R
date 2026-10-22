@@ -57,7 +57,7 @@ mod_executive_brief_ui <- function(id) {
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Key Sections"),
         tags$ul(
           style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
-          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, Year-5 revenue (P50), cost of delay, median Year-1 revenue"),
+          tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, historical median Year-5 revenue, delay exposure, median Year-1 revenue"),
           tags$li(tags$strong("Launch Trajectory Chart"), " - P25/P50/P75 revenue bands over launch Years 1-5"),
           tags$li(tags$strong("Decision Cards"), " - Launch timing impact and forecast range interpretation")
         ),
@@ -66,7 +66,7 @@ mod_executive_brief_ui <- function(id) {
         tags$ul(
           style = sprintf("color: %s;", colors$text_muted),
           tags$li("Metrics update when you ", tags$strong("Apply Selection"), " in Scenario Builder"),
-          tags$li("Cost of Delay reflects your chosen delay scenario"),
+          tags$li("Delay Exposure reflects your chosen delay scenario"),
           tags$li("P25/P50/P75 bands are calculated from your selected analog set")
         ),
         
@@ -137,7 +137,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Median (P50) Year-5 annual revenue across selected analogs: the fifth 12-month period after FDA approval, the last year observed for every analog (not a lifetime peak). Range shows P25-P75 bounds.",
+            title = "Historical median (P50) Year-5 annual revenue across the selected analogs, a reference point, not a probability for a new product: the fifth 12-month period after FDA approval, the last year observed for every analog (not a lifetime peak). Range shows P25-P75 bounds.",
             icon("info circle")
           ),
           div(
@@ -167,7 +167,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Sales lost to the launch delay set in the Scenario Builder if the exclusivity end date is fixed: the delayed quarters come off the end of exclusivity, valued at the P50 Year-5 run rate (a lower bound, since analogs were still growing). The smaller figure is first-year sales that are only deferred.",
+            title = "Delay exposure if the exclusivity end date is fixed: the delayed quarters come off the end of exclusivity, valued at the Year-5 run rate (historical median, or your input). This assumes the Year-5 run rate applies to those final quarters; sales then could be higher (continued growth) or lower (competition, label changes). The smaller figure is first-year sales that are only deferred.",
             icon("info circle")
           ),
           div(
@@ -176,7 +176,7 @@ mod_executive_brief_ui <- function(id) {
           ),
           div(
             style = sprintf("color: %s; font-size: 0.95em; margin-top: 0.5em; text-transform: uppercase; letter-spacing: 0.5px;", colors$text_secondary),
-            "Cost of Delay (Fixed Expiry)"
+            "Delay Exposure (Fixed Expiry)"
           ),
           div(
             style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.25em;", colors$text_muted),
@@ -248,7 +248,7 @@ mod_executive_brief_ui <- function(id) {
           " ",
           strong("Key Assumption:"),
           " A delay usually does not move the exclusivity end date, so the delayed months are ",
-          strong("lost at the end of exclusivity, near peak sales"),
+          strong("lost at the end of exclusivity"),
           ", not just shifted. First-year sales that are only deferred are shown for comparison. ",
           "Share lost to earlier competitors and market access are not modeled."
         )
@@ -309,7 +309,7 @@ mod_executive_brief_ui <- function(id) {
           h4(
             style = sprintf("color: %s; margin-bottom: 0.5em;", colors$primary_dark),
             icon("chart bar outline"),
-            "Decision: Forecast Commitment"
+            "Decision: Forecast Benchmark"
           ),
           p(
             style = sprintf("color: %s; font-size: 0.95em; margin-bottom: 0.75em;", colors$text_secondary),
@@ -472,8 +472,8 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         peak_p75 = quantile(peaks$peak_revenue, 0.75, na.rm = TRUE),
         revenue_at_risk = revenue_at_risk_calc,
         # If the exclusivity end date is fixed, a delay of d quarters removes d
-        # quarters of sales at the end of exclusivity. Valued at the P50 Year-5
-        # run rate: a lower bound for analogs still growing at Year 5 (most).
+        # quarters of sales at the end of exclusivity. Valued at the Year-5 run
+        # rate: an exposure estimate, not a bound (late sales may rise or fall).
         revenue_lost_fixed_expiry = lost_calc,
         product_mode = product_mode,
         expected_y5 = if (product_mode) expected else NA,
@@ -511,7 +511,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
     })
     
     output$kpi_peak_label <- renderUI({
-      if (isTRUE(metrics()$product_mode)) "Your Year-5 Revenue (Input)" else "Base Case Year-5 Revenue (P50)"
+      if (isTRUE(metrics()$product_mode)) "Your Year-5 Revenue (Input)" else "Historical Median Year-5 Revenue"
     })
 
     output$kpi_time_label <- renderUI({
@@ -590,9 +590,10 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           "A ", m$delay_quarters, "-quarter (", delay_months, "-month) delay moves about $",
           format(round(m$revenue_at_risk), big.mark = ","), "M of first-year sales later. ",
           "If the exclusivity end date is fixed, it also removes the last ", delay_months,
-          " months of exclusivity: at least ", fmt_money(m$revenue_lost_fixed_expiry),
-          if (isTRUE(m$product_mode)) " at your Year-5 run rate." else " at the P50 Year-5 run rate.",
-          " Share lost to earlier competitors would add to this."
+          " months of exclusivity: about ", fmt_money(m$revenue_lost_fixed_expiry),
+          if (isTRUE(m$product_mode)) " at your Year-5 run rate" else " at the analogs' median Year-5 run rate",
+          ", assuming that run rate holds in those final months (it could be higher or lower). ",
+          "Share lost to earlier competitors is not included."
         )
       }
     })
@@ -610,10 +611,11 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         "Configure analogs in Scenario Builder to see forecast analysis."
       } else {
         paste0(
-          "Committing to P50 forecast (", fmt_money(m$peak_p50), " Year-5 revenue) ",
-          "implies accepting that ~50% of analogs underperformed this level. ",
-          "P25 conservative scenario (", fmt_money(m$peak_p25), ") ",
-          "reduces credibility risk but may understate opportunity."
+          "Half of the selected analogs had Year-5 revenue below ", fmt_money(m$peak_p50),
+          " and a quarter below ", fmt_money(m$peak_p25), ". These are historical reference points, ",
+          "not probabilities for a new product: a plan above the median should say why this launch ",
+          "will outperform half of its comparators. Enter your own Year-5 forecast in the Scenario ",
+          "Builder to use the analogs for the launch shape only."
         )
       }
     })
@@ -705,8 +707,11 @@ mod_executive_brief_server <- function(id, app_data, shared) {
             caption = paste0(
               if (isTRUE(m_now$product_mode))
                 paste0("Analog launch shapes scaled to your Year-5 input of ", fmt_money(m_now$expected_y5), "\n") else "",
-              "Gray lines = individual analogs | Blue line = P50 median | Shaded area = P25-P75 range | ",
-              "n = ", dplyr::n_distinct(curves$product_name), " analogs",
+              "Gray lines = individual analogs | Blue line = median | Shaded area = P25-P75 range\n",
+              "Analogs per year: ", paste(tapply(curves$product_name, curves$years_since_launch,
+                                                  dplyr::n_distinct), collapse = ", "),
+              " (Years 1-5)\nThe median line joins each year's median, which can come from different ",
+              "products: it is a summary, not one launch's path",
               if (dplyr::n_distinct(curves$product_name) < 5)
                 " (with fewer than 5, P25/P75 interpolate between single products: read as a rough spread)" else ""
             )

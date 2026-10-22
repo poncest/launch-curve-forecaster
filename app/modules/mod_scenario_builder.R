@@ -65,7 +65,7 @@ mod_scenario_builder_ui <- function(id) {
           tags$li(tags$strong("Optional sensitivity checks"), " - Drop the top analog or analogs below a Year-5 revenue level, to see how much outcomes drive the range"),
           tags$li(tags$strong("Click 'Apply Selection'"), " - Confirms your analog set and syncs to Executive Brief"),
           tags$li(tags$strong("Adjust Launch Delay"), " - Use the slider to model 0-4 quarters of delay"),
-          tags$li(tags$strong("Review Cost of Delay"), " - Sales lost at the end of exclusivity, and first-year sales only deferred")
+          tags$li(tags$strong("Review Delay Exposure"), " - Sales lost at the end of exclusivity, and first-year sales only deferred")
         ),
         
         h4(style = sprintf("color: %s; margin-top: 1em;", colors$primary_dark), "Tips"),
@@ -266,7 +266,7 @@ mod_scenario_builder_ui <- function(id) {
             ),
             h4(
               style = sprintf("color: %s; margin: 0 0 0.5em 0;", colors$warning),
-              "Cost of Delay"
+              "Delay Exposure"
             ),
             div(
               style = sprintf("font-size: 1.8em; font-weight: bold; color: %s;", colors$primary),
@@ -275,7 +275,8 @@ mod_scenario_builder_ui <- function(id) {
             p(
               style = sprintf("color: %s; font-size: 0.85em; margin-top: 0.5em; margin-bottom: 0;", colors$text_muted),
               "Lost if the exclusivity end date is fixed: the delayed quarters come off the end of ",
-              "exclusivity, valued at the Year-5 run rate (analogs' P50, or your input; a lower bound).",
+              "exclusivity, valued at the Year-5 run rate (analogs' median, or your input). Assumes that run ",
+              "rate holds in the final quarters; it could be higher or lower.",
               uiOutput(ns("deferred_display"))
             )
           ),
@@ -290,11 +291,42 @@ mod_scenario_builder_ui <- function(id) {
               style = sprintf("color: %s; font-size: 0.8em; margin: 0; line-height: 1.5;", colors$text_muted),
               icon("info circle"),
               " Share lost to earlier competitors and market access effects are not modeled, ",
-              "so both figures understate the cost of a delay."
+              "so neither figure includes them."
             )
           )
         ),
         
+        # ================================================================
+        # SCENARIO RECORD - governance artifact (download)
+        # ================================================================
+        div(
+          class = "ui segment",
+          style = "margin-top: 1.5em;",
+          h3(
+            style = sprintf("color: %s;", colors$primary_dark),
+            icon("file alternate outline"),
+            "Scenario Record"
+          ),
+          p(
+            style = sprintf("color: %s; font-size: 0.85em; margin-bottom: 1em;", colors$text_muted),
+            "The app does not enforce governance; it records it. Download a dated record of the applied ",
+            "criteria, products, exclusions, sensitivity checks, data version and results, to file with ",
+            "the approval that happens outside the app."
+          ),
+          shiny::textAreaInput(
+            ns("rationale"),
+            label = "Selection rationale (included in the record)",
+            value = "", width = "100%", rows = 3,
+            placeholder = "e.g. Criteria agreed with brand team on 2026-10-15 before reviewing outcomes"
+          ),
+          shiny::downloadButton(
+            ns("download_record"),
+            "Download scenario record",
+            class = "ui button",
+            style = "margin-top: 0.5em;"
+          )
+        ),
+
         # ================================================================
         # FUTURE ENHANCEMENTS NOTE (Deferred features)
         # ================================================================
@@ -526,6 +558,99 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
     })
     
     # ========================================================================
+    # DOWNLOAD: Scenario record (governance artifact)
+    # ========================================================================
+    output$download_record <- downloadHandler(
+      filename = function() paste0("launch-scenario-record-", format(Sys.time(), "%Y%m%d-%H%M%S", tz = "UTC"), ".md"),
+      content = function(file) {
+        an <- app_data$analogs
+        applied <- if (is.null(shared$selected_analogs)) an$product_name else shared$selected_analogs
+        sel <- an[an$product_name %in% applied, ]
+        solid <- !isFALSE(input$solid_tumors); heme <- !isFALSE(input$hematology)
+        min_peak <- if (is.null(input$min_peak)) "0" else input$min_peak
+        excl_top <- isTRUE(input$exclude_top_analog)
+        delay_q <- if (is.null(shared$delay_quarters)) 2 else shared$delay_quarters
+        expected <- shared$expected_y5
+        pending <- !setequal(filtered_analogs()$product_name, applied)
+
+        cv <- app_data$curves[app_data$curves$product_name %in% applied, ]
+        y5 <- cv$revenue_millions[cv$years_since_launch == 5]
+        y1 <- cv$revenue_millions[cv$years_since_launch == 1]
+        q <- function(x, p) unname(stats::quantile(x, p, na.rm = TRUE))
+        if (valid_expected(expected)) {
+          sh <- analog_shapes(cv)
+          y1_med <- stats::median(sh$shape[sh$years_since_launch == 1], na.rm = TRUE) * expected
+          exposure <- delay_q / 4 * expected
+        } else {
+          y1_med <- stats::median(y1, na.rm = TRUE)
+          exposure <- delay_q / 4 * stats::median(y5, na.rm = TRUE)
+        }
+
+        reason <- function(prod) {
+          r <- an[an$product_name == prod, ]
+          if (!solid && r$tumor_class == "Solid") return("tumor class not selected (Solid)")
+          if (!heme && r$tumor_class == "Heme") return("tumor class not selected (Heme)")
+          if (min_peak != "0" && r$peak_revenue_millions < as.numeric(min_peak))
+            return(paste0("below minimum Year-5 revenue of $", min_peak, "M (sensitivity check)"))
+          if (excl_top) return("top analog by Year-5 revenue excluded (sensitivity check)")
+          "not in the applied selection"
+        }
+        excluded <- setdiff(an$product_name, applied)
+        dq <- app_data$data_quality
+        outcome_filters <- excl_top || min_peak != "0"
+
+        lines <- c(
+          "# Launch Curve Forecaster: scenario record",
+          "",
+          paste0("- Created: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S UTC", tz = "UTC")),
+          paste0("- App version: ", app_info$version),
+          paste0("- Data version: ", if (!is.null(dq$built)) paste0("built ", dq$built, ", raw revenue file md5 ", dq$raw_md5) else "unknown"),
+          paste0("- Selection status: ", if (pending) "criteria changed since the last Apply (record shows the APPLIED selection)" else "applied"),
+          "",
+          "## Rationale",
+          "",
+          if (!is.null(input$rationale) && nzchar(trimws(input$rationale))) input$rationale else "(none entered)",
+          "",
+          "## Criteria",
+          "",
+          "- Base set: every oncology new molecular entity first approved by the FDA 2013-2017 with sales reported separately by one owner for five years (CAR-T excluded)",
+          paste0("- Tumor classes: ", paste(c(if (solid) "Solid", if (heme) "Heme"), collapse = " + ")),
+          "",
+          "## Sensitivity checks (outcome-based)",
+          "",
+          paste0("- Exclude top analog: ", if (excl_top) "ON" else "off"),
+          paste0("- Minimum Year-5 revenue: ", if (min_peak == "0") "none" else paste0("$", min_peak, "M")),
+          if (outcome_filters) "- NOTE: an outcome-based filter is on. Treat these results as a sensitivity analysis, not a defensible analog set." else "- No outcome-based filters applied.",
+          "",
+          paste0("## Included analogs (", nrow(sel), ")"),
+          "",
+          "| Product | Company | FDA approval | Tumor class | Year-5 revenue ($M) |",
+          "|---|---|---|---|---|",
+          paste0("| ", sel$product_name, " | ", sel$company, " | ", sel$approval_date, " | ",
+                 sel$tumor_class, " | ", round(sel$peak_revenue_millions), " |"),
+          "",
+          paste0("## Excluded analogs (", length(excluded), ")"),
+          "",
+          if (length(excluded) == 0) "(none)" else paste0("- ", excluded, ": ", vapply(excluded, reason, "")),
+          "",
+          "## Inputs and results",
+          "",
+          paste0("- Launch delay: ", delay_q, " quarter(s)"),
+          paste0("- Expected Year-5 revenue (product mode): ", if (valid_expected(expected)) fmt_money(expected) else "not entered"),
+          paste0("- Historical median Year-5 revenue: ", fmt_money(stats::median(y5, na.rm = TRUE)),
+                 " (P25-P75 ", fmt_money(q(y5, 0.25)), " to ", fmt_money(q(y5, 0.75)), ")"),
+          paste0("- Median Year-1 revenue", if (valid_expected(expected)) " (scaled shape)" else "", ": ", fmt_money(y1_med)),
+          paste0("- Delay exposure at the Year-5 run rate (fixed exclusivity end): ", fmt_money(exposure)),
+          paste0("- First-year sales only deferred: ", fmt_money(delay_q * y1_med / 4)),
+          "",
+          "Percentiles describe the selected historical analogs, not probabilities for a new product. ",
+          "Delay exposure assumes the Year-5 run rate applies to the final quarters of exclusivity."
+        )
+        writeLines(lines, file)
+      }
+    )
+
+    # ========================================================================
     # OBSERVE: Apply Filters + Delay
     # ========================================================================
     
@@ -728,8 +853,9 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
       
       reactable(
         display_data,
-        searchable = FALSE,
-        pagination = FALSE,
+        searchable = TRUE,
+        pagination = TRUE,
+        defaultPageSize = 10,
         striped = TRUE,
         highlight = TRUE,
         compact = TRUE,
