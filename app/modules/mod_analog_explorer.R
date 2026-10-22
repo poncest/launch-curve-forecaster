@@ -260,7 +260,9 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
       list(
         # "peak" = Year-5 revenue: every analog is observed through year 5 only
         peak = if (nrow(year5_row) > 0) year5_row$revenue_millions[1] else NA,
-        cumulative = sum(curves_df$revenue_millions[curves_df$years_since_launch <= 5], na.rm = TRUE),
+        # Only when all five launch years are available (a gap would understate it)
+        cumulative = if (all(1:5 %in% curves_df$years_since_launch))
+          sum(curves_df$revenue_millions[curves_df$years_since_launch <= 5]) else NA,
         year1 = if (nrow(year1_row) > 0) year1_row$revenue_millions[1] else NA,
         year3 = if (nrow(year3_row) > 0) year3_row$revenue_millions[1] else NA
       )
@@ -513,12 +515,12 @@ mod_analog_explorer_server <- function(id, app_data, shared) {
           size = 3
         ) +
         scale_color_manual(values = line_colors, name = "") +
-        scale_x_continuous(breaks = 0:5, labels = paste0("Y", 0:5)) +
+        scale_x_continuous(breaks = 1:5, labels = paste0("Y", 1:5)) +
         scale_y_continuous(labels = scales::dollar_format(scale = 1, suffix = "M")) +
         labs(
           title = "Launch Curve Trajectory",
           subtitle = "Annual revenue by years since launch",
-          x = "Years Since Launch",
+          x = "Launch year (12-month periods from FDA approval)",
           y = "Annual Revenue"
         ) +
         theme_launch()

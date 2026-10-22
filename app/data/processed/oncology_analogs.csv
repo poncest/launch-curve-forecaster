@@ -1,11 +1,31 @@
 "product_name","company","approval_date","tumor_class","indication","peak_revenue_millions"
-"Keytruda","Merck",2014-09-04,"Solid","Melanoma (initial)",11084
-"Opdivo","BMS",2014-12-22,"Solid","Melanoma (initial)",7204
-"Ibrance","Pfizer",2015-02-03,"Solid","Breast cancer (HR+/HER2-)",5392
-"Tagrisso","AstraZeneca",2015-11-13,"Solid","NSCLC (EGFR T790M)",4328
-"Lynparza","AstraZeneca",2014-12-19,"Solid","Ovarian cancer (BRCA)",1198
-"Tecentriq","Roche",2016-05-18,"Solid","Bladder cancer (initial)",3625
-"Imbruvica","AbbVie/J&J",2013-11-13,"Heme","CLL/MCL",5583
-"Darzalex","J&J",2015-11-16,"Heme","Multiple myeloma",4190
-"Venclexta","AbbVie",2016-04-11,"Heme","CLL",1820
-"Calquence","AstraZeneca",2017-10-31,"Heme","MCL (initial)",2057
+"Keytruda","Merck",2014-09-04,"Solid","Melanoma (initial)",9808.25479452055
+"Opdivo","BMS",2014-12-22,"Solid","Melanoma (initial)",7191.15068493151
+"Ibrance","Pfizer",2015-02-03,"Solid","Breast cancer (HR+/HER2-)",4998.63516730294
+"Tagrisso","AstraZeneca",2015-11-13,"Solid","NSCLC (EGFR T790M)",4176.68063477805
+"Lynparza","AstraZeneca",2014-12-19,"Solid","Ovarian cancer (BRCA)",1178.37534246575
+"Tecentriq","Roche",2016-05-18,"Solid","Bladder cancer (initial)",3177.1410285201
+"Imbruvica","AbbVie/J&J",2013-11-13,"Heme","CLL/MCL",5375.45479452055
+"Darzalex","J&J",2015-11-16,"Heme","Multiple myeloma",4041.21811512838
+"Venclexta","AbbVie",2016-04-11,"Heme","CLL",1466.67658507373
+"Calquence","AstraZeneca",2017-10-31,"Heme","MCL (initial)",1917.88219178082
+"Pomalyst","Celgene/BMS",2013-02-08,"Heme","Multiple myeloma (relapsed/refractory)",1658.35068493151
+"Kadcyla","Roche",2013-02-22,"Solid","HER2+ metastatic breast cancer",938.943287671233
+"Xofigo","Bayer",2013-05-15,"Solid","Prostate cancer (mCRPC, bone metastases)",444.102191780822
+"Gazyva","Roche",2013-11-01,"Heme","CLL (first line)",379.19698630137
+"Cyramza","Lilly",2014-04-21,"Solid","Gastric/GEJ adenocarcinoma (second line)",852.65205479452
+"Zydelig","Gilead",2014-07-23,"Heme","CLL (relapsed), follicular lymphoma",116.315068493151
+"Blincyto","Amgen",2014-12-03,"Heme","B-cell ALL (relapsed/refractory)",305.484931506849
+"Lenvima","Eisai",2015-02-13,"Solid","Differentiated thyroid cancer (RAI-refractory)",966.911991915563
+"Unituxin","United Therapeutics",2015-03-10,"Solid","High-risk pediatric neuroblastoma",115.687206377723
+"Ninlaro","Takeda",2015-11-20,"Heme","Multiple myeloma (relapsed)",785.674657534247
+"Empliciti","BMS",2015-11-30,"Heme","Multiple myeloma (relapsed)",378.98715472715
+"Alecensa","Roche",2015-12-11,"Solid","ALK+ NSCLC (post-crizotinib)",1215.33284751853
+"Lartruvo","Lilly",2016-10-19,"Solid","Soft tissue sarcoma",0
+"Rubraca","Clovis",2016-12-19,"Solid","BRCA-mutated ovarian cancer",149.343170147466
+"Kisqali","Novartis",2017-03-13,"Solid","HR+/HER2- advanced breast cancer",994.18904109589
+"Bavencio","Merck KGaA/Pfizer",2017-03-23,"Solid","Merkel cell carcinoma",486.19397260274
+"Alunbrig","Takeda",2017-04-28,"Solid","ALK+ NSCLC (post-crizotinib)",124.219178082192
+"Imfinzi","AstraZeneca",2017-05-01,"Solid","Urothelial carcinoma (second line)",2534.30136986301
+"Nerlynx","Puma",2017-07-17,"Solid","HER2+ early breast cancer (extended adjuvant)",194.98301369863
+"Verzenio","Lilly",2017-09-28,"Solid","HR+/HER2- advanced breast cancer",2188.45342465753

@@ -217,16 +217,16 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em;", colors$text_secondary),
-              "Full-year worldwide product sales from each owner's annual report or full-year ",
-              "results release (SEC 10-K and 8-K filings via ",
+              "Full-year worldwide product sales from each owner's annual report, full-year ",
+              "results release or investor materials (SEC filings via ",
               tags$a(href = "https://www.sec.gov/edgar", target = "_blank", "SEC EDGAR"),
-              "; AstraZeneca and Roche results announcements). Every value cites its source in ",
+              "; European and Japanese company reports). Every value cites its source in ",
               tags$code("data/raw/sec_product_revenue.csv"), "."
             ),
             tags$ul(
               style = sprintf("color: %s; font-size: 0.85em;", colors$text_muted),
               tags$li("Annual worldwide product sales, by fiscal year"),
-              tags$li("USD; Roche figures converted from CHF"),
+              tags$li("USD; CHF, EUR and JPY converted at Federal Reserve average rates for the same period"),
               tags$li("Re-sourced and verified October 2026")
             )
           )
@@ -282,10 +282,14 @@ mod_methods_ui <- function(id) {
       ),
       p(
         style = sprintf("color: %s; line-height: 1.7;", colors$text_secondary),
-        strong("Known gap: "), "the criteria below would admit more launches than the ten included ",
-        "(for example Kisqali, Zejula, Rubraca, Ninlaro, Empliciti, Imfinzi). The ten are commercially ",
-        "prominent products, so the set leans toward successful launches and the bands likely overstate a ",
-        "typical launch. Treat P50 as a benchmark from strong launches, not an expected outcome."
+        strong("Complete set: "), "every new oncology molecular entity first approved by the FDA from 2013 ",
+        "to 2017 was screened (56 products). 30 are included, among them modest launches and one withdrawn ",
+        "drug (Lartruvo), so the bands describe typical launches rather than only blockbusters. ",
+        "16 were dropped because their owner did not report their sales separately for every year, or because ",
+        "ownership changed during the first five years; 10 were out of scope (CAR-T cell therapies, supportive-care ",
+        "and imaging products, reformulations). Each decision and its reason is listed in ",
+        tags$code("data/raw/expansion/candidates.csv"), ". An earlier version used ten prominent launches, ",
+        "which put the P50 Year-5 revenue about four times higher."
       ),
       
       h4(
@@ -302,10 +306,9 @@ mod_methods_ui <- function(id) {
       
       tags$ul(
         style = sprintf("color: %s;", colors$text_secondary),
-        tags$li("Products with loss of exclusivity during observation period"),
-        tags$li("Products with major safety withdrawals"),
-        tags$li("Products without separately reported revenue for Years 1-5"),
-        tags$li("Biosimilars and generics")
+        tags$li("Products without separately reported revenue for Years 1-5, or whose owner changed within them"),
+        tags$li("Supportive-care and imaging products, reformulations of approved drugs, biosimilars and generics"),
+        tags$li("Withdrawn products are kept (Lartruvo): dropping launches that failed would bias the bands upward")
       )
     ),
     
@@ -388,7 +391,7 @@ mod_methods_ui <- function(id) {
             ),
             p(
               style = sprintf("color: %s; font-size: 0.9em; margin: 0;", colors$text_secondary),
-              year0_note
+              alignment_note
             )
           )
         )
@@ -557,8 +560,8 @@ mod_methods_ui <- function(id) {
           h4(style = sprintf("color: %s;", colors$text_primary), "Data Processing"),
           tags$ul(
             style = sprintf("color: %s;", colors$text_secondary),
-            tags$li("Annual revenue aligned to approval year (Year 0 = partial launch year; Year 1 = first full year)"),
-            tags$li("Every analog is observed through Year 5, so the app reports Year-5 revenue rather than a lifetime peak; every analog was still growing at Year 5"),
+            tags$li("Launch years counted from each drug's exact FDA approval date (Year 1 = first 12 months); fiscal-year sales split across launch years in proportion to days"),
+            tags$li("Every analog is observed through Year 5, so the app reports Year-5 revenue rather than a lifetime peak; most analogs were still growing at Year 5"),
             tags$li("Percentiles calculated across analog set"),
             tags$li("Optional product mode: each analog's revenue divided by its own Year-5 revenue gives its launch shape; the shapes are scaled to the Year-5 revenue entered for your product, so analogs inform the ramp, not the size"),
             tags$li("Revenue scaled to millions USD"),
@@ -613,17 +616,20 @@ mod_methods_server <- function(id, app_data) {
       criteria_data <- data.frame(
         Criterion = c(
           "Therapeutic Area",
+          "Product Type",
           "Launch Window",
           "Data Availability"
         ),
         Specification = c(
-          "Oncology (solid tumors and hematology)",
-          "FDA approval 2013-2017",
-          "Product-level revenue reported by the owner for Years 1-5"
+          "Oncology treatments (solid tumors and hematology)",
+          "New molecular entity; CAR-T cell therapies excluded",
+          "First FDA approval 2013-2017",
+          "Sales reported separately by one owner for Years 1-5"
         ),
         Rationale = c(
           "Focus on therapeutic area with established launch patterns",
-          "Recent enough to be relevant, early enough for five full years of disclosed revenue",
+          "CAR-T launches are paced by treatment-center certification and manufacturing slots, a different model",
+          "Recent enough to be relevant, early enough for five years of disclosed revenue",
           "Ensures consistent measurement across analogs"
         ),
         stringsAsFactors = FALSE

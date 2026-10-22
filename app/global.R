@@ -24,7 +24,7 @@ library(reactable)
 app_info <- list(
   title = "Oncology Launch Curve Forecaster",
   subtitle = "Decision Support for Commercial Launch Planning",
-  version = "1.2.0",
+  version = "2.0.0",
   author = "Steven Ponce",
   
   # Canonical positioning statement
@@ -208,9 +208,11 @@ load_app_data <- function(app_dir = NULL) {
   
   curves_data <- load_file(curves_file)
   
+  dq_file <- file.path(data_path, "data_quality.rds")
   list(
     analogs = analogs_data,
     curves = curves_data,
+    data_quality = if (file.exists(dq_file)) readRDS(dq_file) else NULL,
     is_placeholder = FALSE
   )
 }
@@ -298,6 +300,8 @@ app_data <- load_app_data()
 analog_shapes <- function(curves) {
   y5 <- curves[curves$years_since_launch == 5, c("product_name", "revenue_millions")]
   names(y5)[2] <- "year5"
+  # Analogs with no Year-5 sales (withdrawn, e.g. Lartruvo) have no defined shape
+  y5 <- y5[!is.na(y5$year5) & y5$year5 > 0, ]
   out <- merge(curves, y5, by = "product_name")
   out$shape <- out$revenue_millions / out$year5
   out[order(out$product_name, out$years_since_launch), ]
@@ -318,31 +322,45 @@ fmt_money <- function(x) {
 local({
   cv <- app_data$curves
   an <- app_data$analogs
-  has_status <- "verification" %in% names(cv)
-  products_no_y0 <- setdiff(an$product_name, cv$product_name[cv$years_since_launch == 0])
-  estimates  <- if (has_status) cv[cv$verification %in% "estimate", ] else cv[0, ]
-  unverified <- if (has_status) cv[cv$verification %in% "unverified", ] else cv[0, ]
-  parts <- c(
-    if (has_status) paste0(sum(cv$verification %in% "verified"), " of ",
-                           nrow(cv) + length(products_no_y0), " values verified against a primary source"),
-    if (nrow(estimates) > 0) paste0(paste(estimates$product_name, estimates$fiscal_year, collapse = ", "),
-                                    " estimated (part of a quarter is not covered by any filing)"),
-    if (nrow(unverified) > 0) paste0(paste(unverified$product_name, unverified$fiscal_year, collapse = ", "),
-                                     " not yet traced to a primary source"),
-    if (length(products_no_y0) > 0) paste0("launch-year sales not reported for ",
-                                           paste(products_no_y0, collapse = " and "))
-  )
+  dq <- app_data$data_quality
+
+  parts <- character()
+  if (!is.null(dq)) {
+    st <- setNames(dq$raw_status$n, dq$raw_status$verification)
+    n_reported <- sum(st[setdiff(names(st), c("not_reported", "not_located", "assumed_zero"))])
+    parts <- c(parts, paste0(st[["verified"]], " of ", n_reported,
+                             " reported values verified against the company's own report"))
+    fl <- dq$raw_flags
+    if (!is.null(fl) && any(fl$verification == "estimate"))
+      parts <- c(parts, paste0(paste(fl$product_name[fl$verification == "estimate"],
+                                     fl$fiscal_year[fl$verification == "estimate"], collapse = ", "),
+                               " estimated (part of a quarter is not covered by any filing)"))
+    if (!is.null(fl) && any(fl$verification == "unverified"))
+      parts <- c(parts, paste0(paste(fl$product_name[fl$verification == "unverified"],
+                                     fl$fiscal_year[fl$verification == "unverified"], collapse = ", "),
+                               " not yet traced to a primary source"))
+    if (any(names(st) %in% c("not_reported", "not_located")))
+      parts <- c(parts, paste0(sum(st[names(st) %in% c("not_reported", "not_located")]),
+                               " fiscal-year values not reported separately or not found"))
+    if (nrow(dq$curve_gaps) > 0) {
+      g <- dq$curve_gaps
+      g <- tapply(g$years_since_launch, g$product_name, function(y) paste(y, collapse = " and "))
+      parts <- c(parts, paste0("launch years missing as a result: ",
+                               paste0(names(g), " (Year ", g, ")", collapse = ", ")))
+    }
+  }
+  if ("verification" %in% names(cv) && any(cv$verification == "assumed_zero"))
+    parts <- c(parts, paste0("sales after withdrawal taken as zero for ",
+                             paste(unique(cv$product_name[cv$verification == "assumed_zero"]), collapse = ", ")))
   data_status_note <<- paste(parts, collapse = "; ")
 
-  # Year 0 = calendar year of first FDA approval; days on market in that year
-  appr <- as.Date(an$approval_date)
-  days <- as.numeric(as.Date(paste0(format(appr, "%Y"), "-12-31")) - appr) + 1
-  year0_note <<- paste0(
-    "Year 0 is the calendar year of first FDA approval, so it covers anywhere from ",
-    min(days), " days (", an$product_name[which.min(days)], ") to about ",
-    round(max(days) / 30.4), " months (", an$product_name[which.max(days)], ") on market. ",
-    "Year 1 to Year 5 therefore sit at different points after approval across analogs, ",
-    "by up to about ", round((max(days) - min(days)) / 30.4), " months, and Year-0 values are not comparable."
+  alignment_note <<- paste0(
+    "Launch Year 1 is the 12 months after each drug's first FDA approval date, Year 2 the next 12 months, ",
+    "and so on to Year 5. Companies report sales by fiscal year (April to March for Eisai and Takeda), so each ",
+    "fiscal-year total is spread evenly over the days it covers and split across the launch years it overlaps. ",
+    "This is an approximation: sales usually grow within a year, so the split slightly overstates early launch ",
+    "years and understates later ones. It replaces calendar-year alignment, in which 'Year 0' ranged from ",
+    "10 days to 11 months on market."
   )
 })
 
