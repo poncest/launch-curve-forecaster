@@ -168,9 +168,10 @@ mod_scenario_builder_ui <- function(id) {
                 label = NULL,
                 choices = c(
                   "No minimum" = "0",
+                  "$500M+" = "500",
+                  "$1B+" = "1000",
                   "$2B+" = "2000",
-                  "$4B+" = "4000",
-                  "$6B+" = "6000"
+                  "$4B+" = "4000"
                 ),
                 selected = "0",
                 width = "100%"
@@ -494,7 +495,7 @@ mod_scenario_builder_server <- function(id, app_data, shared) {
         FUN = median
       )
       
-      # Years 0-3 cumulative revenue (base case)
+      # Years 1-3 (base case)
       base_years <- yearly_median[yearly_median$years_since_launch <= 3, ]
       
       # Delay shifts revenue - calculate lost quarters

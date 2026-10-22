@@ -58,7 +58,7 @@ mod_executive_brief_ui <- function(id) {
         tags$ul(
           style = sprintf("color: %s; line-height: 1.8;", colors$text_secondary),
           tags$li(tags$strong("KPI Cards"), " - High-level metrics: analog count, Year-5 revenue (P50), cost of delay, median Year-1 revenue"),
-          tags$li(tags$strong("Launch Trajectory Chart"), " - P25/P50/P75 revenue bands over Years 0-5"),
+          tags$li(tags$strong("Launch Trajectory Chart"), " - P25/P50/P75 revenue bands over launch Years 1-5"),
           tags$li(tags$strong("Decision Cards"), " - Launch timing impact and forecast range interpretation")
         ),
         
@@ -137,7 +137,7 @@ mod_executive_brief_ui <- function(id) {
           # Info icon with tooltip
           tags$span(
             style = sprintf("position: absolute; top: 10px; right: 10px; color: %s; cursor: help;", colors$text_muted),
-            title = "Median (P50) Year-5 annual revenue across selected analogs: the fifth full year after launch, the last year observed for every analog (not a lifetime peak). Range shows P25-P75 bounds.",
+            title = "Median (P50) Year-5 annual revenue across selected analogs: the fifth 12-month period after FDA approval, the last year observed for every analog (not a lifetime peak). Range shows P25-P75 bounds.",
             icon("info circle")
           ),
           div(
@@ -424,7 +424,8 @@ mod_executive_brief_server <- function(id, app_data, shared) {
       peaks <- curves |>
         group_by(product_name) |>
         summarise(
-          peak_revenue = max(revenue_millions, na.rm = TRUE),
+          # Year-5 revenue (not the maximum: some analogs peaked earlier)
+          peak_revenue = revenue_millions[years_since_launch == 5][1],
           years_to_peak = years_since_launch[which.max(revenue_millions)],
           .groups = "drop"
         )
@@ -472,7 +473,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         revenue_at_risk = revenue_at_risk_calc,
         # If the exclusivity end date is fixed, a delay of d quarters removes d
         # quarters of sales at the end of exclusivity. Valued at the P50 Year-5
-        # run rate: a lower bound, since every analog was still growing at Year 5.
+        # run rate: a lower bound for analogs still growing at Year 5 (most).
         revenue_lost_fixed_expiry = lost_calc,
         product_mode = product_mode,
         expected_y5 = if (product_mode) expected else NA,
@@ -524,22 +525,19 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         "--"
       } else {
         # Inline formatting (avoiding helper function scoping issues)
-        paste0("$", round(m$peak_p50 / 1000, 1), "B")
+        fmt_money(m$peak_p50)
       }
     })
     
     output$kpi_peak_context <- renderUI({
       m <- metrics()
       if (isTRUE(m$product_mode)) {
-        return(paste0("Analogs' P50 is ", fmt_money(m$peak_p50), "; Years 0-4 follow their launch shapes"))
+        return(paste0("Analogs' P50 is ", fmt_money(m$peak_p50), "; Years 1-4 follow their launch shapes"))
       }
       if (m$peak_p50 == 0) {
         "Annual revenue"
       } else {
-        paste0(
-          "Range: $", round(m$peak_p25 / 1000, 1), "B - $",
-          round(m$peak_p75 / 1000, 1), "B"
-        )
+        paste0("Range: ", fmt_money(m$peak_p25), " - ", fmt_money(m$peak_p75))
       }
     })
     
@@ -612,9 +610,9 @@ mod_executive_brief_server <- function(id, app_data, shared) {
         "Configure analogs in Scenario Builder to see forecast analysis."
       } else {
         paste0(
-          "Committing to P50 forecast ($", round(m$peak_p50 / 1000, 1), "B Year-5 revenue) ",
+          "Committing to P50 forecast (", fmt_money(m$peak_p50), " Year-5 revenue) ",
           "implies accepting that ~50% of analogs underperformed this level. ",
-          "P25 conservative scenario ($", round(m$peak_p25 / 1000, 1), "B) ",
+          "P25 conservative scenario (", fmt_money(m$peak_p25), ") ",
           "reduces credibility risk but may understate opportunity."
         )
       }
@@ -702,7 +700,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
           ) +
           # Labels
           labs(
-            x = "Years Since Launch",
+            x = "Launch year (12-month periods from FDA approval)",
             y = if (isTRUE(m_now$product_mode)) "Projected revenue for your product ($M)" else "Revenue ($M)",
             caption = paste0(
               if (isTRUE(m_now$product_mode))
@@ -713,7 +711,7 @@ mod_executive_brief_server <- function(id, app_data, shared) {
                 " (with fewer than 5, P25/P75 interpolate between single products: read as a rough spread)" else ""
             )
           ) +
-          scale_x_continuous(breaks = 0:5, limits = c(0, 5)) +
+          scale_x_continuous(breaks = 1:5, limits = c(1, 5)) +
           scale_y_continuous(labels = scales::comma_format()) +
           theme_launch()
         

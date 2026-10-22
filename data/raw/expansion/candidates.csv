@@ -1,0 +1,57 @@
+product_name,ingredient,reporting_owner,approval_date,tumor_class,status,reason
+Kadcyla,ado-trastuzumab emtansine,Roche,2013-02-22,Solid,candidate,
+Pomalyst,pomalidomide,Celgene/BMS,2013-02-08,Heme,candidate,
+Xofigo,radium-223 dichloride,Bayer,2013-05-15,Solid,candidate,
+Tafinlar + Mekinist,dabrafenib + trametinib,GSK then Novartis,2013-05-29,Solid,dropped,"ownership moved from GSK to Novartis in March 2015, so no single owner reported a full-year 2015 figure"
+Gilotrif,afatinib,Boehringer Ingelheim,2013-07-12,Solid,dropped,Boehringer Ingelheim (private) reports only its largest products; no separate Gilotrif figure
+Gazyva,obinutuzumab,Roche,2013-11-01,Heme,candidate,
+Imbruvica,ibrutinib,AbbVie/J&J,2013-11-13,Heme,existing,
+Cyramza,ramucirumab,Lilly,2014-04-21,Solid,candidate,
+Zykadia,ceritinib,Novartis,2014-04-29,Solid,dropped,Novartis reported it separately for 2015–2016 but not from 2017 (in Oncology Other)
+Beleodaq,belinostat,Spectrum,2014-07-03,Heme,dropped,"Spectrum sold it to Acrotech in March 2019, so no single owner reported Year 5"
+Zydelig,idelalisib,Gilead,2014-07-23,Heme,candidate,
+Keytruda,pembrolizumab,Merck,2014-09-04,Solid,existing,
+Blincyto,blinatumomab,Amgen,2014-12-03,Heme,candidate,
+Lynparza,olaparib,AstraZeneca,2014-12-19,Solid,existing,
+Opdivo,nivolumab,BMS,2014-12-22,Solid,existing,
+Ibrance,palbociclib,Pfizer,2015-02-03,Solid,existing,
+Lenvima,lenvatinib,Eisai,2015-02-13,Solid,candidate,
+Farydak,panobinostat,Novartis,2015-02-23,Heme,dropped,Novartis never reported it separately (grouped in Oncology Other)
+Unituxin,dinutuximab,United Therapeutics,2015-03-10,Solid,candidate,
+Odomzo,sonidegib,Novartis,2015-07-24,Solid,dropped,Novartis never reported it separately (grouped in Oncology Other)
+Lonsurf,trifluridine/tipiracil,Taiho (Otsuka),2015-09-22,Solid,dropped,Otsuka gave Lonsurf figures only in some years (none in its FY2017 or FY2018 results); also launched in Japan in 2014 before FDA approval
+Yondelis,trabectedin,Janssen (J&J),2015-10-23,Solid,dropped,J&J never reported it separately; PharmaMar has sold it outside the US since 2007
+Imlygic,talimogene laherparepvec,Amgen,2015-10-27,Solid,dropped,Amgen never reported it separately (within Other)
+Cotellic,cobimetinib,Roche (Exelixis partner),2015-11-10,Solid,dropped,Roche never reported it separately (absent from its product sales tables 2015–2018)
+Tagrisso,osimertinib,AstraZeneca,2015-11-13,Solid,existing,
+Darzalex,daratumumab,J&J,2015-11-16,Heme,existing,
+Ninlaro,ixazomib,Takeda,2015-11-20,Heme,candidate,
+Portrazza,necitumumab,Lilly,2015-11-24,Solid,dropped,Lilly reported it separately only for 2015–2016
+Empliciti,elotuzumab,BMS,2015-11-30,Heme,candidate,
+Alecensa,alectinib,Roche,2015-12-11,Solid,candidate,
+Venclexta,venetoclax,AbbVie,2016-04-11,Heme,existing,
+Tecentriq,atezolizumab,Roche,2016-05-18,Solid,existing,
+Lartruvo,olaratumab,Lilly,2016-10-19,Solid,candidate,withdrawn 2019; included by rule
+Rubraca,rucaparib,Clovis,2016-12-19,Solid,candidate,
+Kisqali,ribociclib,Novartis,2017-03-13,Solid,candidate,
+Bavencio,avelumab,Merck KGaA/Pfizer,2017-03-23,Solid,candidate,
+Zejula,niraparib,Tesaro then GSK,2017-03-27,Solid,dropped,"ownership moved from Tesaro to GSK in January 2019, so no single owner reported every year"
+Alunbrig,brigatinib,Takeda,2017-04-28,Solid,candidate,
+Rydapt,midostaurin,Novartis,2017-04-28,Heme,dropped,Novartis never reported it separately (grouped in Oncology Other)
+Imfinzi,durvalumab,AstraZeneca,2017-05-01,Solid,candidate,
+Nerlynx,neratinib,Puma,2017-07-17,Solid,candidate,
+Idhifa,enasidenib,Celgene/BMS,2017-08-01,Heme,dropped,"ownership moved from Celgene to BMS in November 2019, so no single owner reported a full-year 2019 figure"
+Besponsa,inotuzumab ozogamicin,Pfizer,2017-08-17,Heme,dropped,Pfizer never reported it separately (in All other Oncology)
+Aliqopa,copanlisib,Bayer,2017-09-14,Heme,dropped,Bayer never reported it separately (Pharmaceuticals investor handouts and product tables omit it)
+Verzenio,abemaciclib,Lilly,2017-09-28,Solid,candidate,
+Calquence,acalabrutinib,AstraZeneca,2017-10-31,Heme,existing,
+Kymriah,tisagenlecleucel,Novartis,2017-08-30,Heme,excluded,CAR-T: cell therapy launch model (site certification and manufacturing slots)
+Yescarta,axicabtagene ciloleucel,Gilead (Kite),2017-10-18,Heme,excluded,CAR-T: cell therapy launch model (site certification and manufacturing slots)
+Sylvant,siltuximab,Janssen,2014-04-23,Heme,excluded,indication is multicentric Castleman disease (not a cancer)
+Xermelo,telotristat ethyl,Lexicon,2017-02-28,Solid,excluded,treats carcinoid syndrome diarrhea (supportive care not antineoplastic)
+Varubi,rolapitant,Tesaro,2015-09-01,Solid,excluded,supportive care (chemotherapy-induced nausea)
+Akynzeo,netupitant/palonosetron,Helsinn,2014-10-10,Solid,excluded,supportive care (chemotherapy-induced nausea)
+Vyxeos,daunorubicin/cytarabine liposome,Jazz,2017-08-03,Heme,excluded,new formulation of two approved drugs (not a new molecular entity)
+Gleolan,aminolevulinic acid,NX Development,2017-06-06,Solid,excluded,imaging agent (not a treatment)
+Mylotarg,gemtuzumab ozogamicin,Pfizer,2017-09-01,Heme,excluded,first approved 2000 (re-approval)
+Onivyde,irinotecan liposome,Merrimack/Ipsen,2015-10-22,Solid,excluded,new formulation of an approved drug (not a new molecular entity)
