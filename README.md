@@ -50,8 +50,8 @@ This framework supports that question by:
 
 | Capability | Implementation |
 |----|----|
-| Governance-first analog selection | Inclusion criteria locked before examining outcomes |
-| Revenue-at-risk quantification | Year 1 impact from configurable delay scenarios |
+| Governance-first analog selection | Criteria fixed before outcomes are examined; the app records them in a downloadable scenario record (approval itself happens outside the app) |
+| Delay exposure | Sales displaced at the end of exclusivity and first-year sales deferred, for a configurable delay |
 | Sensitivity testing | Option to exclude the top-performing analog (by Year-5 revenue) |
 | Dynamic selection rationale | Live statistics: solid/heme count, approval-year range, median Year-5 revenue |
 | Transparent methodology | Assumptions, limitations, and exclusions clearly documented |
@@ -85,7 +85,7 @@ NPV and market access modeling are excluded because they require company-specifi
 
 ### Executive Brief
 
-![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, Year-5 revenue range, cost of delay, median Year-1 revenue), scenario comparison chart, and decision framing.*
+![Executive Brief](screenshots/executive_brief.png) *High-level summary with key metrics (analog count, historical median Year-5 revenue and range, delay exposure, median Year-1 revenue), scenario comparison chart, and decision framing.*
 
 ### Scenario Builder
 
@@ -117,6 +117,8 @@ All 56 candidates and the reason each was kept, dropped or ruled out of scope ar
 
 Two optional filters use outcomes (excluding the top analog, and a minimum Year-5 revenue). Because they look at results, they are offered as **sensitivity checks**, not selection criteria.
 
+**Scenario record.** The app supports governance rather than enforcing it: anyone can change the selection and see the results. The Scenario Builder therefore exports a dated Markdown record of the applied criteria, included and excluded products (with the reason for each exclusion), whether an outcome-based filter was on, the data version, the inputs and the results, plus a free-text rationale. That record is what gets filed with the approval.
+
 **Alignment:** Launch Year 1 is the 12 months after each drug's first FDA approval date, Year 2 the next 12 months, and so on to Year 5. Companies report by fiscal year (April–March for Eisai and Takeda), so each fiscal-year total is spread evenly over the days it covers and split across the launch years it overlaps (`scripts/02_data_preparation.R`). Sales usually grow within a year, so this slightly overstates early launch years and understates later ones.
 
 ------------------------------------------------------------------------
@@ -125,20 +127,19 @@ Two optional filters use outcomes (excluding the top analog, and a minimum Year-
 
 Percentile bands are derived from observed analog performance:
 
--   **P50 (Base Case):** Median analog trajectory
--   **P75 (Upper Range):** Upper quartile performance
--   **P25 (Lower Range):** Lower quartile performance
+-   **P50:** historical median of the selected analogs
+-   **P25 / P75:** historical interquartile range
 
-> **Important:** These represent observed analog ranges, not statistical confidence intervals.
+> **Important:** These describe the selected historical products. They are not confidence intervals, and P50 is not a 50% probability for a new product. The median curve joins each year's median, which can come from different products, so it summarizes the set rather than tracing a launch that happened. The chart shows how many analogs sit behind each year (26 to 30).
 
 > **Year-5 revenue, not peak:** every analog is observed for five years after approval. Most were still growing at Year 5 (Zydelig, Nerlynx, Rubraca and the withdrawn Lartruvo had already peaked), so revenue figures describe Year-5 revenue, not a lifetime peak.
 
 ------------------------------------------------------------------------
 
-### Revenue-at-Risk Calculation
+### Delay Exposure Calculation
 
 ```         
-Lost if exclusivity end is fixed = delay_quarters / 4 × P50 Year-5 revenue   (lower bound for analogs still growing at Year 5)
+Delay exposure (fixed exclusivity end) = delay_quarters / 4 × median Year-5 revenue
 Deferred first-year sales       = delay_quarters × (median Year-1 revenue / 4)
 ```
 
@@ -148,7 +149,7 @@ Deferred first-year sales       = delay_quarters × (median Year-1 revenue / 4)
 Implied Year-t revenue = expected Year-5 revenue × P50 analog shape at Year t
 ```
 
-The deferred figure is a Year-1 average-quarter approximation; the lost figure is a lower bound for products still growing at Year 5. Lartruvo, with no Year-5 sales, has no defined shape and is left out of product mode.
+The deferred figure is a Year-1 average-quarter approximation. The exposure figure assumes the Year-5 run rate applies to the final quarters of exclusivity, often ten or more years after launch; sales then could be higher (continued growth) or lower (competition, label changes), so it is an exposure estimate, not a bound. A full comparison would value the delayed and on-time revenue paths over the same calendar horizon. Lartruvo, with no Year-5 sales, has no defined shape and is left out of product mode.
 
 ------------------------------------------------------------------------
 
@@ -185,6 +186,24 @@ Every 2013–2017 oncology new molecular entity that meets the criteria above:
 
 ------------------------------------------------------------------------
 
+## Reproduce
+
+Requires R 4.3+ and the packages in `app/DESCRIPTION` (installed from CRAN; the project does not use renv).
+
+```r
+install.packages(c("shiny", "shiny.semantic", "dplyr", "tidyr", "purrr", "stringr",
+                   "scales", "ggplot2", "ggiraph", "reactable", "readr"))
+```
+
+From the project root:
+
+1.  `python3 scripts/03_merge_analog_expansion.py`: merge the sourced values in `data/raw/expansion/` into the raw files (only needed after editing those sourced values)
+2.  `Rscript scripts/02_data_preparation.R`: build launch years and write `app/data/processed/`
+3.  `Rscript scripts/04_deploy_checks.R`: check the app folder before deploying
+4.  `shiny::runApp("app")`
+
+------------------------------------------------------------------------
+
 ## Technology Stack
 
 | Component     | Technology                   |
@@ -212,12 +231,13 @@ Every 2013–2017 oncology new molecular entity that meets the criteria above:
 
 -   Reporting definitions differ slightly by company (see Data Sources)
 -   Launch years are apportioned from fiscal-year totals assuming even sales within each year
--   Survivorship in the data, not the selection: 16 eligible drugs were dropped because their sales were not reported separately or their owner changed; these are mostly smaller launches, so the bands may still lean slightly high
+-   16 eligible drugs were dropped because their sales were not reported separately or their owner changed. They include small launches (Farydak, Odomzo) and large ones (Tafinlar + Mekinist, Zejula), so the direction and size of any remaining bias are unknown
+-   Worldwide sales are aligned to the US approval date: a drug sold elsewhere first (Alecensa in Japan from 2014) has higher early launch years, one launched outside the US later has lower ones
 -   Five launch years are missing (see Data status), so early-year percentiles rest on 26–29 analogs
 -   Opdivo excludes Ono's territories (Japan, Korea, Taiwan), so its curve understates global sales
 -   Label expansion can introduce upward bias in Year-5 revenues
 -   Earlier analogs may not fully reflect current launch environments
--   Revenue-at-risk calculation is simplified (not a full DCF model)
+-   Delay exposure is a run-rate approximation, not a comparison of revenue paths or a DCF model
 -   Competitive dynamics and market access are not modeled
 
 ------------------------------------------------------------------------

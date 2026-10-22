@@ -164,9 +164,22 @@ cat("\n--- Check 7: Core App Files ---\n")
 core_files <- c(
   "app/app.R",
   "app/global.R",
-  "app/ui.R",
-  "app/server.R"
+  "app/ui_main.R",
+  "app/server_main.R",
+  "app/DESCRIPTION",
+  "app/data/processed/oncology_analogs.rds",
+  "app/data/processed/launch_curves.rds",
+  "app/data/processed/data_quality.rds"
 )
+
+# shinyapps.io runs ui.R/server.R instead of app.R if they exist, so they must not
+for (f in c("app/ui.R", "app/server.R")) {
+  check(
+    !file.exists(f),
+    paste0(f, " absent (would bypass app.R on shinyapps.io)"),
+    paste0(f, " exists: shinyapps.io would bypass app.R; rename it")
+  )
+}
 
 for (f in core_files) {
   check(

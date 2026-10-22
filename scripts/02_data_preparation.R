@@ -346,7 +346,9 @@ saveRDS(curves, paths$curves_out)
 cat(sprintf("  ✓ Saved: %s\n", paths$curves_out))
 
 # Data-quality facts shown in the Methods tab
-attr_info <- list(curve_gaps = curve_gaps, raw_status = raw_status, raw_flags = raw_flags)
+attr_info <- list(curve_gaps = curve_gaps, raw_status = raw_status, raw_flags = raw_flags,
+                  built = as.character(Sys.Date()),
+                  raw_md5 = substr(unname(tools::md5sum(paths$revenue_raw)), 1, 12))
 saveRDS(attr_info, "data/processed/data_quality.rds")
 
 # ============================================================================
