@@ -1,0 +1,91 @@
+product_name,company,fiscal_year,revenue_local_millions,currency,geography,source_filing,source_url,verification,notes
+Cyramza,Lilly,2014,75.6,USD,WW,Lilly Q4/FY2015 results release,https://investor.lilly.com/node/24841,verified,
+Cyramza,Lilly,2015,383.8,USD,WW,Lilly Q4/FY2016 results release,https://investor.lilly.com/node/25421,verified,
+Cyramza,Lilly,2016,614.1,USD,WW,Lilly Q4/FY2016 results release,https://investor.lilly.com/node/25421,verified,
+Cyramza,Lilly,2017,758.3,USD,WW,Lilly Q4/FY2018 results release,https://investor.lilly.com/node/40401,verified,
+Cyramza,Lilly,2018,821.4,USD,WW,Lilly Q4/FY2018 results release,https://investor.lilly.com/node/40401,verified,
+Cyramza,Lilly,2019,925.1,USD,WW,Lilly Q4/FY2020 results release,https://investor.lilly.com/node/44386,verified,
+Lartruvo,Lilly,2016,11.9,USD,WW,Lilly Q4/FY2016 results release,https://investor.lilly.com/node/25421,verified,
+Lartruvo,Lilly,2017,203.0,USD,WW,Lilly Q4/FY2018 results release,https://investor.lilly.com/node/40401,verified,
+Lartruvo,Lilly,2018,304.7,USD,WW,Lilly Q4/FY2018 results release,https://investor.lilly.com/node/40401,verified,
+Lartruvo,Lilly,2019,,USD,WW,Lilly Q4/FY2019 results release,https://investor.lilly.com/node/42561,not_reported,promotion suspended Jan 2019 and product withdrawn; Lilly stopped reporting it
+Lartruvo,Lilly,2020,0,USD,WW,,,assumed_zero,withdrawn from market in 2019
+Lartruvo,Lilly,2021,0,USD,WW,,,assumed_zero,withdrawn from market in 2019
+Verzenio,Lilly,2017,21.0,USD,WW,Lilly Q4/FY2018 results release,https://investor.lilly.com/node/40401,verified,
+Verzenio,Lilly,2018,255.0,USD,WW,Lilly Q4/FY2018 results release,https://investor.lilly.com/node/40401,verified,
+Verzenio,Lilly,2019,579.7,USD,WW,Lilly Q4/FY2020 results release,https://investor.lilly.com/node/44386,verified,
+Verzenio,Lilly,2020,912.7,USD,WW,Lilly Q4/FY2020 results release,https://investor.lilly.com/node/44386,verified,
+Verzenio,Lilly,2021,1349.9,USD,WW,Lilly Q4/FY2022 results release,https://investor.lilly.com/node/48276,verified,
+Verzenio,Lilly,2022,2483.5,USD,WW,Lilly Q4/FY2022 results release,https://investor.lilly.com/node/48276,verified,
+Kisqali,Novartis,2017,76,USD,WW,Novartis Q4/FY2018 interim financial report (6-K),https://www.sec.gov/Archives/edgar/data/1114448/000137036819000006/a190130-99_2.htm,verified,
+Kisqali,Novartis,2018,235,USD,WW,Novartis Q4/FY2018 interim financial report (6-K),https://www.sec.gov/Archives/edgar/data/1114448/000137036819000006/a190130-99_2.htm,verified,
+Kisqali,Novartis,2019,480,USD,WW,Novartis Q4/FY2020 interim financial report (6-K),https://www.sec.gov/Archives/edgar/data/1114448/000137036821000008/a210126-99_2.htm,verified,
+Kisqali,Novartis,2020,687,USD,WW,Novartis Q4/FY2020 interim financial report (6-K),https://www.sec.gov/Archives/edgar/data/1114448/000137036821000008/a210126-99_2.htm,verified,
+Kisqali,Novartis,2021,937,USD,WW,Novartis Q4/FY2021 interim financial report (6-K),https://www.sec.gov/Archives/edgar/data/1114448/000137036822000009/a220202-99_2.htm,verified,
+Kisqali,Novartis,2022,1231,USD,WW,Novartis Q4/FY2022 media release,https://www.novartis.com/sites/novartis_com/files/q4-2022-media-release-en.pdf,verified,
+Kadcyla,Roche,2013,,CHF,WW,,,not_located,Roche 2013-2014 product tables group Kadcyla in Other or were not retrievable
+Kadcyla,Roche,2014,,CHF,WW,,,not_located,Roche 2014 product figure not retrievable from public PDFs
+Kadcyla,Roche,2015,769,CHF,WW,Roche Finance Report 2016,https://assets.roche.com/f/176343/x/8569575849/fb16e.pdf,verified,
+Kadcyla,Roche,2016,831,CHF,WW,Roche Finance Report 2017,https://assets.roche.com/f/176343/x/ab217136ac/fb17e.pdf,verified,
+Kadcyla,Roche,2017,914,CHF,WW,Roche Finance Report 2018,https://assets.roche.com/f/176343/x/1141b7ff0d/fb18e.pdf,verified,
+Kadcyla,Roche,2018,979,CHF,WW,Roche Finance Report 2018,https://assets.roche.com/f/176343/x/1141b7ff0d/fb18e.pdf,verified,
+Gazyva,Roche,2013,,CHF,WW,,,not_located,Roche 2013 product table groups it in Other
+Gazyva,Roche,2014,,CHF,WW,,,not_located,Roche 2014 product figure not retrievable from public PDFs
+Gazyva,Roche,2015,128,CHF,WW,Roche Finance Report 2016,https://assets.roche.com/f/176343/x/8569575849/fb16e.pdf,verified,
+Gazyva,Roche,2016,196,CHF,WW,Roche Finance Report 2017,https://assets.roche.com/f/176343/x/ab217136ac/fb17e.pdf,verified,
+Gazyva,Roche,2017,278,CHF,WW,Roche Finance Report 2018,https://assets.roche.com/f/176343/x/1141b7ff0d/fb18e.pdf,verified,
+Gazyva,Roche,2018,390,CHF,WW,Roche Finance Report 2018,https://assets.roche.com/f/176343/x/1141b7ff0d/fb18e.pdf,verified,
+Alecensa,Roche,2015,,CHF,WW,Roche Finance Report 2016,https://assets.roche.com/f/176343/x/8569575849/fb16e.pdf,not_reported,not broken out in Roche's 2015 table
+Alecensa,Roche,2016,182,CHF,WW,Roche Finance Report 2017,https://assets.roche.com/f/176343/x/ab217136ac/fb17e.pdf,verified,includes Japan sales (launched there 2014 via Chugai)
+Alecensa,Roche,2017,362,CHF,WW,Roche Finance Report 2018,https://assets.roche.com/f/176343/x/1141b7ff0d/fb18e.pdf,verified,
+Alecensa,Roche,2018,637,CHF,WW,Roche Finance Report 2018,https://assets.roche.com/f/176343/x/1141b7ff0d/fb18e.pdf,verified,
+Alecensa,Roche,2019,876,CHF,WW,Roche Finance Report 2020,https://assets.roche.com/f/176343/x/42a7f33c0c/fb20e.pdf,verified,
+Alecensa,Roche,2020,1160,CHF,WW,Roche Finance Report 2020,https://assets.roche.com/f/176343/x/42a7f33c0c/fb20e.pdf,verified,
+Imfinzi,AstraZeneca,2017,19,USD,WW,AstraZeneca FY and Q4 2018 results (6-K),https://www.sec.gov/Archives/edgar/data/901832/000165495419001546/a9540p.htm,verified,
+Imfinzi,AstraZeneca,2018,633,USD,WW,AstraZeneca FY and Q4 2018 results (6-K),https://www.sec.gov/Archives/edgar/data/901832/000165495419001546/a9540p.htm,verified,
+Imfinzi,AstraZeneca,2019,1469,USD,WW,AstraZeneca FY and Q4 2019 results (RNS),https://data.fca.org.uk/artefacts/NSM/data-migration/LSE20200214070005_3494151.html,verified,
+Imfinzi,AstraZeneca,2020,2042,USD,WW,AstraZeneca FY and Q4 2020 results (RNS),https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/azn-full-year-2020-results/6329729,verified,
+Imfinzi,AstraZeneca,2021,2412,USD,WW,AstraZeneca FY and Q4 2021 results (6-K),https://www.sec.gov/Archives/edgar/data/901832/000165495422001372/a2250b.htm,verified,
+Imfinzi,AstraZeneca,2022,2784,USD,WW,AstraZeneca FY and Q4 2022 results (6-K),https://www.sec.gov/Archives/edgar/data/901832/000165495423001503/a3767p.htm,verified,includes Imjudo from Q4 2022 (small)
+Empliciti,BMS,2015,3,USD,WW,BMS Q4/FY2016 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0000014272/000001427217000017/q42016ex991.htm,verified,
+Empliciti,BMS,2016,150,USD,WW,BMS Q4/FY2016 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0000014272/000001427217000017/q42016ex991.htm,verified,
+Empliciti,BMS,2017,231,USD,WW,BMS Q4/FY2018 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/14272/000114036119001470/s002621x10_ex99-1.htm,verified,
+Empliciti,BMS,2018,247,USD,WW,BMS Q4/FY2018 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/14272/000114036119001470/s002621x10_ex99-1.htm,verified,
+Empliciti,BMS,2019,357,USD,WW,BMS Q4/FY2020 results release,https://www.businesswire.com/news/home/20210204005588/en,verified,
+Empliciti,BMS,2020,381,USD,WW,BMS Q4/FY2020 results release,https://www.businesswire.com/news/home/20210204005588/en,verified,
+Zydelig,Gilead,2014,23,USD,WW,Gilead Q4/FY2015 results release,https://www.gilead.com/news/news-details/2016/gilead-sciences-announces-fourth-quarter-and-full-year-2015-financial-results,verified,
+Zydelig,Gilead,2015,132,USD,WW,Gilead Q4/FY2015 results release,https://www.gilead.com/news/news-details/2016/gilead-sciences-announces-fourth-quarter-and-full-year-2015-financial-results,verified,
+Zydelig,Gilead,2016,168,USD,WW,Gilead Q4/FY2017 results release,https://www.gilead.com/news/news-details/2018/gilead-sciences-announces-fourth-quarter-and-full-year-2017-financial-results,verified,
+Zydelig,Gilead,2017,149,USD,WW,Gilead Q4/FY2017 results release,https://www.gilead.com/news/news-details/2018/gilead-sciences-announces-fourth-quarter-and-full-year-2017-financial-results,verified,
+Zydelig,Gilead,2018,133,USD,WW,Gilead Q4/FY2019 results release,https://www.businesswire.com/news/home/20200204005925/en,verified,
+Zydelig,Gilead,2019,103,USD,WW,Gilead Q4/FY2019 results release,https://www.businesswire.com/news/home/20200204005925/en,verified,
+Blincyto,Amgen,2014,,USD,WW,Amgen Q4/FY2015 results release,https://www.amgen.com/newsroom/press-releases/2016/01/amgens-2015-revenues-increased-8-percent-to-217-billion-and-adjusted-earnings-per-share-eps-increased-19-percent-to-1038,not_reported,launched Dec 2014; reported within Other
+Blincyto,Amgen,2015,77,USD,WW,Amgen Q4/FY2016 results release,https://www.amgen.com/newsroom/press-releases/2017/02/amgen-reports-fourth-quarter-and-full-year-2016-financial-results,verified,
+Blincyto,Amgen,2016,115,USD,WW,Amgen Q4/FY2016 results release,https://www.amgen.com/newsroom/press-releases/2017/02/amgen-reports-fourth-quarter-and-full-year-2016-financial-results,verified,
+Blincyto,Amgen,2017,175,USD,WW,Amgen Q4/FY2018 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/318154/000031815419000004/amgn-20181231xq4exhibit991.htm,verified,
+Blincyto,Amgen,2018,230,USD,WW,Amgen Q4/FY2019 results release,https://www.amgen.com/newsroom/press-releases/2020/01/amgen-reports-fourth-quarter-and-full-year-2019-financial-results,verified,
+Blincyto,Amgen,2019,312,USD,WW,Amgen Q4/FY2019 results release,https://www.amgen.com/newsroom/press-releases/2020/01/amgen-reports-fourth-quarter-and-full-year-2019-financial-results,verified,
+Rubraca,Clovis,2016,0.078,USD,WW,Clovis FY2017 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0001466301/000115752318000413/a51764664ex99_1.htm,verified,
+Rubraca,Clovis,2017,55.5,USD,WW,Clovis FY2017 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0001466301/000115752318000413/a51764664ex99_1.htm,verified,
+Rubraca,Clovis,2018,95.4,USD,WW,Clovis FY2019 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1466301/000119312520046720/d890302dex991.htm,verified,
+Rubraca,Clovis,2019,143.0,USD,WW,Clovis FY2019 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1466301/000119312520046720/d890302dex991.htm,verified,
+Rubraca,Clovis,2020,164.5,USD,WW,Clovis FY2021 results release,https://www.businesswire.com/news/home/20220223005316/en,verified,
+Rubraca,Clovis,2021,148.8,USD,WW,Clovis FY2021 results release,https://www.businesswire.com/news/home/20220223005316/en,verified,
+Nerlynx,Puma,2017,26.2,USD,US,Puma Q4/FY2017 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0001401667/000119312518067167/d523535dex991.htm,verified,Puma product revenue (mostly US); ex-US partner sales appear only as royalties
+Nerlynx,Puma,2018,200.5,USD,US,Puma Q4/FY2019 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1401667/000119312520043513/d871008dex991.htm,verified,Puma product revenue (mostly US)
+Nerlynx,Puma,2019,211.6,USD,US,Puma Q4/FY2019 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1401667/000119312520043513/d871008dex991.htm,verified,Puma product revenue (mostly US)
+Nerlynx,Puma,2020,196.7,USD,US,Puma Q4/FY2020 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1401667/000119312521056960/d44832dex991.htm,verified,Puma product revenue (mostly US)
+Nerlynx,Puma,2021,189.1,USD,US,Puma Q4/FY2022 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1401667/000143774923005220/ex_482630.htm,verified,Puma product revenue (mostly US)
+Nerlynx,Puma,2022,200.0,USD,US,Puma Q4/FY2022 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/1401667/000143774923005220/ex_482630.htm,verified,Puma product revenue (mostly US)
+Pomalyst,Celgene,2013,305.4,USD,WW,Celgene Q4/FY2014 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0000816284/000110465915005190/a15-3318_1ex99d1.htm,verified,includes Imnovid (EU)
+Pomalyst,Celgene,2014,679.7,USD,WW,Celgene Q4/FY2014 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0000816284/000110465915005190/a15-3318_1ex99d1.htm,verified,includes Imnovid (EU)
+Pomalyst,Celgene,2015,983.3,USD,WW,Celgene Q4/FY2015 results (8-K ex99.1),https://www.sec.gov/Archives/edgar/data/0000816284/000110465916091858/a16-3061_1ex99d1.htm,verified,includes Imnovid (EU)
+Pomalyst,Celgene,2016,1311,USD,WW,Celgene Q4/FY2016 results release (repost),https://www.1stoncology.com/blog/?p=8708,verified,includes Imnovid (EU); text of Celgene's release
+Pomalyst,Celgene,2017,1614,USD,WW,Celgene Q4/FY2018 results release,https://www.biospace.com/celgene-reports-fourth-quarter-and-full-year-2018-operating-and-financial-results,verified,includes Imnovid (EU)
+Pomalyst,Celgene,2018,2040,USD,WW,Celgene Q4/FY2018 results release,https://www.biospace.com/celgene-reports-fourth-quarter-and-full-year-2018-operating-and-financial-results,verified,includes Imnovid (EU)
+Unituxin,United Therapeutics,2015,20.5,USD,WW,United Therapeutics 10-K FY2017 (Item 1),https://www.sec.gov/Archives/edgar/data/0001082554/000104746918000911/a2234069z10-k.htm,verified,10-K text says approximately
+Unituxin,United Therapeutics,2016,62.5,USD,WW,United Therapeutics 10-K FY2017 (Item 1),https://www.sec.gov/Archives/edgar/data/0001082554/000104746918000911/a2234069z10-k.htm,verified,10-K text says approximately
+Unituxin,United Therapeutics,2017,76.0,USD,WW,United Therapeutics 10-K FY2017 (Item 1),https://www.sec.gov/Archives/edgar/data/0001082554/000104746918000911/a2234069z10-k.htm,verified,10-K text says approximately
+Unituxin,United Therapeutics,2018,84.8,USD,WW,United Therapeutics Q4/FY2019 results release,https://ir.unither.com/press-releases/2020/02-26-2020,verified,
+Unituxin,United Therapeutics,2019,113.7,USD,WW,United Therapeutics Q4/FY2019 results release,https://ir.unither.com/press-releases/2020/02-26-2020,verified,
+Unituxin,United Therapeutics,2020,122.9,USD,WW,United Therapeutics Q4/FY2020 results release,https://ir.unither.com/press-releases/2021/02-24-2021,verified,
